@@ -1,8 +1,9 @@
-PROGRAM TESTE1
+PROGRAM A
 INTEGER X, Y
+INTEGER SUM%  // <- Invalid character
 
 CALL INPUT(X,Y)
-WRITE "X+Y=", SUM(X,Y)
+PRINT "X+Y=", SUM(X,Y)
 
 STOP
 END

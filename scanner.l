@@ -5,31 +5,32 @@
 
 letter      [A-Za-z]
 digit       [0-9]
-number      {digit}+
-/*number    [-+]?([0-9]*\.?[0-9]+|[0-9]+\.)(E(-|+)?[0-9]+)?*/
-id          {letter}({letter}|{digit})*
-sliteral    \"([^\\\"]|\\.)*\"
+number      [-+]?({digit}*\.?{digit}+|{digit}+\.)([E]?[-+]?{digit}+)?
+id          {letter}({letter}|{digit}|_)*
+sliteral    \'([^\\\']|\\.)*\'
 comment     "//".*\n
 ws          [ \t]+
-
 %%
 
 "PROGRAM"       { printf(" RES "); }
 "SUBROUTINE"    { printf(" RES "); }
 "FUNCTION"      { printf(" RES "); }
 "STOP"          { printf(" RES "); }
+"RETURN"        { printf(" RES "); }
 "END"           { printf(" RES "); }
 "PARAMETER"     { printf(" RES "); }
 "INTEGER"       { printf(" RES "); }
 "REAL"          { printf(" RES "); }
-"CONTINUE"      { printf(" RES "); }
+"CYCLE"         { printf(" RES "); }
+"EXIT"          { printf(" RES "); }
 "IF"            { printf(" RES "); }
 "ELSE"          { printf(" RES "); }
+"ELSEIF"        { printf(" RES "); }
 "ENDIF"         { printf(" RES "); }
 "WHILE"         { printf(" RES "); }
 "DO"            { printf(" RES "); }
 "ENDDO"         { printf(" RES "); }
-"WRITE"         { printf(" RES "); }
+"PRINT"         { printf(" RES "); }
 "READ"          { printf(" RES "); }
 "CALL"          { printf(" RES "); }
 
@@ -38,16 +39,19 @@ ws          [ \t]+
 "*"     { printf(" OP "); }
 "/"     { printf(" OP "); }
 "="     { printf(" OP "); }
-"=="    { printf(" OP "); }
-"!="    { printf(" OP "); }
-">"     { printf(" OP "); }
-">="    { printf(" OP "); }
-"<"     { printf(" OP "); }
-"<="    { printf(" OP "); }
+".EQ."  { printf(" OP "); }
+".NE."  { printf(" OP "); }
+".GT."  { printf(" OP "); }
+".GE."  { printf(" OP "); }
+".LT."  { printf(" OP "); }
+".LE."  { printf(" OP "); }
 
 "," { printf(" PUNK "); }
 "(" { printf(" PUNK "); }
 ")" { printf(" PUNK "); }
+
+".TRUE." { printf(" LOG_VALUE "); }
+".FALSE." { printf(" LOG_VALUE "); }
 
 {ws}        { /* ignore whitespace */ }
 {comment}   { printf(" COMMENT EOL\n"); }
