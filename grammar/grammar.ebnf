@@ -1,0 +1,160 @@
+/* FORTRAN 666 */
+
+ExecutableProgram ::= MainProgram
+                    | ExecutableProgram Subprogram
+Subprogram ::= Subroutine
+             | Function
+
+MainProgram ::= MainProgramPrefix Body MainProgramSuffix
+Subroutine ::= SubroutinePrefix "(" ParameterList ")" Body SubroutineSuffix
+Function ::= FunctionPrefix "(" ParameterList ")" Body FunctionSuffix
+
+MainProgramPrefix ::= "PROGRAM" Name
+MainProgramSuffix ::= "STOP" "END"
+
+SubroutinePrefix ::= "SUBROUTINE" Name
+SubroutineSuffix ::= "RETURN" "END"
+
+FunctionPrefix ::= Type "FUNCTION" Name
+FunctionSuffix ::= "RETURN" "END"
+
+Name ::= Letter
+       | Name Letter
+Letter ::= [a-zA-Z]
+
+Body ::= BodyConstruct
+      | Body BodyConstruct
+
+BodyConstruct ::= SpecificationConstruct
+               | ExecutableConstruct
+
+SpecificationConstruct ::= DeclarationConstruct
+                         | ParameterStatement
+
+DeclarationConstruct ::= Declaration
+                       | DeclarationConstruct Declaration
+
+Declaration ::= Type IdentifierDeclarationList
+
+Type ::= "INTEGER"
+       | "REAL"
+       | "CHARACTER"
+       | "LOGICAL"
+
+IdentifierDeclarationList ::= IdentifierDeclaration
+                            | IdentifierDeclarationList "," IdentifierDeclaration
+IdentifierDeclaration ::= Identifier
+                        | Identifier "(" Integer ")"
+Identifier ::= Letter
+           | Identifier Alphanumeric
+Alphanumeric ::= Letter
+               | Digit
+
+Digit ::= [0-9]
+
+ParameterStatement ::= "PARAMETER" "(" ConstantList ")"
+
+ConstantList ::= ConstantDefinition
+               | ConstantList "," ConstantDefinition
+ConstantDefinition ::= Identifier "=" ConstantExpression
+ConstantExpression ::= Number
+                     | StringLiteral
+
+ExecutableConstruct ::= Statement
+                      | ExecutableConstruct Statement
+
+Statement ::= AssignmentStatement
+            | PrintStatement
+            | ReadStatement
+            | IfConstruct
+            | DoConstruct
+            | WhileConstruct
+            | CallStatement
+            | CycleStatement
+            | ExitStatement
+
+AssignmentStatement ::= Identifier "=" Expression
+                      | Identifier "(" Integer ")" "=" Expression
+
+Expression ::= Factor
+             | Expression "+" Factor
+             | Expression "-" Factor
+Factor ::= Term
+         | Factor "*" Term
+         | Factor "/" Term
+Term ::= "(" Expression ")"
+       | Identifier "(" ExpressionList ")"
+       | Identifier "(" ")"
+       | Identifier
+       | Number
+       | "-" Term
+
+ExpressionList ::= Expression
+                 | ExpressionList "," Expression
+
+Number ::= Integer
+         | Real
+Integer ::= Digit | Integer Digit
+Real ::= Integer '.' Integer
+       | Integer '.'
+       | '.' Integer 
+
+PrintStatement ::= "PRINT" PrintList
+PrintList ::= PrintItem
+            | PrintList "," PrintItem
+PrintItem ::= StringLiteral
+            | Expression
+
+StringLiteral ::= "'' Text "''
+Text ::= TextChar
+       | TextChar Text
+TextChar ::= [\x20-\x26]
+           | [\x28-\x7E]
+           | [\xA]
+
+ReadStatement ::= "READ" IdentifierList
+
+
+IfConstruct ::= IfThenStatement ThenConstruct
+IfThenStatement ::= "IF" LogicalExpression "THEN"
+ThenConstruct ::= Statement EndIfStatement
+                | Statement ElseIfConstruct
+                | Statement ElseConstruct
+EndIFStatement ::= "ENDIF"
+ElseIfConstruct ::= ElseIfStatement ThenConstruct
+ElseIfStatement ::= "ELSEIF" Expression "THEN"
+ElseConstruct ::= "ELSE" Expression "END"
+
+LogicalExpression ::= Expression Op Expression
+                    | LogicalConstant
+
+Op ::= ".AND."
+     | ".OR."
+     | ".EQ."
+     | ".NE."
+     | ".GT."
+     | ".GE."
+     | ".LT."
+     | ".LE."
+
+LogicalConstant ::= ".TRUE."
+                  | ".FALSE."
+
+
+DoConstruct ::= DoStatement DoLoopControl EndDoStatement
+DoStatement ::= "DO"
+DoLoopControl ::= Identifier "=" Expression "," Expression
+                | Identifier "=" Expression "," Expression "," Expression
+EndDoStatement ::= Statement "ENDDO"
+
+
+WhileConstruct ::= WhileStatement EndWhileStatement
+WhileStatement ::= "WHILE" LogicalExpression "DO"
+EndWhileStatement ::= Statement "ENDDO"
+
+CallStatement ::= "CALL" Name "(" IdentifierList ")"
+                | "CALL" Name "(" ")"
+
+CycleStatement ::= "CONTINUE"
+
+ExitStatement ::= "EXIT"
