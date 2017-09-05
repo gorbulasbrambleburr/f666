@@ -1,7 +1,30 @@
-%option noyywrap
 %{
-#include <stdio.h>
+#include <string>
+
+/* Implementation of yyFlexScanner */ 
+#include "f_scanner.hpp"
+#undef  YY_DECL
+#define YY_DECL int Fortran::Scanner::yylex(Fortran::Parser::semantic_type * const lval,
+                                            Fortran::Parser::location_type *location )
+
+using token = Fortran::Parser::token;
+
+/* Default is YY_NULL */
+#define yyterminate() return( token::END )
+
+/* msvc2010 requires that we exclude this header file. */
+#define YY_NO_UNISTD_H
+
+/* update location on matching */
+#define YY_USER_ACTION loc->step(); loc->columns(yyleng);
+
 %}
+
+%option debug
+%option nodefault
+%option yyclass="Fortran::Scanner"
+%option noyywrap
+%option c++
 
 letter      [A-Za-z]
 digit       [0-9]
@@ -10,70 +33,74 @@ id          {letter}({letter}|{digit}|_)*
 sliteral    \'([^\\\']|\\.)*\'
 comment     "//".*\n
 ws          [ \t]+
-%%
-
-"PROGRAM"       { printf(" RES "); }
-"SUBROUTINE"    { printf(" RES "); }
-"FUNCTION"      { printf(" RES "); }
-"STOP"          { printf(" RES "); }
-"RETURN"        { printf(" RES "); }
-"END"           { printf(" RES "); }
-"PARAMETER"     { printf(" RES "); }
-"INTEGER"       { printf(" RES "); }
-"REAL"          { printf(" RES "); }
-"CYCLE"         { printf(" RES "); }
-"EXIT"          { printf(" RES "); }
-"IF"            { printf(" RES "); }
-"ELSE"          { printf(" RES "); }
-"ELSEIF"        { printf(" RES "); }
-"ENDIF"         { printf(" RES "); }
-"WHILE"         { printf(" RES "); }
-"DO"            { printf(" RES "); }
-"ENDDO"         { printf(" RES "); }
-"PRINT"         { printf(" RES "); }
-"READ"          { printf(" RES "); }
-"CALL"          { printf(" RES "); }
-
-"+"     { printf(" OP "); }
-"-"     { printf(" OP "); }
-"*"     { printf(" OP "); }
-"/"     { printf(" OP "); }
-"="     { printf(" OP "); }
-".EQ."  { printf(" OP "); }
-".NE."  { printf(" OP "); }
-".GT."  { printf(" OP "); }
-".GE."  { printf(" OP "); }
-".LT."  { printf(" OP "); }
-".LE."  { printf(" OP "); }
-
-"," { printf(" PUNK "); }
-"(" { printf(" PUNK "); }
-")" { printf(" PUNK "); }
-
-".TRUE." { printf(" LOG_VALUE "); }
-".FALSE." { printf(" LOG_VALUE "); }
-
-{ws}        { /* ignore whitespace */ }
-{comment}   { printf(" COMMENT EOL\n"); }
-{sliteral}  { printf(" STRING_LITERAL "); }
-{id}        { printf(" ID "); }
-{number}    { printf(" NUM "); }
-\n          { printf(" EOL\n"); }
-.           { printf(" ERR "); }
 
 %%
 
-int main (int argc, char *argv[]) {
-    if (argc > 1) {
-        if (!(yyin = fopen(argv[1], "r"))) {
-            perror(argv[1]);
-            return (1);
-        }
-    } else {
-        printf("Missing input file.\n");
-        return (1);
-    }
-    yylex();
-    printf("\n");
-    return (0);
-}
+%{          /** Code executed at the beginning of yylex **/
+            yylval = lval;
+%}
+
+"PROGRAM"     { return( token::PROGRAM ); }
+"SUBROUTINE"  { return( token::SUBROUTINE ); }
+"FUNCTION"    { return( token::FUNCTION ); }
+"STOP"        { return( token::STOP ); }
+"RETURN"      { return( token::RETURN ); }
+"END"         { return( token::END ); }
+"PARAMETER"   { return( token::PARAMETER ); }
+"INTEGER"     { return( token::INTEGER ); }
+"REAL"        { return( token::REAL ); }
+"CYCLE"       { return( token::CYCLE ); }
+"EXIT"        { return( token::EXIT ); }
+"IF"          { return( token::IF ); }
+"ELSE"        { return( token::ELSE ); }
+"ELSEIF"      { return( token::ELSEIF ); }
+"ENDIF"       { return( token::ENDIF ); }
+"WHILE"       { return( token::WHILE ); }
+"DO"          { return( token::DO ); }
+"ENDDO"       { return( token::ENDDO ); }
+"PRINT"       { return( token::PRINT ); }
+"READ"        { return( token::READ ); }
+"CALL"        { return( token::CALL ); }
+
+"+"           { return( token::SUM ); }
+"-"           { return( token::SUB ); }
+"*"           { return( token::TIMES ); }
+"/"           { return( token::DIV ); }
+"="           { return( token::ASSIGN ); }
+".EQ."        { return( token::EQ ); }
+".NE."        { return( token::NE ); }
+".GT."        { return( token::GT ); }
+".GE."        { return( token::GE ); }
+".LT."        { return( token::LT ); }
+".LE."        { return( token::LE ); }
+".TRUE."      { return( token::TRUE ); }
+".FALSE."     { return( token::FALSE ); }
+","           { return( token::COMMA ); }
+"("           { return( token::LP ); }
+")"           { return( token::RP ); }
+
+
+{ws}        ;
+{comment}   ;
+
+{sliteral}  { 
+              auto content = std::string(yytext);
+              content = content.substr(1, content.size() - 2);
+              yylval->build< std::string >( content );
+              return( token::STRING_LITERAL );
+            }
+
+{id}        {
+              yylval->build< std::string >( yytext );
+              return( token::ID );
+            }
+
+{number}    { return( token::NUM ); }
+
+\n          { loc->lines(); return( token::EOL); }
+
+.           { return( token::ERR ); }
+
+<<EOF>>     { return yyterminate(); }
+
+%%
