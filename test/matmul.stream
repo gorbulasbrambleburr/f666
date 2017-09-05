@@ -1,4 +1,3 @@
-./scanner test/matmul.f
 RES  ID  EOL
 EOL
 RES  ID  PUNK  ID  PUNK  ID  EOL

@@ -1,4 +1,3 @@
-./scanner test/error.f
 RES  ID  EOL
 RES  ID  PUNK  ID  EOL
 RES  ID  ERR  COMMENT EOL
