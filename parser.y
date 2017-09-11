@@ -2,8 +2,8 @@
 %require "3.0"
 %debug
 %defines
-%define api.namespace {Fortran}
-%define parser_class_name "Parser"
+%define api.namespace { Fortran }
+%define parser_class_name { Parser }
 
 %code requires {
     namespace Fortran {
@@ -21,7 +21,7 @@
     # endif
 }
 
-/* Parameters for the yylex function */
+/* Parameters given to the Parser constructor */
 %parse-param { Scanner &scanner }
 %parse-param { Driver &driver }
 
@@ -31,7 +31,7 @@
     #include <fstream>
 
     /* Include for all driver functions */
-    #include "driver.hpp"
+    #include "include/f_driver.hpp"
 
     #undef yylex
     #define yylex scanner.yylex
@@ -61,6 +61,9 @@
 %token PRINT         "print keyword"
 %token READ          "read keyword"
 %token CALL          "call keyword"
+%token ERR           "error"
+%token EOL           "end of line"
+%token END 0         "end of file"
 
 %token SUM           "+"
 %token SUB           "-"
@@ -78,6 +81,11 @@
 %token COMMA         ","
 %token LP            "("
 %token RP            ")"
+
+%token <int> INT            "integer number"
+%token <float> FLOAT        "number number"
+%token <std::string> ID     "id"
+%token <std::string> STRING "string"
 
 %locations
 
@@ -98,15 +106,15 @@ MainProgram
     ;
 
 Subroutine
-    : SubroutinePrefix "(" ParameterList ")" Body SubroutineSuffix
+    : SubroutinePrefix LP ParameterList RP Body SubroutineSuffix
     ;
 
 Function
-    : FunctionPrefix "(" ParameterList ")" Body FunctionSuffix
+    : FunctionPrefix LP ParameterList RP Body FunctionSuffix
     ;
 
 MainProgramPrefix
-    : "PROGRAM" Name
+    : "PROGRAM" ID
     ;
 
 MainProgramSuffix
@@ -114,7 +122,7 @@ MainProgramSuffix
     ;
 
 SubroutinePrefix
-    : "SUBROUTINE" Name
+    : "SUBROUTINE" ID
     ;
 
 SubroutineSuffix
@@ -122,20 +130,16 @@ SubroutineSuffix
     ;
 
 FunctionPrefix
-    : Type "FUNCTION" Name
+    : Type "FUNCTION" ID
     ;
 
 FunctionSuffix
     : "RETURN" "END"
     ;
 
-Name
-    : Letter
-    | Name Letter
-    ;
-
-Letter
-    : [a-zA-Z]
+ParameterList
+    : ID
+    | ParameterList "," ID
     ;
 
 Body
@@ -174,26 +178,12 @@ IdentifierDeclarationList
     ;
 
 IdentifierDeclaration
-    : Identifier
-    | Identifier "(" Integer ")"
-    ;
-
-Identifier
-    : Letter
-    | Identifier Alphanumeric
-    ;
-
-Alphanumeric
-    : Letter
-    | Digit
-    ;
-
-Digit
-    : [0-9]
+    : ID
+    | ID LP INT RP
     ;
 
 ParameterStatement
-    : "PARAMETER" "(" ConstantList ")"
+    : "PARAMETER" LP ConstantList RP
     ;
 
 ConstantList
@@ -202,12 +192,17 @@ ConstantList
     ;
 
 ConstantDefinition
-    : Identifier "=" ConstantExpression
+    : ID "=" ConstantExpression
     ;
 
 ConstantExpression
     : Number
-    | StringLiteral
+    | STRING
+    ;
+
+Number
+    : INT
+    | FLOAT
     ;
 
 ExecutableConstruct
@@ -228,8 +223,8 @@ Statement
     ;
 
 AssignmentStatement
-    : Identifier "=" Expression
-    | Identifier "(" Integer ")" "=" Expression
+    : ID "=" Expression
+    | ID LP INT RP "=" Expression
     ;
 
 Expression
@@ -245,10 +240,10 @@ Factor
     ;
 
 Term
-    : "(" Expression ")"
-    | Identifier "(" ExpressionList ")"
-    | Identifier "(" ")"
-    | Identifier
+    : LP Expression RP
+    | ID LP ExpressionList RP
+    | ID LP RP
+    | ID
     | Number
     | "-" Term
     ;
@@ -256,22 +251,6 @@ Term
 ExpressionList
     : Expression
     | ExpressionList "," Expression
-    ;
-
-Number
-    : Integer
-    | Real
-    ;
-
-Integer
-    : Digit
-    | Integer Digit
-    ;
-
-Real
-    : Integer '.' Integer
-    | Integer '.'
-    | '.' Integer 
     ;
 
 PrintStatement
@@ -284,27 +263,12 @@ PrintList
     ;
 
 PrintItem
-    : StringLiteral
+    : STRING
     | Expression
     ;
 
-StringLiteral
-    : "'' Text "''
-    ;
-
-Text
-    : TextChar
-    | TextChar Text
-    ;
-
-TextChar
-    : [\x20-\x26]
-    | [\x28-\x7E]
-    | [\xA]
-    ;
-
 ReadStatement
-    : "READ" IdentifierList
+    : "READ" ParameterList
     ;
 
 IfConstruct
@@ -321,7 +285,7 @@ ThenConstruct
     | Statement ElseConstruct
     ;
 
-EndIFStatement
+EndIfStatement
     : "ENDIF"
     ;
 
@@ -339,7 +303,7 @@ ElseConstruct
 
 LogicalExpression
     : Expression Op Expression
-     LogicalConstant
+    | LogicalConstant
     ;
 
 Op
@@ -367,8 +331,8 @@ DoStatement
     ;
 
 DoLoopControl
-    : Identifier "=" Expression "," Expression
-    | Identifier "=" Expression "," Expression "," Expression
+    : ID "=" Expression "," Expression
+    | ID "=" Expression "," Expression "," Expression
     ;
 
 EndDoStatement
@@ -388,8 +352,8 @@ EndWhileStatement
     ;
 
 CallStatement
-    : "CALL" Name "(" IdentifierList ")"
-    | "CALL" Name "(" ")"
+    : "CALL" ID LP ParameterList RP
+    | "CALL" ID LP RP
     ;
 
 CycleStatement
@@ -402,19 +366,6 @@ ExitStatement
 
 %%
 
-void Fortran::Parser::error( const location_type &l, const std::string &err_message ) {
-   std::cerr << "Error: " << err_message << " at " << l << "\n";
+void Fortran::Parser::error(const location_type &loc, const std::string &err_message) {
+   std::cerr << "Error: " << err_message << " at " << loc << "\n";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

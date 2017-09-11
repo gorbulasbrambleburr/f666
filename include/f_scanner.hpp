@@ -5,8 +5,8 @@
 #include <FlexLexer.h>
 #endif
 
-#include "f_parser.tab.hh"
-#include "location.hh"
+#include "../parser.tab.h"
+#include "../location.hh"
 
 namespace Fortran {
 
@@ -18,13 +18,13 @@ namespace Fortran {
 
         using FlexLexer::yylex;
 
-        virtual int yylex(Fortran::Parser::semantinc_type * const lval,
+        virtual int yylex(Fortran::Parser::semantic_type * const lval,
                           Fortran::Parser::location_type *location);
         // YY_DECL defined in scanner.l
         // Method body created by flex in scanner.yy.cc
 
     private:
-        Fortran::Parser::semantinc_type *yylval = nullptr;
+        Fortran::Parser::semantic_type *yylval = nullptr;
         Fortran::Parser::location_type *loc = nullptr;
     };
 }

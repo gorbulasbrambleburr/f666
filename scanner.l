@@ -1,22 +1,22 @@
 %{
-#include <string>
+    #include <string>
 
-/* Implementation of yyFlexScanner */ 
-#include "f_scanner.hpp"
-#undef  YY_DECL
-#define YY_DECL int Fortran::Scanner::yylex(Fortran::Parser::semantic_type * const lval,
-                                            Fortran::Parser::location_type *location )
+    /* Implementation of yyFlexScanner */ 
+    #include "include/f_scanner.hpp"
+    #undef  YY_DECL
+    #define YY_DECL int Fortran::Scanner::yylex(Fortran::Parser::semantic_type * const lval,\
+                                                Fortran::Parser::location_type *location )
 
-using token = Fortran::Parser::token;
+    using token = Fortran::Parser::token;
 
-/* Default is YY_NULL */
-#define yyterminate() return( token::END )
+    /* Default is YY_NULL */
+    #define yyterminate() return( token::END )
 
-/* msvc2010 requires that we exclude this header file. */
-#define YY_NO_UNISTD_H
+    /* msvc2010 requires that we exclude this header file. */
+    #define YY_NO_UNISTD_H
 
-/* update location on matching */
-#define YY_USER_ACTION loc->step(); loc->columns(yyleng);
+    /* update location on matching */
+    #define YY_USER_ACTION loc->step(); loc->columns(yyleng);
 
 %}
 
@@ -28,7 +28,8 @@ using token = Fortran::Parser::token;
 
 letter      [A-Za-z]
 digit       [0-9]
-number      [-+]?({digit}*\.?{digit}+|{digit}+\.)([E]?[-+]?{digit}+)?
+integer     [-+]?{digit}+
+real        [-+]?({digit}*\.?{digit}+|{digit}+\.)([E]?[-+]?{digit}+)?
 id          {letter}({letter}|{digit}|_)*
 sliteral    \'([^\\\']|\\.)*\'
 comment     "//".*\n
@@ -86,21 +87,27 @@ ws          [ \t]+
 {sliteral}  { 
               auto content = std::string(yytext);
               content = content.substr(1, content.size() - 2);
-              yylval->build< std::string >( content );
-              return( token::STRING_LITERAL );
+              yylval->build<std::string>( content );
+              return( token::STRING );
             }
 
 {id}        {
-              yylval->build< std::string >( yytext );
+              yylval->build<std::string>(yytext);
               return( token::ID );
             }
 
-{number}    { return( token::NUM ); }
+{integer}   { 
+              yylval->build<int>(std::atoi(yytext));
+              return( token::INT );
+            }
+
+{real}      { 
+              yylval->build<float>(std::atof(yytext));
+              return( token::FLOAT );
+            }
 
 \n          { loc->lines(); return( token::EOL); }
 
 .           { return( token::ERR ); }
-
-<<EOF>>     { return yyterminate(); }
 
 %%

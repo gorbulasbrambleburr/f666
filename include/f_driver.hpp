@@ -6,7 +6,7 @@
 #include <istream>
 
 #include "f_scanner.hpp"
-#include "f_parser.tab.hh"
+#include "../parser.tab.h"
 
 namespace Fortran {
 
@@ -21,12 +21,6 @@ namespace Fortran {
         * @param filename - valid string with input file
         */
         void parse(const char *filename);
-
-        /** 
-        * parse - parse from a c++ input stream
-        * @param is - std::istream&, valid input stream
-        */
-        void parse(std::istream &iss);
 
         void add_upper();
         void add_lower();
