@@ -1,11 +1,13 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include "AST.hpp"
 
 class ExecutableProgram : public AST {
 public:
-    ExecutableProgram();
+    ExecutableProgram(node_ptrs subprograms)
+        : _subprograms(subprograms) {
+    }
     virtual ~ExecutableProgram();
     virtual std::string print() const {
         std::string code = "ExecutableProgram\n";
@@ -17,4 +19,6 @@ public:
         return code;
     }
 
+private:
+    node_ptrs _subprograms;
 };

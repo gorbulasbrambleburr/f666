@@ -7,37 +7,25 @@
 
 #include "f_scanner.hpp"
 #include "../parser.tab.h"
+#include "ast/AST.hpp"
 
 namespace Fortran {
 
     class Driver {
-      public:
+    public:
         Driver() = default;
 
         virtual ~Driver();
 
-        /** 
-        * parse - parse from a file
-        * @param filename - valid string with input file
-        */
         void parse(const char *filename);
 
-        void add_upper();
-        void add_lower();
-        void add_word(const std::string &word);
-        void add_newline();
-        void add_char();
+        node_ptr type(ast::type type);
+        node_ptr identifier(std::string id);
 
         std::ostream& print(std::ostream &stream);
 
-      private:
+    private:
         void parse_helper(std::istream &stream);
-
-        std::size_t  chars = 0;
-        std::size_t  words = 0;
-        std::size_t  lines = 0;
-        std::size_t  uppercase = 0;
-        std::size_t  lowercase = 0;
 
         Parser *parser = nullptr;
         Scanner *scanner = nullptr;

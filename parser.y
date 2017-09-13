@@ -89,6 +89,7 @@
 %token <std::string> STRING
 
 %type <AST> ExecutableProgram
+%type <AST> Subprogram
 %type <AST> MainProgram
 %type <AST> Subroutine
 %type <AST> Function
@@ -100,8 +101,8 @@
 %%
 
 ExecutableProgram
-    : MainProgram                                          { $$ = $1; }
-    | ExecutableProgram Subprogram                         { $$ = $1; }
+    : MainProgram                                          { $$ = driver.executableProgram($1, nullptr); }
+    | ExecutableProgram Subprogram                         { $$ = driver.executableProgram($1, $2); }
     ;
 
 Subprogram
@@ -120,11 +121,11 @@ Subroutine
 
 Function
     : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function($1, $3, $5, $7); }
-    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function($1, $3, $6); }
+    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function($1, $3, nullptr, $6); }
     ;
 
 ParameterList
-    : Parameter                                            { $$ = driver.parameterList($1); }
+    : Parameter                                            { $$ = driver.parameterList(nullptr, $1); }
     | ParameterList COMMA Parameter                        { $$ = driver.parameterList($1, $3); }
     ;
 

@@ -1,17 +1,16 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include "Types.hpp"
+#include "AST.hpp"
 
-class Function : public AST {
+class MainProgram : public AST {
 public:
-    Function(ast::type type, std::string name)
-        : _type(type), _name(name) {
+    MainProgram(std::string name)
+        : _name(name) {
     }
-    virtual ~Function();
+    virtual ~MainProgram();
     virtual std::string print() const {
-        std::string code = "Function (name = " + _name + ", type = " + _type + ")\n";
+        std::string code = "MainProgram (" + _name + ")\n";
         for (AST *child : children) {
             if (child != nullptr) {
                 code += " " + child->print() + "\n";
@@ -22,5 +21,4 @@ public:
 
 private:
     std::string _name;
-    ast::type _type;
 };

@@ -1,16 +1,17 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include "AST.hpp"
+
 
 class Subroutine : public AST {
 public:
-    Subroutine(std::string name)
-        : _name(name) {
+    Subroutine(node_ptr id, node_ptr params, node_ptr body)
+        : _id(id), _params(params), _body(body) {
     }
     virtual ~Subroutine();
     virtual std::string print() const {
-        std::string code = "Subroutine (" + _name + ")\n";
+        std::string code = "- Subroutine\n";
         for (AST *child : children) {
             if (child != nullptr) {
                 code += " " + child->print() + "\n";
@@ -20,5 +21,7 @@ public:
     }
 
 private:
-    std::string _name;
+    node_ptr _id;
+    node_ptr _params;
+    node_ptr _body;
 };
