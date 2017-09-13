@@ -10,7 +10,7 @@
     using token = Fortran::Parser::token;
 
     /* Default is YY_NULL */
-    #define yyterminate() return( token::END )
+    #define yyterminate() return( token::EOF )
 
     /* msvc2010 requires that we exclude this header file. */
     #define YY_NO_UNISTD_H
@@ -48,8 +48,8 @@ ws          [ \t]+
 "RETURN"      { return( token::RETURN ); }
 "END"         { return( token::END ); }
 "PARAMETER"   { return( token::PARAMETER ); }
-"INTEGER"     { return( token::INTEGER ); }
-"REAL"        { return( token::REAL ); }
+"INTEGER"     { return( token::TYPE_INTEGER ); }
+"REAL"        { return( token::TYPE_REAL ); }
 "CYCLE"       { return( token::CYCLE ); }
 "EXIT"        { return( token::EXIT ); }
 "IF"          { return( token::IF ); }
@@ -87,27 +87,27 @@ ws          [ \t]+
 {sliteral}  { 
               auto content = std::string(yytext);
               content = content.substr(1, content.size() - 2);
-              yylval->build<std::string>( content );
+              yylval->build<std::string>(content);
               return( token::STRING );
             }
 
 {id}        {
               yylval->build<std::string>(yytext);
-              return( token::ID );
+              return(token::ID);
             }
 
 {integer}   { 
               yylval->build<int>(std::atoi(yytext));
-              return( token::INT );
+              return(token::INTEGER);
             }
 
 {real}      { 
               yylval->build<float>(std::atof(yytext));
-              return( token::FLOAT );
+              return(token::REAL);
             }
 
 \n          { loc->lines(); return( token::EOL); }
 
-.           { return( token::ERR ); }
+.           { return(token::ERR); }
 
 %%

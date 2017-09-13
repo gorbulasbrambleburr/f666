@@ -29,6 +29,7 @@
     #include <iostream>
     #include <cstdlib>
     #include <fstream>
+    #include "include/Types.hpp"
 
     /* Include for all driver functions */
     #include "include/f_driver.hpp"
@@ -40,169 +41,158 @@
 %define api.value.type variant
 %define parse.assert
 
-%token PROGRAM       "program keyword"
-%token SUBROUTINE    "subroutine  keyword"
-%token FUNCTION      "function  keyword"
-%token STOP          "stop keyword"
-%token RETURN        "return keyword"
-%token END           "end keyword"
-%token PARAMETER     "parameter"
-%token INTEGER       "integer keyword"
-%token REAL          "real keyword"
-%token CYCLE         "cycle keyword"
-%token EXIT          "exit keyword"
-%token IF            "if keyword"
-%token ELSE          "else keyword"
-%token ELSEIF        "elseif keyword"
-%token ENDIF         "endif keyword"
-%token WHILE         "while keyword"
-%token DO            "do keyword"
-%token ENDDO         "enddo keyword"
-%token PRINT         "print keyword"
-%token READ          "read keyword"
-%token CALL          "call keyword"
-%token ERR           "error"
-%token EOL           "end of line"
-%token END 0         "end of file"
+%token PROGRAM
+%token SUBROUTINE
+%token FUNCTION
+%token STOP
+%token RETURN
+%token END
+%token PARAMETER
+%token TYPE_INTEGER
+%token TYPE_REAL
+%token CYCLE
+%token EXIT
+%token IF
+%token ELSE
+%token ELSEIF
+%token ENDIF
+%token WHILE
+%token DO
+%token ENDDO
+%token PRINT
+%token READ
+%token CALL
+%token ERR
+%token EOL
+%token EOF 0
 
-%token SUM           "+"
-%token SUB           "-"
-%token TIMES         "*"
-%token DIV           "/"
-%token ASSIGN        "="
-%token EQ            ".EQ."
-%token NE            ".NE."
-%token GT            ".GT."
-%token GE            ".GE."
-%token LT            ".LT."
-%token LE            ".LE."
-%token TRUE          ".TRUE."
-%token FALSE         ".FALSE."
-%token COMMA         ","
-%token LP            "("
-%token RP            ")"
+%token ADD
+%token SUB
+%token TIMES
+%token DIV
+%token ASSIGN
+%token EQ
+%token NE
+%token GT
+%token GE
+%token LT
+%token LE
+%token TRUE
+%token FALSE
+%token COMMA
+%token LP
+%token RP
 
-%token <int> INT            "integer number"
-%token <float> FLOAT        "number number"
-%token <std::string> ID     "id"
-%token <std::string> STRING "string"
+%token <ast::type> INTEGER
+%token <ast::type> REAL
+%token <std::string> ID
+%token <std::string> STRING
+
+%type <AST> ExecutableProgram
+%type <AST> MainProgram
+%type <AST> Subroutine
+%type <AST> Function
+
+%start ExecutableProgram
 
 %locations
 
 %%
 
 ExecutableProgram
-    : MainProgram
-    | ExecutableProgram Subprogram
+    : MainProgram                                          { $$ = $1; }
+    | ExecutableProgram Subprogram                         { $$ = $1; }
     ;
 
 Subprogram
-    : Subroutine
-    | Function
+    : Subroutine                                           { $$ = $1; }
+    | Function                                             { $$ = $1; }
     ;
 
 MainProgram
-    : MainProgramPrefix Body MainProgramSuffix
+    : PROGRAM ID Body STOP END                             { $$ = driver.mainProgram($2, $3); }
     ;
 
 Subroutine
-    : SubroutinePrefix LP ParameterList RP Body SubroutineSuffix
+    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.subroutine($2, $4, $6); }
+    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.subroutine($2, $5); }
     ;
 
 Function
-    : FunctionPrefix LP ParameterList RP Body FunctionSuffix
-    ;
-
-MainProgramPrefix
-    : "PROGRAM" ID
-    ;
-
-MainProgramSuffix
-    : "STOP" "END"
-    ;
-
-SubroutinePrefix
-    : "SUBROUTINE" ID
-    ;
-
-SubroutineSuffix
-    : "RETURN" "END"
-    ;
-
-FunctionPrefix
-    : Type "FUNCTION" ID
-    ;
-
-FunctionSuffix
-    : "RETURN" "END"
+    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function($1, $3, $5, $7); }
+    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function($1, $3, $6); }
     ;
 
 ParameterList
-    : ID
-    | ParameterList "," ID
+    : Parameter                                            { $$ = driver.parameterList($1); }
+    | ParameterList COMMA Parameter                        { $$ = driver.parameterList($1, $3); }
     ;
 
-Body
-    : BodyConstruct
-    | Body BodyConstruct
+Parameter
+    : ID                                                   { $$ = driver.identifier($1); }
+    ;
+
+Type
+    : INTEGER                                              { $$ = driver.type($1); }
+    | REAL                                                 { $$ = driver.type($1); }
+
+Body: %empty                                               { $$ = nullptr; }
+    ;
+
+/*
+    : BodyConstruct                                        { $$ = $1; }
+    | Body BodyConstruct                                   { $$ = $3; } 
     ;
 
 BodyConstruct
-    : SpecificationConstruct
-    | ExecutableConstruct
+    : SpecificationConstruct                               { $$ = driver.specificationConstruct($1); }
+    | ExecutableConstruct                                  { $$ = driver.executableConstruct($1); }
     ;
 
 SpecificationConstruct
-    : DeclarationConstruct
-    | ParameterStatement
+    : DeclarationConstruct                                 { $$ = $1; }
+    | ParameterStatement                                   { $$ = $1; }
     ;
 
 DeclarationConstruct
-    : Declaration
-    | DeclarationConstruct Declaration
+    : Declaration                                          { $$ = driver.declarationConstruct($1); }
+    | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, $2); }
     ;
 
 Declaration
-    : Type IdentifierDeclarationList
-
-Type
-    : "INTEGER"
-    | "REAL"
-    | "CHARACTER"
-    | "LOGICAL"
-    ;
+    : Type IdentifierDeclarationList                       { $$ = driver.declaration($1,$2); }
 
 IdentifierDeclarationList
-    : IdentifierDeclaration
-    | IdentifierDeclarationList "," IdentifierDeclaration
+    : IdentifierDeclaration                                  { $$ = $1; }
+    | IdentifierDeclarationList COMMA IdentifierDeclaration  { $$ = driver.identifierDeclarationList($1, $3); }
     ;
 
 IdentifierDeclaration
-    : ID
-    | ID LP INT RP
+    : ID                                                   { $$ = driver.identifier($1); }
+    | ID LP INT RP                                         { $$ = driver.arrayIdentifier($1, $3); }
     ;
 
 ParameterStatement
-    : "PARAMETER" LP ConstantList RP
+    : PARAMETER LP ConstantList RP                         { $$ = driver.parameterStatement($3); }
     ;
 
 ConstantList
-    : ConstantDefinition
-    | ConstantList "," ConstantDefinition
+    : ConstantDefinition                                   { $$ = driver.constantList($1); }
+    | ConstantList COMMA ConstantDefinition                { $$ = driver.constantList($1, $3); }
     ;
 
 ConstantDefinition
-    : ID "=" ConstantExpression
+    : ID ASSIGN ConstantExpression                         { $$ = driver.constantDefinition($1, $3); }
     ;
 
 ConstantExpression
-    : Number
-    | STRING
+    : Number                                               { $$ = driver.constantExpression($1); }
+    | STRING                                               { $$ = driver.stringLiteral($1); }
     ;
 
 Number
-    : INT
-    | FLOAT
+    : INT                                                  { $$ = driver.intNumeber($1); }
+    | FLOAT                                                { $$ = driver.floatNumber($1); }
     ;
 
 ExecutableConstruct
@@ -363,7 +353,7 @@ CycleStatement
 ExitStatement
     : "EXIT"
     ;
-
+*/
 %%
 
 void Fortran::Parser::error(const location_type &loc, const std::string &err_message) {
