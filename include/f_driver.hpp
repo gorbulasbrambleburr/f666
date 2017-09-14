@@ -19,7 +19,7 @@ namespace Fortran {
 
         void parse(const char *filename);
 
-        node_ptr type(ast::type type);
+        node_ptr createType(ast::type type);
         node_ptr identifier(std::string id);
 
         std::ostream& print(std::ostream &stream);

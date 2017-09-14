@@ -9,8 +9,8 @@ public:
     Subroutine(node_ptr id, node_ptr params, node_ptr body)
         : _id(id), _params(params), _body(body) {
     }
-    virtual ~Subroutine();
-    virtual std::string print() const {
+    ~Subroutine();
+    std::string print() const {
         std::string code = "- Subroutine\n";
         for (AST *child : children) {
             if (child != nullptr) {

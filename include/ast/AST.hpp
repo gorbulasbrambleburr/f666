@@ -4,8 +4,8 @@
 #include <vector>
 #include "Types.hpp"
 
-#define std::unique_ptr<AST> node_ptr
-#define std::vector<node_ptr> node_ptrs
+using node_ptr = std::unique_ptr<AST>;
+using node_ptrs = std::vector<node_ptr>;
 
 class AST {
 public:

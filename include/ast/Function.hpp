@@ -8,8 +8,8 @@ public:
     Function(node_ptr type, node_ptr id, node_ptr params, node_ptr body)
         : _type(type), _id(id), _params(params), _body(body) {
     }
-    virtual ~Function();
-    virtual std::string print() const {
+    ~Function();
+    std::string print() const {
         std::string code = "- Function\n";
         for (AST *child : children) {
             if (child != nullptr) {

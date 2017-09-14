@@ -11,6 +11,8 @@
         class Scanner;
     }
 
+    using std::move;
+
     // The following definitions are missing when %locations isn't used
     # ifndef YY_NULLPTR
     #   if defined __cplusplus && 201103L <= __cplusplus
@@ -83,16 +85,17 @@
 %token LP
 %token RP
 
-%token <ast::type> INTEGER
-%token <ast::type> REAL
+%token <int> INTEGER
+%token <float> REAL
 %token <std::string> ID
 %token <std::string> STRING
 
-%type <AST> ExecutableProgram
-%type <AST> Subprogram
-%type <AST> MainProgram
-%type <AST> Subroutine
-%type <AST> Function
+%type <node_ptr> ExecutableProgram
+%type <node_ptr> Subprogram
+%type <node_ptr> MainProgram
+%type <node_ptr> Subroutine
+%type <node_ptr> Function
+%type <node_ptrs> ParameterList
 
 %start ExecutableProgram
 
@@ -101,48 +104,49 @@
 %%
 
 ExecutableProgram
-    : MainProgram                                          { $$ = driver.executableProgram($1, nullptr); }
-    | ExecutableProgram Subprogram                         { $$ = driver.executableProgram($1, $2); }
+    : ExecutableProgram Subprogram                         { $$ = move($1); $$->addChild(move($2)); }
+    | Subprogram                                           { $$ = driver.root(); $$->addChild(move($1)); }
     ;
 
 Subprogram
-    : Subroutine                                           { $$ = $1; }
-    | Function                                             { $$ = $1; }
+    : MainProgram                                          { $$ = move($1); }
+    | Subroutine                                           { $$ = move($1); }
+    | Function                                             { $$ = move($1); }
     ;
 
 MainProgram
-    : PROGRAM ID Body STOP END                             { $$ = driver.mainProgram($2, $3); }
+    : PROGRAM ID Body STOP END                             { $$ = driver.mainProgram(move($2), move($3)); }
     ;
 
 Subroutine
-    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.subroutine($2, $4, $6); }
-    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.subroutine($2, $5); }
+    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.subroutine(move($2), move($4), move($6); }
+    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.subroutine(move($2), {}, $5); }
     ;
 
 Function
-    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function($1, $3, $5, $7); }
-    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function($1, $3, nullptr, $6); }
+    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function(move($1), move($3), move($5), move($7); }
+    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function(move($1), move($3), {}, move($6); }
     ;
 
 ParameterList
-    : Parameter                                            { $$ = driver.parameterList(nullptr, $1); }
-    | ParameterList COMMA Parameter                        { $$ = driver.parameterList($1, $3); }
+    : Parameter                                            { $$ = driver.parameterList(move($1)); }
+    | ParameterList COMMA Parameter                        { $$ = move($1); $$.emplace_back(move($3)); }
     ;
 
 Parameter
-    : ID                                                   { $$ = driver.identifier($1); }
+    : ID                                                   { $$ = driver.identifier(move($1)); }
     ;
 
 Type
-    : INTEGER                                              { $$ = driver.type($1); }
-    | REAL                                                 { $$ = driver.type($1); }
+    : INTEGER                                              { $$ = driver.createType(move($1)); }
+    | REAL                                                 { $$ = driver.createType(move($1)); }
 
 Body: %empty                                               { $$ = nullptr; }
     ;
 
 /*
     : BodyConstruct                                        { $$ = $1; }
-    | Body BodyConstruct                                   { $$ = $3; } 
+    | Body BodyConstruct                                   { $$ = move($3); }
     ;
 
 BodyConstruct
@@ -157,7 +161,7 @@ SpecificationConstruct
 
 DeclarationConstruct
     : Declaration                                          { $$ = driver.declarationConstruct($1); }
-    | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, $2); }
+    | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, move($2)); }
     ;
 
 Declaration

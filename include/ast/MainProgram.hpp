@@ -8,8 +8,8 @@ public:
     MainProgram(std::string name)
         : _name(name) {
     }
-    virtual ~MainProgram();
-    virtual std::string print() const {
+    ~MainProgram();
+    std::string print() const {
         std::string code = "MainProgram (" + _name + ")\n";
         for (AST *child : children) {
             if (child != nullptr) {
