@@ -370,8 +370,10 @@ ExitStatement
     : "EXIT"
     ;
 */
+
 %%
 
-void Fortran::Parser::error(const location_type &loc, const std::string &err_message) {
-   std::cerr << "Error: " << err_message << " at " << loc << "\n";
+void Fortran::Parser::error(const location &loc, const std::string &message) {
+   //std::cerr << "Error: " << message << " at " << loc << "\n";
+   std::cerr << "Error: " << message << " at " << driver.location() << "\n";
 }
