@@ -1,30 +1,31 @@
 %{
+    #include <iostream>
+    #include <cstdlib>
+    #include "include/f_scanner.hpp"
+    #include "include/f_driver.hpp"
+    #include "parser.hpp"
+    #include "location.hh"
+
     #include <string>
 
-    /* Implementation of yyFlexScanner */ 
-    #include "include/f_scanner.hpp"
-    #undef  YY_DECL
-    #define YY_DECL int Fortran::Scanner::yylex(Fortran::Parser::semantic_type * const lval,\
-                                                Fortran::Parser::location_type *location )
+    // Original yyterminate() macro returns int. Since we're using Bison 3 variants
+    // as tokens, we must redefine it to change type from `int` to `Parser::semantic_type`
+    #define yyterminate() Fortran::Parser::make_END(EzAquarii::location());
+
+    // This will track current scanner location.
+    // Action is called when length of the token is known.
+    #define YY_USER_ACTION m_driver.increaseLocation(yyleng);
 
     using token = Fortran::Parser::token;
-
-    /* Default is YY_NULL */
-    #define yyterminate() return( token::EOF )
-
-    /* msvc2010 requires that we exclude this header file. */
-    #define YY_NO_UNISTD_H
-
-    /* update location on matching */
-    #define YY_USER_ACTION loc->step(); loc->columns(yyleng);
 
 %}
 
 %option debug
 %option nodefault
-%option yyclass="Fortran::Scanner"
 %option noyywrap
 %option c++
+%option yyclass="Scanner"
+%option prefix="Fortran_"
 
 letter      [A-Za-z]
 digit       [0-9]
@@ -109,5 +110,7 @@ ws          [ \t]+
 \n          { loc->lines(); return( token::EOL); }
 
 .           { return(token::ERR); }
+
+<<EOF>>     { return yyterminate(); }
 
 %%

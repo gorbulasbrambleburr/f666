@@ -1,31 +1,40 @@
 #ifndef __FSCANNER_HPP__
 #define __FSCANNER_HPP__
 
+/**
+ * Generated Flex class name is yyFlexLexer by default. If we want to use more flex-generated
+ * classes we should name them differently. See scanner.l prefix option.
+ * 
+ * Unfortunately the implementation relies on this trick with redefining class name
+ * with a preprocessor macro. See GNU Flex manual, "Generating C++ Scanners" section
+ */
 #if ! defined(yyFlexLexerOnce)
+#undef yyFlexLexer
+#define yyFlexLexer Fortran_FlexLexer // the trick with prefix; no namespace here :(
 #include <FlexLexer.h>
 #endif
 
-#include "../parser.tab.h"
-#include "../location.hh"
+// Scanner method signature is defined by this macro. Original yylex() returns int.
+// Since Bison 3 uses symbol_type, we must change returned type. We also rename it
+// to something sane, since you cannot overload return type.
+#undef YY_DECL
+#define YY_DECL Fortran::Parser::symbol_type Fortran::Scanner::getNextToken()
+
+#include "parser.hpp" // this is needed for symbol_type
+//#include "../location.hh"
 
 namespace Fortran {
 
+    class Driver;
+
     class Scanner : public yyFlexLexer {
     public:
-        Scanner(std::istream *in) : yyFlexLexer(in) {
-            loc = new Fortran::Parser::location_type();
-        }
-
-        using FlexLexer::yylex;
-
-        virtual int yylex(Fortran::Parser::semantic_type * const lval,
-                          Fortran::Parser::location_type *location);
-        // YY_DECL defined in scanner.l
-        // Method body created by flex in scanner.yy.cc
+        Scanner(Driver &driver) : m_driver(driver) {}
+        virtual ~Scanner() {}
+        virtual Fortran::Parser::symbol_type getNextToken();
 
     private:
-        Fortran::Parser::semantic_type *yylval = nullptr;
-        Fortran::Parser::location_type *loc = nullptr;
+        Driver m_driver;
     };
 }
 

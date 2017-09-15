@@ -105,7 +105,7 @@
 
 ExecutableProgram
     : ExecutableProgram Subprogram                         { $$ = move($1); $$->addChild(move($2)); }
-    | Subprogram                                           { $$ = driver.root(); $$->addChild(move($1)); }
+    | Subprogram                                           { $$ = driver.createNode<ExecutableProgram>(); $$->addChild(move($1)); }
     ;
 
 Subprogram
@@ -115,33 +115,33 @@ Subprogram
     ;
 
 MainProgram
-    : PROGRAM ID Body STOP END                             { $$ = driver.mainProgram(move($2), move($3)); }
+    : PROGRAM ID Body STOP END                             { $$ = driver.createNode<MainProgram>(move($2), move($3)); }
     ;
 
 Subroutine
-    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.subroutine(move($2), $4, move($6); }
-    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.subroutine(move($2), {}, move($5); }
+    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.createNode<Subroutine>(move($2), $4, move($6); }
+    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.createNode<Subroutine>(move($2), {}, move($5); }
     ;
 
 Function
-    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function(move($1), move($3), $5, move($7); }
-    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function(move($1), move($3), {}, move($6); }
+    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.createNode<Function>(move($1), move($3), $5, move($7); }
+    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.createNode<Function>(move($1), move($3), {}, move($6); }
     ;
 
 ParameterList
-    : Parameter                                            { $$ = driver.parameterList(move($1)); }
+    : Parameter                                            { $$ = driver.createNodeList(move($1)); }
     | ParameterList COMMA Parameter                        { $$ = move($1); $$.emplace_back(move($3)); }
     ;
 
 Parameter
-    : ID                                                   { $$ = driver.identifier(move($1)); }
+    : ID                                                   { $$ = driver.createNode<Identifier>(move($1)); }
     ;
 
 Type
-    : INTEGER                                              { $$ = driver.createType(move($1)); }
-    | REAL                                                 { $$ = driver.createType(move($1)); }
+    : INTEGER                                              { $$ = driver.createNode<Type>(move($1)); }
+    | REAL                                                 { $$ = driver.createNode<Type>(move($1)); }
 
-Body: %empty                                               { $$ = driver.body(std::nullptr_t); }
+Body: %empty                                               { $$ = driver.createNode<Body>(std::nullptr_t); }
     ;
 
 /*

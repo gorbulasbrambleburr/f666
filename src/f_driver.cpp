@@ -4,67 +4,35 @@
 
 #include "../include/f_driver.hpp"
 
-Fortran::Driver::~Driver() {
-    delete(scanner);
-    scanner = nullptr;
-    delete(parser);
-    parser = nullptr;
+Fortran::Driver::Driver() :
+    m_nodes(),
+    m_scanner(*this),
+    m_parser(_scanner, *this),
+    m_location(0) {
 }
 
-node_ptr Fortran::Driver::root() {
-    node_ptr node(new ExecutableProgram);
-    return node;
+template<typename NodeType, typename ...Args>
+node_ptr Fortran::Driver::createNode(Args&&... args) {
+    return node_ptr(new NodeType(std::forward<Args>(args)...));
 }
 
-node_ptr Fortran::Driver::mainProgram(node_ptr id, node_ptr body) {
-    node_ptr node(new MainProgram(std::move(id), std::move(body)));
-    return node;
+template<typename ...Args>
+node_ptrs Fortran::Driver::crateNodeList(Args&&... args) {
+    return node_ptrs(args...);
 }
 
-node_ptr Fortran::Driver::subroutine(node_ptr id, node_ptrs params, node_ptr body) {
-    node_ptr node(new Subroutine(std::move(id), params, std::move(body)));
-    return node;
-}
-
-node_ptr Fortran::Driver::function(node_ptr type, node_ptr id, node_ptrs params, node_ptr body) {
-    node_ptr node(new Function(std::move(type), std::move(id), params, std::move(body)));
-    return node;
-}
-
-node_ptrs Fortran::Driver::parameterList(node_ptr param) {
-    node_ptrs params;
-    params.emplace_back(param);
-    return params;
-}
-
-node_ptr Fortran::Driver::identifier(std::string id) {
-    node_ptr node(new Identifier(id));
-    return node;
-}
-
-node_ptr Fortran::Driver::createType(ast::type type) {
-    node_ptr node(new Type(type));
-    return node;
-}
-
-node_ptr Fortran::Driver::body(node_ptr construct) {
-    node_ptr node(new Body(construct));
-    return node;
-}
-
-void
-Fortran::Driver::parse(const char * const filename) {
-    assert(filename != nullptr);
+void Fortran::Driver::parse(const char * const filename) {
+    assert(filename != std::nullptr_t);
     std::ifstream in_file(filename);
     if (!in_file.good()) {
         exit(EXIT_FAILURE);
     }
+    m_location = 0;
     parse_helper(in_file);
     return;
 }
 
-void
-Fortran::Driver::parse_helper(std::istream &stream) {
+void Fortran::Driver::parse_helper(std::istream &stream) {
     delete(scanner);
     try {
         scanner = new Fortran::Scanner(&stream);
@@ -90,8 +58,20 @@ Fortran::Driver::parse_helper(std::istream &stream) {
     return;
 }
 
-std::ostream&
-Fortran::Driver::print(std::ostream &stream) {
-    stream << blue << "Results:\n";
-    return(stream);
+std::string Fortran::Driver::print() const {
+    std::stringstream s;
+    s << "Results:\n";
+    for (node_ptr child : node_ptrs) {
+        s << child->print() << std::endl;
+    }
+    return s.str();
+}
+
+void Fortran::Driver::increaseLocation(unsigned int loc) {
+    m_location += loc;
+    cout << "increaseLocation(): " << loc << ", total = " << m_location << endl;
+}
+
+unsigned int Fortran::Driver::location() const {
+    return m_location;
 }
