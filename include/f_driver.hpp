@@ -19,16 +19,22 @@ namespace Fortran {
 
         void parse(const char *filename);
 
-        node_ptr createType(ast::type type);
+        node_ptr root();
+        node_ptr mainProgram(node_ptr id, node_ptr body);
+        node_ptr subroutine(node_ptr id, node_ptrs params, node_ptr body);
+        node_ptr function(node_ptr type, node_ptr id, node_ptrs params, node_ptr body);
+        node_ptrs parameterList(node_ptr param);
         node_ptr identifier(std::string id);
+        node_ptr createType(ast::type type);
+        node_ptr body(node_ptr construct);
 
         std::ostream& print(std::ostream &stream);
 
     private:
         void parse_helper(std::istream &stream);
 
-        Parser *parser = nullptr;
-        Scanner *scanner = nullptr;
+        Parser *parser = std::nullptr_t;
+        Scanner *scanner = std::nullptr_t;
 
         /** define some pretty colors **/
         const std::string red  = "\033[1;31m";

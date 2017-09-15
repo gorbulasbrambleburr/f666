@@ -11,6 +11,47 @@ Fortran::Driver::~Driver() {
     parser = nullptr;
 }
 
+node_ptr Fortran::Driver::root() {
+    node_ptr node(new ExecutableProgram);
+    return node;
+}
+
+node_ptr Fortran::Driver::mainProgram(node_ptr id, node_ptr body) {
+    node_ptr node(new MainProgram(std::move(id), std::move(body)));
+    return node;
+}
+
+node_ptr Fortran::Driver::subroutine(node_ptr id, node_ptrs params, node_ptr body) {
+    node_ptr node(new Subroutine(std::move(id), params, std::move(body)));
+    return node;
+}
+
+node_ptr Fortran::Driver::function(node_ptr type, node_ptr id, node_ptrs params, node_ptr body) {
+    node_ptr node(new Function(std::move(type), std::move(id), params, std::move(body)));
+    return node;
+}
+
+node_ptrs Fortran::Driver::parameterList(node_ptr param) {
+    node_ptrs params;
+    params.emplace_back(param);
+    return params;
+}
+
+node_ptr Fortran::Driver::identifier(std::string id) {
+    node_ptr node(new Identifier(id));
+    return node;
+}
+
+node_ptr Fortran::Driver::createType(ast::type type) {
+    node_ptr node(new Type(type));
+    return node;
+}
+
+node_ptr Fortran::Driver::body(node_ptr construct) {
+    node_ptr node(new Body(construct));
+    return node;
+}
+
 void
 Fortran::Driver::parse(const char * const filename) {
     assert(filename != nullptr);

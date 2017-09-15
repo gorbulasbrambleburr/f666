@@ -12,6 +12,7 @@ public:
     AST();
     virtual ~AST();
     virtual std::string print() const;
+    virtual void addChild(node_ptr child);
 
 protected:
     std::vector<std::unique_ptr<AST>> children;

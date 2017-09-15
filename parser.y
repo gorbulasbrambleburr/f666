@@ -119,12 +119,12 @@ MainProgram
     ;
 
 Subroutine
-    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.subroutine(move($2), move($4), move($6); }
-    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.subroutine(move($2), {}, $5); }
+    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.subroutine(move($2), $4, move($6); }
+    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.subroutine(move($2), {}, move($5); }
     ;
 
 Function
-    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function(move($1), move($3), move($5), move($7); }
+    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.function(move($1), move($3), $5, move($7); }
     | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.function(move($1), move($3), {}, move($6); }
     ;
 
@@ -141,7 +141,7 @@ Type
     : INTEGER                                              { $$ = driver.createType(move($1)); }
     | REAL                                                 { $$ = driver.createType(move($1)); }
 
-Body: %empty                                               { $$ = nullptr; }
+Body: %empty                                               { $$ = driver.body(std::nullptr_t); }
     ;
 
 /*

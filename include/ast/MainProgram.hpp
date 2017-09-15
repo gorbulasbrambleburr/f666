@@ -5,8 +5,8 @@
 
 class MainProgram : public AST {
 public:
-    MainProgram(std::string name)
-        : _name(name) {
+    MainProgram(node_ptr id, node_ptr body)
+        : _id(id), _body(body) {
     }
     ~MainProgram();
     std::string print() const {
@@ -20,5 +20,6 @@ public:
     }
 
 private:
-    std::string _name;
+    ode_ptr _id;
+    node_ptr _body;
 };
