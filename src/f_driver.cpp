@@ -21,6 +21,21 @@ node_ptrs Fortran::Driver::crateNodeList(Args&&... args) {
     return node_ptrs(args...);
 }
 
+bool Fortran::Driver::createBoolean(const std::string &text) {
+    if (text == "TRUE") {
+        return true;
+    }
+    return false;
+}
+
+int Fortran::Driver::createInteger(const std::string &text) {
+    return std::atoi(text.c_str());
+}
+
+float Fortran::Driver::createReal(const std::string &text) {
+    return std::atof(text.c_str());
+}
+
 void Fortran::Driver::parse(const char * const filename) {
     assert(filename != std::nullptr_t);
     std::ifstream in_file(filename);

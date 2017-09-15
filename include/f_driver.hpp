@@ -31,6 +31,10 @@ namespace Fortran {
     public:
         Driver();
 
+        bool createBoolean(const std::string &);
+        bool createInteger(const std::string &);
+        bool createReal(const std::string &);
+
         void parse(const char *filename);
 
 

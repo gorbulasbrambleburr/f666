@@ -43,6 +43,7 @@
 %define api.value.type variant
 %define parse.assert
 
+// Control
 %token PROGRAM
 %token SUBROUTINE
 %token FUNCTION
@@ -50,8 +51,6 @@
 %token RETURN
 %token END
 %token PARAMETER
-%token TYPE_INTEGER
-%token TYPE_REAL
 %token CYCLE
 %token EXIT
 %token IF
@@ -65,28 +64,37 @@
 %token READ
 %token CALL
 %token ERR
-%token EOL
-%token EOF 0
 
-%token ADD
-%token SUB
+// Arithmetic operators
+%token PLUS
+%token MINUS
 %token TIMES
-%token DIV
+%token DIVIDE
 %token ASSIGN
+
+// Comparison
 %token EQ
 %token NE
 %token GT
 %token GE
 %token LT
 %token LE
+
+// Boolean
 %token TRUE
 %token FALSE
+
+// Other
+%token NEWLINE
+%token EOF 0
 %token COMMA
 %token LP
 %token RP
 
-%token <int> INTEGER
-%token <float> REAL
+// Types
+%token <Fortran::type> TYPE
+%token <Fortran::integer> INTEGER
+%token <Fortran::real> REAL
 %token <std::string> ID
 %token <std::string> STRING
 
@@ -95,6 +103,9 @@
 %type <node_ptr> MainProgram
 %type <node_ptr> Subroutine
 %type <node_ptr> Function
+%type <node_ptr> Parameter
+%type <node_ptr> Type
+%type <node_ptr> Body
 %type <node_ptrs> ParameterList
 
 %start ExecutableProgram

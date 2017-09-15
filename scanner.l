@@ -38,78 +38,193 @@ ws          [ \t]+
 
 %%
 
-%{          /** Code executed at the beginning of yylex **/
-            yylval = lval;
-%}
+"PROGRAM" {
+    return Fortran::Parser::make_PROGRAM(falk::location());
+}
 
-"PROGRAM"     { return( token::PROGRAM ); }
-"SUBROUTINE"  { return( token::SUBROUTINE ); }
-"FUNCTION"    { return( token::FUNCTION ); }
-"STOP"        { return( token::STOP ); }
-"RETURN"      { return( token::RETURN ); }
-"END"         { return( token::END ); }
-"PARAMETER"   { return( token::PARAMETER ); }
-"INTEGER"     { return( token::TYPE_INTEGER ); }
-"REAL"        { return( token::TYPE_REAL ); }
-"CYCLE"       { return( token::CYCLE ); }
-"EXIT"        { return( token::EXIT ); }
-"IF"          { return( token::IF ); }
-"ELSE"        { return( token::ELSE ); }
-"ELSEIF"      { return( token::ELSEIF ); }
-"ENDIF"       { return( token::ENDIF ); }
-"WHILE"       { return( token::WHILE ); }
-"DO"          { return( token::DO ); }
-"ENDDO"       { return( token::ENDDO ); }
-"PRINT"       { return( token::PRINT ); }
-"READ"        { return( token::READ ); }
-"CALL"        { return( token::CALL ); }
+"SUBROUTINE" {
+    return Fortran::Parser::make_SUBROUTINE(falk::location());
+}
 
-"+"           { return( token::SUM ); }
-"-"           { return( token::SUB ); }
-"*"           { return( token::TIMES ); }
-"/"           { return( token::DIV ); }
-"="           { return( token::ASSIGN ); }
-".EQ."        { return( token::EQ ); }
-".NE."        { return( token::NE ); }
-".GT."        { return( token::GT ); }
-".GE."        { return( token::GE ); }
-".LT."        { return( token::LT ); }
-".LE."        { return( token::LE ); }
-".TRUE."      { return( token::TRUE ); }
-".FALSE."     { return( token::FALSE ); }
-","           { return( token::COMMA ); }
-"("           { return( token::LP ); }
-")"           { return( token::RP ); }
+"FUNCTION" {
+    return Fortran::Parser::make_FUNCTION(falk::location());
+}
+
+"STOP" {
+    return Fortran::Parser::make_STOP(falk::location());
+}
+
+"RETURN" {
+    return Fortran::Parser::make_RETURN(falk::location());
+}
+
+"END" {
+    return Fortran::Parser::make_END(falk::location());
+}
+
+"PARAMETER" {
+    return Fortran::Parser::make_PARAMETER(falk::location());
+}
+
+"INTEGER" {
+    return Fortran::Parser::make_TYPE(ast::type::INTEGER, falk::location());
+}
+
+"REAL" {
+    return Fortran::Parser::make_TYPE(ast::type::REAL, falk::location());
+}
+
+"BOOLEAN" {
+    return Fortran::Parser::make_TYPE(ast::type::BOOLEAN, falk::location());
+}
+
+"CYCLE" {
+    return Fortran::Parser::make_CYCLE(falk::location());
+}
+
+"EXIT" {
+    return Fortran::Parser::make_EXIT(falk::location());
+}
+
+"IF" {
+    return Fortran::Parser::make_IF(falk::location());
+}
+
+"ELSE" {
+    return Fortran::Parser::make_ELSE(falk::location());
+}
+
+"ELSEIF" {
+    return Fortran::Parser::make_ELSEIF(falk::location());
+}
+
+"ENDIF" {
+    return Fortran::Parser::make_ENDIF(falk::location());
+}
+
+"WHILE" {
+    return Fortran::Parser::make_WHILE(falk::location());
+}
+
+"DO" {
+    return Fortran::Parser::make_DO(falk::location());
+}
+
+"ENDDO" {
+    return Fortran::Parser::make_ENDDO(falk::location());
+}
+
+"PRINT" {
+    return Fortran::Parser::make_PRINT(falk::location());
+}
+
+"READ" {
+    return Fortran::Parser::make_READ(falk::location());
+}
+
+"CALL" {
+    return Fortran::Parser::make_CALL(falk::location());
+}
+
+
+"+" {
+    return Fortran::Parser::make_PLUS(Fortran::op::arithmetic::ADD, falk::location());
+}
+
+"-" {
+    return Fortran::Parser::make_MINUS(Fortran::op::arithmetic::SUB, falk::location());
+}
+
+"*" {
+    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MULT, falk::location());
+}
+
+"/" {
+    return Fortran::Parser::make_DIVIDE(Fortran::op::arithmetic::DIV, falk::location());
+}
+
+"=" {
+    return Fortran::Parser::make_ASSIGN(falk::location());
+}
+
+".EQ." {
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::EQ, falk::location());
+}
+
+".NE." {
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::NE, falk::location());
+}
+
+".GT." {
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GT, falk::location());
+}
+
+".GE." {
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GE, falk::location());
+}
+
+".LT." {
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LT, falk::location());
+}
+
+".LE." {
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LE, falk::location());
+}
+
+".TRUE." {
+    auto rvalue = driver.createBoolean(yytext);
+    return Fortran::Parser::make_BOOL(std::move(rvalue), falk::location());
+}
+
+".FALSE." {
+    auto rvalue = driver.createBoolean(yytext);
+    return Fortran::Parser::make_BOOL(std::move(rvalue), falk::location());
+}
+
+"," {
+    return Fortran::Parser::make_COMMA(falk::location());
+}
+
+"(" {
+    return Fortran::Parser::make_LP(falk::location());
+}
+
+")" {
+    return Fortran::Parser::make_RP(falk::location());
+}
+
 
 
 {ws}        ;
 {comment}   ;
 
-{sliteral}  { 
-              auto content = std::string(yytext);
-              content = content.substr(1, content.size() - 2);
-              yylval->build<std::string>(content);
-              return( token::STRING );
-            }
+{sliteral} {
+    auto content = std::string(yytext);
+    content = content.substr(1, content.size() - 2);
+    return Fortran::Parser::make_STRING(content, falk::location());
+}
 
-{id}        {
-              yylval->build<std::string>(yytext);
-              return(token::ID);
-            }
+{id} {
+    return Fortran::Parser::make_ID(yytext, falk::location());
+}
 
-{integer}   { 
-              yylval->build<int>(std::atoi(yytext));
-              return(token::INTEGER);
-            }
+{integer} { 
+    auto rvalue = driver.createInteger(yytext);
+    return Fortran::Parser::make_INTEGER(std::move(rvalue), falk::location());
+}
 
-{real}      { 
-              yylval->build<float>(std::atof(yytext));
-              return(token::REAL);
-            }
+{real} {
+    auto rvalue = driver.createReal(yytext);
+    return Fortran::Parser::make_REAL(std::move(rvalue), falk::location());
+}
 
-\n          { loc->lines(); return( token::EOL); }
+\n {
+    return Fortran::Parser::make_NEWLINE(falk::location());
+}
 
-.           { return(token::ERR); }
+. {
+    cout << "Scanner: unknown character [" << yytext << "]" << endl;
+}
 
 <<EOF>>     { return yyterminate(); }
 
