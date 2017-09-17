@@ -3,14 +3,14 @@
     #include <cstdlib>
     #include "include/f_scanner.hpp"
     #include "include/f_driver.hpp"
-    #include "parser.hpp"
+    #include "include/f_parser.hpp"
     #include "location.hh"
 
     #include <string>
 
     // Original yyterminate() macro returns int. Since we're using Bison 3 variants
     // as tokens, we must redefine it to change type from `int` to `Parser::semantic_type`
-    #define yyterminate() Fortran::Parser::make_END(EzAquarii::location());
+    #define yyterminate() Fortran::Parser::make_EOF(Fortran::location());
 
     // This will track current scanner location.
     // Action is called when length of the token is known.

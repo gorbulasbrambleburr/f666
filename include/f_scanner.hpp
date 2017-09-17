@@ -20,7 +20,7 @@
 #undef YY_DECL
 #define YY_DECL Fortran::Parser::symbol_type Fortran::Scanner::getNextToken()
 
-#include "parser.hpp" // this is needed for symbol_type
+#include "f_parser.hpp" // this is needed for symbol_type
 //#include "../location.hh"
 
 namespace Fortran {

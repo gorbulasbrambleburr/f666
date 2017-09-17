@@ -1,112 +1,119 @@
 %skeleton "lalr1.cc"
-%require "3.0"
-%debug
-%defines
+%require "3.0"       // Bison version
+
+%output "src/f_parser.cpp" 
+%defines "include/f_parser.hpp"
+
+%define api.token.constructor
+%define api.token.prefix {TOKEN_}
+%define api.value.type variant
 %define api.namespace { Fortran }
 %define parser_class_name { Parser }
+%define parse.trace
+%define parse.error verbose
+%define parse.assert  // Correct cleanup of semantic value objects
 
+// Code to be placed in the parser header file
 %code requires {
+    #include <iostream>
+    #include <string>
+    #include <vector>
+    #include <stdint.h>
+    #include "Types.hpp"
+    #include "ast/AST.hpp"
+    #include "../stack.hh"
+
     namespace Fortran {
         class Driver;
         class Scanner;
     }
 
     using std::move;
-
-    // The following definitions are missing when %locations isn't used
-    # ifndef YY_NULLPTR
-    #   if defined __cplusplus && 201103L <= __cplusplus
-    #     define YY_NULLPTR nullptr
-    #   else
-    #     define YY_NULLPTR 0
-    #   endif
-    # endif
 }
 
-/* Parameters given to the Parser constructor */
+// Parameters given to the Parser constructor
 %parse-param { Scanner &scanner }
 %parse-param { Driver &driver }
 
+// Code to be placed in the beggining of the parser implementation file
 %code {
     #include <iostream>
-    #include <cstdlib>
-    #include <fstream>
-    #include "include/Types.hpp"
+    #include "../include/f_scanner.hpp"
+    #include "../include/f_parser.hpp"
+    #include "../include/f_driver.hpp"
+    #include "../location.hh"
 
-    /* Include for all driver functions */
-    #include "include/f_driver.hpp"
-
-    #undef yylex
-    #define yylex scanner.yylex
+    // This function is called only inside Bison, so we make it static to limit
+    // symbol visibility for the linker to avoid potential linking conflicts.
+    static Fortran::Parser::symbol_type yylex(
+            Fortran::Scanner &scanner, Fortran::Driver &driver) {
+        return scanner.getNextToken();
+    }
 }
 
-%define api.value.type variant
-%define parse.assert
+// Parameters to flex and bison
+%lex-param { Fortran::Scanner &scanner }
+%lex-param { Fortran::Driver &driver }
+%parse-param { Fortran::Scanner &scanner }
+%parse-param { Fortran::Driver &driver }
 
-// Control
-%token PROGRAM
-%token SUBROUTINE
-%token FUNCTION
-%token STOP
-%token RETURN
-%token END
-%token PARAMETER
-%token CYCLE
-%token EXIT
-%token IF
-%token ELSE
-%token ELSEIF
-%token ENDIF
-%token WHILE
-%token DO
-%token ENDDO
-%token PRINT
-%token READ
-%token CALL
-%token ERR
+%locations
 
-// Arithmetic operators
-%token PLUS
-%token MINUS
-%token TIMES
-%token DIVIDE
-%token ASSIGN
-
-// Comparison
-%token EQ
-%token NE
-%token GT
-%token GE
-%token LT
-%token LE
-
-// Boolean
-%token TRUE
-%token FALSE
+// Keywords
+%token PROGRAM     "PROGRAM keyword";
+%token SUBROUTINE  "SUBROUTINE keyword";
+%token FUNCTION    "FUNCTION keyword";
+%token STOP        "STOP keyword";
+%token RETURN      "RETURN keyword";
+%token END         "END keyword";
+%token PARAMETER   "PARAMETER keyword";
+%token CYCLE       "CYCLE keyword";
+%token EXIT        "EXIT keyword";
+%token IF          "IF keyword";
+%token ELSE        "ELSE keyword";
+%token ELSEIF      "ELSEIF keyword";
+%token ENDIF       "ENDIF keyword";
+%token WHILE       "WHILE keyword";
+%token DO          "DO keyword";
+%token ENDDO       "ENDDO keyword";
+%token PRINT       "PRINT keyword";
+%token READ        "READ keyword";
+%token CALL        "CALL keyword";
+%token ERR         "ERR keyword";
 
 // Other
-%token NEWLINE
-%token EOF 0
-%token COMMA
-%token LP
-%token RP
+%token NEWLINE "new line"
+%token EOF 0   "end of file" 
+%token COMMA   "comma"
+%token LP      "left parenthesis"
+%token RP      "right parenthesis"
 
-// Types
-%token <Fortran::type> TYPE
-%token <Fortran::integer> INTEGER
-%token <Fortran::real> REAL
-%token <std::string> ID
-%token <std::string> STRING
+// Arithmetic operators
+%token<Fortran::op:arithmetic> PLUS   "+";
+%token<Fortran::op:arithmetic> MINUS  "-";
+%token<Fortran::op:arithmetic> TIMES  "*";
+%token<Fortran::op:arithmetic> DIVIDE "/";
+%token<Fortran::op:arithmetic> ASSIGN "=";
 
-%type <node_ptr> ExecutableProgram
-%type <node_ptr> Subprogram
-%type <node_ptr> MainProgram
-%type <node_ptr> Subroutine
-%type <node_ptr> Function
-%type <node_ptr> Parameter
-%type <node_ptr> Type
-%type <node_ptr> Body
-%type <node_ptrs> ParameterList
+// Token semantic types
+%token<Fortran::type> TYPE          "TYPE identifier";
+%token<Fortran::integer> INTEGER    "INTEGER value";
+%token<Fortran::real> REAL          "REAL value";
+%token<Fortran::boolean> BOOL       "BOOL value";
+%token<std::string> STRING          "STRING value";
+%token<std::string> ID              "ID identifier";
+%token<Fortran::op:comp> COMPARISON "COMPARISON operator";
+
+// AST node types
+%type<node_ptr> ExecutableProgram
+%type<node_ptr> Subprogram
+%type<node_ptr> MainProgram
+%type<node_ptr> Subroutine
+%type<node_ptr> Function
+%type<node_ptr> Parameter
+%type<node_ptr> Type
+%type<node_ptr> Body
+%type<node_ptrs> ParameterList
 
 %start ExecutableProgram
 
@@ -131,7 +138,7 @@ MainProgram
 
 Subroutine
     : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.createNode<Subroutine>(move($2), $4, move($6); }
-    : SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.createNode<Subroutine>(move($2), {}, move($5); }
+    | SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.createNode<Subroutine>(move($2), {}, move($5); }
     ;
 
 Function

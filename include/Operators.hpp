@@ -7,7 +7,7 @@ namespace Fortran {
             MULT
         };
 
-        enum class comparison {
+        enum class comp {
             LT,
             GT,
             LE,
