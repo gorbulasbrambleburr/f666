@@ -29,10 +29,6 @@
     }
 }
 
-// Parameters given to the Parser constructor
-%parse-param { Fortran::Scanner &scanner }
-%parse-param { Fortran::Driver &driver }
-
 // Code to be placed in the beggining of the parser implementation file
 %code {
     #include <iostream>
@@ -52,8 +48,8 @@
 // Parameters to flex and bison
 %lex-param { Fortran::Scanner &scanner }
 %lex-param { Fortran::Driver &driver }
-//%parse-param { Fortran::Scanner &scanner }
-//%parse-param { Fortran::Driver &driver }
+%parse-param { Fortran::Scanner &scanner }
+%parse-param { Fortran::Driver &driver }
 
 %locations
 
