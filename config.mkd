@@ -34,7 +34,7 @@ CXX      :=g++
 CXXFLAGS :=-std=c++11 -Wno-deprecated-register -Wall\
             -Wno-unused-function -Wno-unneeded-internal-declaration
 LDFLAGS  :=
-LDLIBS   :=-pthread -lncurses
+LDLIBS   :=-pthread
 INCLUDE  :=-I$(HDRDIR)
 # Files
 MAIN     :=main

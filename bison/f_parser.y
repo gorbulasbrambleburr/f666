@@ -1,8 +1,6 @@
 %skeleton "lalr1.cc"
 %require "3.0"       // Bison version
-
-//%output "src/f_parser.cpp" 
-%defines// "include/f_parser.hpp"
+%defines
 
 %define api.token.constructor
 %define api.token.prefix {TOKEN_}
@@ -74,18 +72,18 @@
 %token ERR         "ERR keyword";
 
 // Other
-%token NEWLINE "new line"
-%token EOF 0   "end of file" 
-%token COMMA   "comma"
-%token LP      "left parenthesis"
-%token RP      "right parenthesis"
+%token NEWLINE "new line";
+%token EOF 0   "end of file" ;
+%token COMMA   "comma";
+%token LP      "left parenthesis";
+%token RP      "right parenthesis";
+%token ASSIGN  "=";
 
 // Arithmetic operators
 %token<Fortran::op::arithmetic> PLUS   "+";
 %token<Fortran::op::arithmetic> MINUS  "-";
 %token<Fortran::op::arithmetic> TIMES  "*";
 %token<Fortran::op::arithmetic> DIVIDE "/";
-%token<Fortran::op::arithmetic> ASSIGN "=";
 
 // Token semantic types
 %token<Fortran::type> TYPE           "TYPE identifier";
@@ -144,7 +142,7 @@ Subroutine
         $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
     }
     | SUBROUTINE ID LP RP Body RETURN END {
-        $$ = driver.createNode<Subroutine>(std::move($2), {}, std::move($5));
+        $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
     };
 
 Function
@@ -152,7 +150,7 @@ Function
         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
     }
     | Type FUNCTION ID LP RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), {}, std::move($6));
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
     };
 
 ParameterList
@@ -181,7 +179,7 @@ Type
     };
 
 Body: %empty {
-        $$ = driver.createNode<Body>({});
+        $$ = driver.createNode<Body>(node_ptrs{});
     };
 
 /*

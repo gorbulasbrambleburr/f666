@@ -40,7 +40,7 @@
 #ifndef YY_YY_INCLUDE_F_PARSER_HPP_INCLUDED
 # define YY_YY_INCLUDE_F_PARSER_HPP_INCLUDED
 // //                    "%code requires" blocks.
-#line 17 "bison/f_parser.y" // lalr1.cc:377
+#line 15 "bison/f_parser.y" // lalr1.cc:377
 
     #include <iostream>
     #include <string>
@@ -130,7 +130,7 @@
 # define YYDEBUG 1
 #endif
 
-#line 10 "bison/f_parser.y" // lalr1.cc:377
+#line 8 "bison/f_parser.y" // lalr1.cc:377
 namespace  Fortran  {
 #line 136 "include/f_parser.hpp" // lalr1.cc:377
 
@@ -322,7 +322,6 @@ namespace  Fortran  {
       // "-"
       // "*"
       // "/"
-      // "="
       char dummy5[sizeof(Fortran::op::arithmetic)];
 
       // "COMPARISON operator"
@@ -384,11 +383,11 @@ namespace  Fortran  {
         TOKEN_COMMA = 279,
         TOKEN_LP = 280,
         TOKEN_RP = 281,
-        TOKEN_PLUS = 282,
-        TOKEN_MINUS = 283,
-        TOKEN_TIMES = 284,
-        TOKEN_DIVIDE = 285,
-        TOKEN_ASSIGN = 286,
+        TOKEN_ASSIGN = 282,
+        TOKEN_PLUS = 283,
+        TOKEN_MINUS = 284,
+        TOKEN_TIMES = 285,
+        TOKEN_DIVIDE = 286,
         TOKEN_TYPE = 287,
         TOKEN_INTEGER = 288,
         TOKEN_REAL = 289,
@@ -620,6 +619,10 @@ namespace  Fortran  {
 
     static inline
     symbol_type
+    make_ASSIGN (const location_type& l);
+
+    static inline
+    symbol_type
     make_PLUS (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
@@ -633,10 +636,6 @@ namespace  Fortran  {
     static inline
     symbol_type
     make_DIVIDE (const Fortran::op::arithmetic& v, const location_type& l);
-
-    static inline
-    symbol_type
-    make_ASSIGN (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
     symbol_type
@@ -981,11 +980,10 @@ namespace  Fortran  {
         value.copy< Fortran::integer > (other.value);
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         value.copy< Fortran::op::arithmetic > (other.value);
         break;
 
@@ -1046,11 +1044,10 @@ namespace  Fortran  {
         value.copy< Fortran::integer > (v);
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         value.copy< Fortran::op::arithmetic > (v);
         break;
 
@@ -1198,11 +1195,10 @@ namespace  Fortran  {
         value.template destroy< Fortran::integer > ();
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         value.template destroy< Fortran::op::arithmetic > ();
         break;
 
@@ -1269,11 +1265,10 @@ namespace  Fortran  {
         value.move< Fortran::integer > (s.value);
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         value.move< Fortran::op::arithmetic > (s.value);
         break;
 
@@ -1508,6 +1503,12 @@ namespace  Fortran  {
   }
 
    Parser ::symbol_type
+   Parser ::make_ASSIGN (const location_type& l)
+  {
+    return symbol_type (token::TOKEN_ASSIGN, l);
+  }
+
+   Parser ::symbol_type
    Parser ::make_PLUS (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_PLUS, v, l);
@@ -1529,12 +1530,6 @@ namespace  Fortran  {
    Parser ::make_DIVIDE (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_DIVIDE, v, l);
-  }
-
-   Parser ::symbol_type
-   Parser ::make_ASSIGN (const Fortran::op::arithmetic& v, const location_type& l)
-  {
-    return symbol_type (token::TOKEN_ASSIGN, v, l);
   }
 
    Parser ::symbol_type
@@ -1580,9 +1575,9 @@ namespace  Fortran  {
   }
 
 
-#line 10 "bison/f_parser.y" // lalr1.cc:377
+#line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1586 "include/f_parser.hpp" // lalr1.cc:377
+#line 1581 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

@@ -49,7 +49,7 @@
 
 #line 51 "src/f_parser.cpp" // lalr1.cc:412
 // Unqualified %code blocks.
-#line 33 "bison/f_parser.y" // lalr1.cc:413
+#line 31 "bison/f_parser.y" // lalr1.cc:413
 
     #include <iostream>
     #include "f_scanner.hpp"
@@ -147,7 +147,7 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 10 "bison/f_parser.y" // lalr1.cc:479
+#line 8 "bison/f_parser.y" // lalr1.cc:479
 namespace  Fortran  {
 #line 153 "src/f_parser.cpp" // lalr1.cc:479
 
@@ -285,11 +285,10 @@ namespace  Fortran  {
         value.move< Fortran::integer > (that.value);
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         value.move< Fortran::op::arithmetic > (that.value);
         break;
 
@@ -348,11 +347,10 @@ namespace  Fortran  {
         value.copy< Fortran::integer > (that.value);
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         value.copy< Fortran::op::arithmetic > (that.value);
         break;
 
@@ -624,11 +622,10 @@ namespace  Fortran  {
         yylhs.value.build< Fortran::integer > ();
         break;
 
-      case 27: // "+"
-      case 28: // "-"
-      case 29: // "*"
-      case 30: // "/"
-      case 31: // "="
+      case 28: // "+"
+      case 29: // "-"
+      case 30: // "*"
+      case 31: // "/"
         yylhs.value.build< Fortran::op::arithmetic > ();
         break;
 
@@ -667,146 +664,146 @@ namespace  Fortran  {
           switch (yyn)
             {
   case 2:
-#line 117 "bison/f_parser.y" // lalr1.cc:859
+#line 115 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[1].value.as< AST::node_ptr > ());
         yylhs.value.as< AST::node_ptr > ()->addChild(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 676 "src/f_parser.cpp" // lalr1.cc:859
+#line 673 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 3:
-#line 121 "bison/f_parser.y" // lalr1.cc:859
+#line 119 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createRoot();
         yylhs.value.as< AST::node_ptr > ()->addChild(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 685 "src/f_parser.cpp" // lalr1.cc:859
+#line 682 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 4:
-#line 127 "bison/f_parser.y" // lalr1.cc:859
+#line 125 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 693 "src/f_parser.cpp" // lalr1.cc:859
+#line 690 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 5:
-#line 130 "bison/f_parser.y" // lalr1.cc:859
+#line 128 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 701 "src/f_parser.cpp" // lalr1.cc:859
+#line 698 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 6:
-#line 133 "bison/f_parser.y" // lalr1.cc:859
+#line 131 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 709 "src/f_parser.cpp" // lalr1.cc:859
+#line 706 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 7:
-#line 138 "bison/f_parser.y" // lalr1.cc:859
+#line 136 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<MainProgram>(std::move(yystack_[3].value.as< Fortran::string > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
     }
-#line 717 "src/f_parser.cpp" // lalr1.cc:859
+#line 714 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 8:
-#line 143 "bison/f_parser.y" // lalr1.cc:859
+#line 141 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[6].value.as< Fortran::string > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
     }
-#line 725 "src/f_parser.cpp" // lalr1.cc:859
+#line 722 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 9:
-#line 146 "bison/f_parser.y" // lalr1.cc:859
+#line 144 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[5].value.as< Fortran::string > ()), {}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[5].value.as< Fortran::string > ()), node_ptrs{}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
     }
-#line 733 "src/f_parser.cpp" // lalr1.cc:859
+#line 730 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 10:
-#line 151 "bison/f_parser.y" // lalr1.cc:859
+#line 149 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[8].value.as< AST::node_ptr > ()), std::move(yystack_[6].value.as< Fortran::string > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
     }
-#line 741 "src/f_parser.cpp" // lalr1.cc:859
+#line 738 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 11:
-#line 154 "bison/f_parser.y" // lalr1.cc:859
+#line 152 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[7].value.as< AST::node_ptr > ()), std::move(yystack_[5].value.as< Fortran::string > ()), {}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[7].value.as< AST::node_ptr > ()), std::move(yystack_[5].value.as< Fortran::string > ()), node_ptrs{}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
     }
-#line 749 "src/f_parser.cpp" // lalr1.cc:859
+#line 746 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 12:
-#line 159 "bison/f_parser.y" // lalr1.cc:859
+#line 157 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 757 "src/f_parser.cpp" // lalr1.cc:859
+#line 754 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 13:
-#line 162 "bison/f_parser.y" // lalr1.cc:859
+#line 160 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
         yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 766 "src/f_parser.cpp" // lalr1.cc:859
+#line 763 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 14:
-#line 168 "bison/f_parser.y" // lalr1.cc:859
+#line 166 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()));
     }
-#line 774 "src/f_parser.cpp" // lalr1.cc:859
+#line 771 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 15:
-#line 173 "bison/f_parser.y" // lalr1.cc:859
+#line 171 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::integer > ());
     }
-#line 782 "src/f_parser.cpp" // lalr1.cc:859
+#line 779 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 16:
-#line 176 "bison/f_parser.y" // lalr1.cc:859
+#line 174 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::real > ());
     }
-#line 790 "src/f_parser.cpp" // lalr1.cc:859
+#line 787 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 17:
-#line 179 "bison/f_parser.y" // lalr1.cc:859
+#line 177 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::boolean > ());
     }
-#line 798 "src/f_parser.cpp" // lalr1.cc:859
+#line 795 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 18:
-#line 183 "bison/f_parser.y" // lalr1.cc:859
+#line 181 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Body>({});
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Body>(node_ptrs{});
     }
-#line 806 "src/f_parser.cpp" // lalr1.cc:859
+#line 803 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
 
-#line 810 "src/f_parser.cpp" // lalr1.cc:859
+#line 807 "src/f_parser.cpp" // lalr1.cc:859
             default:
               break;
             }
@@ -1156,7 +1153,7 @@ namespace  Fortran  {
   "\"WHILE keyword\"", "\"DO keyword\"", "\"ENDDO keyword\"",
   "\"PRINT keyword\"", "\"READ keyword\"", "\"CALL keyword\"",
   "\"ERR keyword\"", "\"new line\"", "\"comma\"", "\"left parenthesis\"",
-  "\"right parenthesis\"", "\"+\"", "\"-\"", "\"*\"", "\"/\"", "\"=\"",
+  "\"right parenthesis\"", "\"=\"", "\"+\"", "\"-\"", "\"*\"", "\"/\"",
   "\"TYPE identifier\"", "\"INTEGER value\"", "\"REAL value\"",
   "\"BOOLEAN value\"", "\"STRING value\"", "\"ID identifier\"",
   "\"COMPARISON operator\"", "$accept", "ExecutableProgram", "Subprogram",
@@ -1168,8 +1165,8 @@ namespace  Fortran  {
   const unsigned char
    Parser ::yyrline_[] =
   {
-       0,   117,   117,   121,   127,   130,   133,   138,   143,   146,
-     151,   154,   159,   162,   168,   173,   176,   179,   183
+       0,   115,   115,   119,   125,   128,   131,   136,   141,   144,
+     149,   152,   157,   160,   166,   171,   174,   177,   181
   };
 
   // Print the state stack on the debug stream.
@@ -1202,10 +1199,10 @@ namespace  Fortran  {
 #endif // YYDEBUG
 
 
-#line 10 "bison/f_parser.y" // lalr1.cc:1167
+#line 8 "bison/f_parser.y" // lalr1.cc:1167
 } //  Fortran 
-#line 1208 "src/f_parser.cpp" // lalr1.cc:1167
-#line 403 "bison/f_parser.y" // lalr1.cc:1168
+#line 1205 "src/f_parser.cpp" // lalr1.cc:1167
+#line 401 "bison/f_parser.y" // lalr1.cc:1168
 
 
 void Fortran::Parser::error(const location &loc, const std::string &message) {

@@ -148,36 +148,36 @@ ws          [ \t]+
 }
 
 ".EQ." {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::EQ, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::EQ, Fortran::location());
 }
 
 ".NE." {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::NE, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::NE, Fortran::location());
 }
 
 ".GT." {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GT, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::GT, Fortran::location());
 }
 
 ".GE." {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GE, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::GE, Fortran::location());
 }
 
 ".LT." {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LT, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::LT, Fortran::location());
 }
 
 ".LE." {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LE, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::LE, Fortran::location());
 }
 
 ".TRUE." {
-    auto rvalue = driver.createBoolean(yytext);
+    auto rvalue = m_driver.createBoolean(yytext);
     return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());
 }
 
 ".FALSE." {
-    auto rvalue = driver.createBoolean(yytext);
+    auto rvalue = m_driver.createBoolean(yytext);
     return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());
 }
 
@@ -209,12 +209,12 @@ ws          [ \t]+
 }
 
 {integer} { 
-    auto rvalue = driver.createInteger(yytext);
+    auto rvalue = m_driver.createInteger(yytext);
     return Fortran::Parser::make_INTEGER(std::move(rvalue), Fortran::location());
 }
 
 {real} {
-    auto rvalue = driver.createReal(yytext);
+    auto rvalue = m_driver.createReal(yytext);
     return Fortran::Parser::make_REAL(std::move(rvalue), Fortran::location());
 }
 
@@ -223,7 +223,7 @@ ws          [ \t]+
 }
 
 . {
-    cout << "Scanner: unknown character [" << yytext << "]" << endl;
+    std::cout << "Scanner: unknown character [" << yytext << "]" << std::endl;
 }
 
 <<EOF>>     { return yyterminate(); }

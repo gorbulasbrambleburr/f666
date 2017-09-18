@@ -12,10 +12,10 @@ public:
     using node_ptr = std::shared_ptr<AST>;
     using node_ptrs = std::vector<node_ptr>;
 
-    AST();
-    virtual ~AST();
-    virtual void print() const;
-    virtual void addChild(node_ptr child);
+    AST() {}
+    virtual ~AST() {}
+    virtual void print() const {}
+    virtual void addChild(node_ptr child) {}
 };
 
 #endif /* END __AST_HPP__ */

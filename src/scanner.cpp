@@ -1103,49 +1103,49 @@ case 28:
 YY_RULE_SETUP
 #line 150 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::EQ, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::EQ, Fortran::location());
 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 154 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::NE, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::NE, Fortran::location());
 }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 158 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GT, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::GT, Fortran::location());
 }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 162 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GE, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::GE, Fortran::location());
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 166 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LT, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::LT, Fortran::location());
 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 170 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LE, Fortran::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::comp::LE, Fortran::location());
 }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 174 "flex/scanner.l"
 {
-    auto rvalue = driver.createBoolean(yytext);
+    auto rvalue = m_driver.createBoolean(yytext);
     return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
@@ -1153,7 +1153,7 @@ case 35:
 YY_RULE_SETUP
 #line 179 "flex/scanner.l"
 {
-    auto rvalue = driver.createBoolean(yytext);
+    auto rvalue = m_driver.createBoolean(yytext);
     return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
@@ -1210,7 +1210,7 @@ case 43:
 YY_RULE_SETUP
 #line 211 "flex/scanner.l"
 { 
-    auto rvalue = driver.createInteger(yytext);
+    auto rvalue = m_driver.createInteger(yytext);
     return Fortran::Parser::make_INTEGER(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
@@ -1218,7 +1218,7 @@ case 44:
 YY_RULE_SETUP
 #line 216 "flex/scanner.l"
 {
-    auto rvalue = driver.createReal(yytext);
+    auto rvalue = m_driver.createReal(yytext);
     return Fortran::Parser::make_REAL(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
@@ -1234,7 +1234,7 @@ case 46:
 YY_RULE_SETUP
 #line 225 "flex/scanner.l"
 {
-    cout << "Scanner: unknown character [" << yytext << "]" << endl;
+    std::cout << "Scanner: unknown character [" << yytext << "]" << std::endl;
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):

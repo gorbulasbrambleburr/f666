@@ -6,16 +6,22 @@
 
 class Type : public AST {
 public:
-    Type(std::string &id)
-        : m_id(id) {
+    Type(int type)
+        : m_type("int") {
+    }
+    Type(float type)
+        : m_type("float") {
+    }
+    Type(bool type)
+        : m_type("bool") {
     }
     ~Type() {}
     void print() const {
-        std::cout << "ID (" << m_id << ")" << std::endl;
+        std::cout << "Type (" << m_type << ")" << std::endl;
     }
 
 private:
-    std::string m_id;
+    std::string m_type;
 };
 
 #endif /* END __AST_TYPE_HPP__ */

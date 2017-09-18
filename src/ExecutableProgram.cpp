@@ -17,4 +17,3 @@ void ExecutableProgram::print() const {
 void ExecutableProgram::addChild(node_ptr child) {
     m_subprograms.emplace_back(std::move(child));
 }
-
