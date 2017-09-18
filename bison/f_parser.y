@@ -39,15 +39,13 @@
 
     // This function is called only inside Bison, so we make it static to limit
     // symbol visibility for the linker to avoid potential linking conflicts.
-    static Fortran::Parser::symbol_type yylex(Fortran::Scanner &scanner,
-                                              Fortran::Driver &driver) {
+    static Fortran::Parser::symbol_type yylex(Fortran::Scanner &scanner) {
         return scanner.getNextToken();
     }
 }
 
 // Parameters to flex and bison
 %lex-param { Fortran::Scanner &scanner }
-%lex-param { Fortran::Driver &driver }
 %parse-param { Fortran::Scanner &scanner }
 %parse-param { Fortran::Driver &driver }
 
