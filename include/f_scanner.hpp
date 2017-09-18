@@ -24,7 +24,7 @@
 
 namespace Fortran {
 
-    //class Driver;
+    class Driver;
 
     class Scanner : public yyFlexLexer {
     public:

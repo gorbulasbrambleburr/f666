@@ -43,21 +43,17 @@
 
     // This function is called only inside Bison, so we make it static to limit
     // symbol visibility for the linker to avoid potential linking conflicts.
-    static Fortran::Parser::symbol_type yylex(
-            Fortran::Scanner &scanner) {
+    static Fortran::Parser::symbol_type yylex(Fortran::Scanner &scanner,
+                                              Fortran::Driver &driver) {
         return scanner.getNextToken();
     }
-    //static Fortran::Parser::symbol_type yylex(
-    //        Fortran::Scanner &scanner, Fortran::Driver &driver) {
-    //    return scanner.getNextToken();
-    //}
 }
 
 // Parameters to flex and bison
 %lex-param { Fortran::Scanner &scanner }
-//%lex-param { Fortran::Driver &driver }
-%parse-param { Fortran::Scanner &scanner }
-%parse-param { Fortran::Driver &driver }
+%lex-param { Fortran::Driver &driver }
+//%parse-param { Fortran::Scanner &scanner }
+//%parse-param { Fortran::Driver &driver }
 
 %locations
 
@@ -125,10 +121,12 @@
 
 ExecutableProgram
     : ExecutableProgram Subprogram {
-        $$ = std::move($1); $$->addChild(std::move($2));
+        $$ = std::move($1);
+        $$->addChild(std::move($2));
     }
     | Subprogram {
-        $$ = driver.createRoot(); $$->addChild(std::move($1));
+        $$ = driver.createRoot();
+        $$->addChild(std::move($1));
     };
 
 Subprogram
@@ -149,18 +147,18 @@ MainProgram
 
 Subroutine
     : SUBROUTINE ID LP ParameterList RP Body RETURN END {
-        $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6);
+        $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
     }
     | SUBROUTINE ID LP RP Body RETURN END {
-        $$ = driver.createNode<Subroutine>(std::move($2), {}, std::move($5);
+        $$ = driver.createNode<Subroutine>(std::move($2), {}, std::move($5));
     };
 
 Function
     : Type FUNCTION ID LP ParameterList RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7);
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
     }
     | Type FUNCTION ID LP RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), {}, std::move($6);
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), {}, std::move($6));
     };
 
 ParameterList
@@ -168,7 +166,8 @@ ParameterList
         $$ = driver.createNodeList(std::move($1));
     }
     | ParameterList COMMA Parameter {
-        $$ = std::move($1); $$.emplace_back(std::move($3));
+        $$ = std::move($1);
+        $$.emplace_back(std::move($3));
     };
 
 Parameter
@@ -178,14 +177,17 @@ Parameter
 
 Type
     : INTEGER {
-        $$ = driver.createNode<Type>(std::move($1));
+        $$ = driver.createNode<Type>($1);
     }
     | REAL {
-        $$ = driver.createNode<Type>(std::move($1));
+        $$ = driver.createNode<Type>($1);
+    }
+    | BOOLEAN {
+        $$ = driver.createNode<Type>($1);
     };
 
 Body: %empty {
-        $$ = driver.createNode<Body>(std::nullptr_t);
+        $$ = driver.createNode<Body>({});
     };
 
 /*

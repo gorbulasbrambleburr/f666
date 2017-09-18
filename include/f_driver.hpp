@@ -6,11 +6,15 @@
 #include <memory>
 
 #include "f_scanner.hpp"
+#include "f_parser.hpp"
 #include "ast/AST.hpp"
 #include "../include/ast/ExecutableProgram.hpp"
 #include "../include/ast/MainProgram.hpp"
 #include "../include/ast/Subroutine.hpp"
 #include "../include/ast/Function.hpp"
+#include "../include/ast/Identifier.hpp"
+#include "../include/ast/Type.hpp"
+#include "../include/ast/Body.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

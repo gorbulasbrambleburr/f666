@@ -914,231 +914,231 @@ case 1:
 YY_RULE_SETUP
 #line 41 "flex/scanner.l"
 {
-    return Fortran::Parser::make_PROGRAM(falk::location());
+    return Fortran::Parser::make_PROGRAM(Fortran::location());
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 45 "flex/scanner.l"
 {
-    return Fortran::Parser::make_SUBROUTINE(falk::location());
+    return Fortran::Parser::make_SUBROUTINE(Fortran::location());
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 49 "flex/scanner.l"
 {
-    return Fortran::Parser::make_FUNCTION(falk::location());
+    return Fortran::Parser::make_FUNCTION(Fortran::location());
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 53 "flex/scanner.l"
 {
-    return Fortran::Parser::make_STOP(falk::location());
+    return Fortran::Parser::make_STOP(Fortran::location());
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 57 "flex/scanner.l"
 {
-    return Fortran::Parser::make_RETURN(falk::location());
+    return Fortran::Parser::make_RETURN(Fortran::location());
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 61 "flex/scanner.l"
 {
-    return Fortran::Parser::make_END(falk::location());
+    return Fortran::Parser::make_END(Fortran::location());
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 65 "flex/scanner.l"
 {
-    return Fortran::Parser::make_PARAMETER(falk::location());
+    return Fortran::Parser::make_PARAMETER(Fortran::location());
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 69 "flex/scanner.l"
 {
-    return Fortran::Parser::make_TYPE(Fortran::type::INTEGER, falk::location());
+    return Fortran::Parser::make_TYPE(Fortran::type::INTEGER, Fortran::location());
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 73 "flex/scanner.l"
 {
-    return Fortran::Parser::make_TYPE(Fortran::type::REAL, falk::location());
+    return Fortran::Parser::make_TYPE(Fortran::type::REAL, Fortran::location());
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 77 "flex/scanner.l"
 {
-    return Fortran::Parser::make_TYPE(Fortran::type::BOOLEAN, falk::location());
+    return Fortran::Parser::make_TYPE(Fortran::type::BOOLEAN, Fortran::location());
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 81 "flex/scanner.l"
 {
-    return Fortran::Parser::make_CYCLE(falk::location());
+    return Fortran::Parser::make_CYCLE(Fortran::location());
 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 85 "flex/scanner.l"
 {
-    return Fortran::Parser::make_EXIT(falk::location());
+    return Fortran::Parser::make_EXIT(Fortran::location());
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 89 "flex/scanner.l"
 {
-    return Fortran::Parser::make_IF(falk::location());
+    return Fortran::Parser::make_IF(Fortran::location());
 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 93 "flex/scanner.l"
 {
-    return Fortran::Parser::make_ELSE(falk::location());
+    return Fortran::Parser::make_ELSE(Fortran::location());
 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 97 "flex/scanner.l"
 {
-    return Fortran::Parser::make_ELSEIF(falk::location());
+    return Fortran::Parser::make_ELSEIF(Fortran::location());
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 101 "flex/scanner.l"
 {
-    return Fortran::Parser::make_ENDIF(falk::location());
+    return Fortran::Parser::make_ENDIF(Fortran::location());
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 105 "flex/scanner.l"
 {
-    return Fortran::Parser::make_WHILE(falk::location());
+    return Fortran::Parser::make_WHILE(Fortran::location());
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 109 "flex/scanner.l"
 {
-    return Fortran::Parser::make_DO(falk::location());
+    return Fortran::Parser::make_DO(Fortran::location());
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 113 "flex/scanner.l"
 {
-    return Fortran::Parser::make_ENDDO(falk::location());
+    return Fortran::Parser::make_ENDDO(Fortran::location());
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 117 "flex/scanner.l"
 {
-    return Fortran::Parser::make_PRINT(falk::location());
+    return Fortran::Parser::make_PRINT(Fortran::location());
 }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 121 "flex/scanner.l"
 {
-    return Fortran::Parser::make_READ(falk::location());
+    return Fortran::Parser::make_READ(Fortran::location());
 }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 125 "flex/scanner.l"
 {
-    return Fortran::Parser::make_CALL(falk::location());
+    return Fortran::Parser::make_CALL(Fortran::location());
 }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 130 "flex/scanner.l"
 {
-    return Fortran::Parser::make_PLUS(Fortran::op::arithmetic::ADD, falk::location());
+    return Fortran::Parser::make_PLUS(Fortran::op::arithmetic::ADD, Fortran::location());
 }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 134 "flex/scanner.l"
 {
-    return Fortran::Parser::make_MINUS(Fortran::op::arithmetic::SUB, falk::location());
+    return Fortran::Parser::make_MINUS(Fortran::op::arithmetic::SUB, Fortran::location());
 }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 138 "flex/scanner.l"
 {
-    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MULT, falk::location());
+    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MULT, Fortran::location());
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 142 "flex/scanner.l"
 {
-    return Fortran::Parser::make_DIVIDE(Fortran::op::arithmetic::DIV, falk::location());
+    return Fortran::Parser::make_DIVIDE(Fortran::op::arithmetic::DIV, Fortran::location());
 }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 146 "flex/scanner.l"
 {
-    return Fortran::Parser::make_ASSIGN(falk::location());
+    return Fortran::Parser::make_ASSIGN(Fortran::location());
 }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 150 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::EQ, falk::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::EQ, Fortran::location());
 }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 154 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::NE, falk::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::NE, Fortran::location());
 }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 158 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GT, falk::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GT, Fortran::location());
 }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 162 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GE, falk::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::GE, Fortran::location());
 }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 166 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LT, falk::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LT, Fortran::location());
 }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 170 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LE, falk::location());
+    return Fortran::Parser::make_COMPARISON(Fortran::op::arithmetic::LE, Fortran::location());
 }
 	YY_BREAK
 case 34:
@@ -1146,7 +1146,7 @@ YY_RULE_SETUP
 #line 174 "flex/scanner.l"
 {
     auto rvalue = driver.createBoolean(yytext);
-    return Fortran::Parser::make_BOOLEAN(std::move(rvalue), falk::location());
+    return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
 case 35:
@@ -1154,28 +1154,28 @@ YY_RULE_SETUP
 #line 179 "flex/scanner.l"
 {
     auto rvalue = driver.createBoolean(yytext);
-    return Fortran::Parser::make_BOOLEAN(std::move(rvalue), falk::location());
+    return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 184 "flex/scanner.l"
 {
-    return Fortran::Parser::make_COMMA(falk::location());
+    return Fortran::Parser::make_COMMA(Fortran::location());
 }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 188 "flex/scanner.l"
 {
-    return Fortran::Parser::make_LP(falk::location());
+    return Fortran::Parser::make_LP(Fortran::location());
 }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 192 "flex/scanner.l"
 {
-    return Fortran::Parser::make_RP(falk::location());
+    return Fortran::Parser::make_RP(Fortran::location());
 }
 	YY_BREAK
 case 39:
@@ -1196,14 +1196,14 @@ YY_RULE_SETUP
 {
     auto content = std::string(yytext);
     content = content.substr(1, content.size() - 2);
-    return Fortran::Parser::make_STRING(content, falk::location());
+    return Fortran::Parser::make_STRING(content, Fortran::location());
 }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 207 "flex/scanner.l"
 {
-    return Fortran::Parser::make_ID(yytext, falk::location());
+    return Fortran::Parser::make_ID(yytext, Fortran::location());
 }
 	YY_BREAK
 case 43:
@@ -1211,7 +1211,7 @@ YY_RULE_SETUP
 #line 211 "flex/scanner.l"
 { 
     auto rvalue = driver.createInteger(yytext);
-    return Fortran::Parser::make_INTEGER(std::move(rvalue), falk::location());
+    return Fortran::Parser::make_INTEGER(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
 case 44:
@@ -1219,7 +1219,7 @@ YY_RULE_SETUP
 #line 216 "flex/scanner.l"
 {
     auto rvalue = driver.createReal(yytext);
-    return Fortran::Parser::make_REAL(std::move(rvalue), falk::location());
+    return Fortran::Parser::make_REAL(std::move(rvalue), Fortran::location());
 }
 	YY_BREAK
 case 45:
@@ -1227,7 +1227,7 @@ case 45:
 YY_RULE_SETUP
 #line 221 "flex/scanner.l"
 {
-    return Fortran::Parser::make_NEWLINE(falk::location());
+    return Fortran::Parser::make_NEWLINE(Fortran::location());
 }
 	YY_BREAK
 case 46:

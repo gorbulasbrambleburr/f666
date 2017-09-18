@@ -668,7 +668,7 @@ namespace  Fortran  {
 
 
     /// Build a parser object.
-     Parser  (Fortran::Scanner &scanner_yyarg, Fortran::Driver &driver_yyarg, Fortran::Scanner &scanner_yyarg, Fortran::Driver &driver_yyarg);
+     Parser  (Fortran::Scanner &scanner_yyarg, Fortran::Driver &driver_yyarg);
     virtual ~ Parser  ();
 
     /// Parse.
@@ -871,9 +871,9 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 41,     ///< Last index in yytable_.
+      yylast_ = 43,     ///< Last index in yytable_.
       yynnts_ = 10,  ///< Number of nonterminal symbols.
-      yyfinal_ = 13, ///< Termination state number.
+      yyfinal_ = 14, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
       yyntokens_ = 39  ///< Number of tokens.
@@ -881,8 +881,6 @@ namespace  Fortran  {
 
 
     // User arguments.
-    Fortran::Scanner &scanner;
-    Fortran::Driver &driver;
     Fortran::Scanner &scanner;
     Fortran::Driver &driver;
   };
@@ -1584,7 +1582,7 @@ namespace  Fortran  {
 
 #line 10 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1588 "include/f_parser.hpp" // lalr1.cc:377
+#line 1586 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
