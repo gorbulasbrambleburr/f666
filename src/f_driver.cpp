@@ -17,15 +17,15 @@ node_ptr Fortran::Driver::createRoot() {
     return m_root;
 }
 
-template<typename NodeType, typename ...Args>
-node_ptr Fortran::Driver::createNode(Args&&... args) {
-    return node_ptr(new NodeType(std::forward<Args>(args)...));
-}
+// template<typename NodeType, typename ...Args>
+// node_ptr Fortran::Driver::createNode(Args&&... args) {
+//     return node_ptr(new NodeType(std::forward<Args>(args)...));
+// }
 
-template<typename ...Args>
-node_ptrs Fortran::Driver::createNodeList(Args&&... args) {
-    return node_ptrs(args...);
-}
+// template<typename ...Args>
+// node_ptrs Fortran::Driver::createNodeList(Args&&... args) {
+//     return node_ptrs(args...);
+// }
 
 bool Fortran::Driver::createBoolean(const std::string &text) {
     if (text == "TRUE") {

@@ -21,10 +21,6 @@ using node_ptrs = std::vector<node_ptr>;
 
 namespace Fortran {
 
-    // Forward declare the AST node class so we
-    // can declare container for it without the header
-    //class AST;
-
     /**
      * This class is the interface for our scanner/lexer. The end user
      * is expected to use this. It drives scanner/lexer, keeps
@@ -46,11 +42,15 @@ namespace Fortran {
 
         // Used by the Parser to create AST nodes
         template<typename NodeType, typename... Args>
-        node_ptr createNode(Args&&... args);
+        node_ptr createNode(Args&&... args) {
+            return node_ptr(new NodeType(std::forward<Args>(args)...));
+        }
 
         // Used by the Parser to create AST node lists
         template<typename... Args>
-        node_ptrs createNodeList(Args&&... args);
+        node_ptrs createNodeList(Args&&... args) {
+            return {args...};
+        }
 
         void switchInputStream(std::istream *is);
 

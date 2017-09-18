@@ -28,7 +28,7 @@
 }
 
 // Code to be placed in the beggining of the parser implementation file
-%code {
+%code top {
     #include <iostream>
     #include "f_scanner.hpp"
     #include "f_parser.hpp"
@@ -100,6 +100,7 @@
 %type<AST::node_ptr> MainProgram
 %type<AST::node_ptr> Subroutine
 %type<AST::node_ptr> Function
+%type<AST::node_ptr> Identifier
 %type<AST::node_ptr> Parameter
 %type<AST::node_ptr> Type
 %type<AST::node_ptr> Body
@@ -133,24 +134,29 @@ Subprogram
     };
 
 MainProgram
-    : PROGRAM ID Body STOP END {
+    : PROGRAM Identifier Body STOP END {
         $$ = driver.createNode<MainProgram>(std::move($2), std::move($3));
     };
 
 Subroutine
-    : SUBROUTINE ID LP ParameterList RP Body RETURN END {
+    : SUBROUTINE Identifier LP ParameterList RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
     }
-    | SUBROUTINE ID LP RP Body RETURN END {
+    | SUBROUTINE Identifier LP RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
     };
 
 Function
-    : Type FUNCTION ID LP ParameterList RP Body RETURN END {
+    : Type FUNCTION Identifier LP ParameterList RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
     }
-    | Type FUNCTION ID LP RP Body RETURN END {
+    | Type FUNCTION Identifier LP RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
+    };
+
+Identifier
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1));
     };
 
 ParameterList

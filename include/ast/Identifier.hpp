@@ -6,7 +6,7 @@
 
 class Identifier : public AST {
 public:
-    Identifier(std::string &id)
+    Identifier(std::string id)
         : m_id(id) {
     }
     ~Identifier() {}

@@ -304,6 +304,7 @@ namespace  Fortran  {
       // MainProgram
       // Subroutine
       // Function
+      // Identifier
       // Parameter
       // Type
       // Body
@@ -870,9 +871,9 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 43,     ///< Last index in yytable_.
-      yynnts_ = 10,  ///< Number of nonterminal symbols.
-      yyfinal_ = 14, ///< Termination state number.
+      yylast_ = 44,     ///< Last index in yytable_.
+      yynnts_ = 11,  ///< Number of nonterminal symbols.
+      yyfinal_ = 15, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
       yyntokens_ = 39  ///< Number of tokens.
@@ -962,13 +963,14 @@ namespace  Fortran  {
       case 42: // MainProgram
       case 43: // Subroutine
       case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
+      case 45: // Identifier
+      case 47: // Parameter
+      case 48: // Type
+      case 49: // Body
         value.copy< AST::node_ptr > (other.value);
         break;
 
-      case 45: // ParameterList
+      case 46: // ParameterList
         value.copy< AST::node_ptrs > (other.value);
         break;
 
@@ -1026,13 +1028,14 @@ namespace  Fortran  {
       case 42: // MainProgram
       case 43: // Subroutine
       case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
+      case 45: // Identifier
+      case 47: // Parameter
+      case 48: // Type
+      case 49: // Body
         value.copy< AST::node_ptr > (v);
         break;
 
-      case 45: // ParameterList
+      case 46: // ParameterList
         value.copy< AST::node_ptrs > (v);
         break;
 
@@ -1177,13 +1180,14 @@ namespace  Fortran  {
       case 42: // MainProgram
       case 43: // Subroutine
       case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
+      case 45: // Identifier
+      case 47: // Parameter
+      case 48: // Type
+      case 49: // Body
         value.template destroy< AST::node_ptr > ();
         break;
 
-      case 45: // ParameterList
+      case 46: // ParameterList
         value.template destroy< AST::node_ptrs > ();
         break;
 
@@ -1247,13 +1251,14 @@ namespace  Fortran  {
       case 42: // MainProgram
       case 43: // Subroutine
       case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
+      case 45: // Identifier
+      case 47: // Parameter
+      case 48: // Type
+      case 49: // Body
         value.move< AST::node_ptr > (s.value);
         break;
 
-      case 45: // ParameterList
+      case 46: // ParameterList
         value.move< AST::node_ptrs > (s.value);
         break;
 
@@ -1577,7 +1582,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1581 "include/f_parser.hpp" // lalr1.cc:377
+#line 1586 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
