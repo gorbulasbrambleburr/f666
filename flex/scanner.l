@@ -35,6 +35,7 @@ id          {letter}({letter}|{digit}|_)*
 sliteral    \'([^\\\']|\\.)*\'
 comment     "//".*\n
 ws          [ \t]+
+newline     \n
 
 %%
 
@@ -195,8 +196,9 @@ ws          [ \t]+
 
 
 
-{ws}        ;
-{comment}   ;
+{ws}      ;
+{comment} ;
+{newline} ;
 
 {sliteral} {
     auto content = std::string(yytext);
@@ -216,10 +218,6 @@ ws          [ \t]+
 {real} {
     auto rvalue = m_driver.createReal(yytext);
     return Fortran::Parser::make_REAL(std::move(rvalue), Fortran::location());
-}
-
-\n {
-    return Fortran::Parser::make_NEWLINE(Fortran::location());
 }
 
 . {
