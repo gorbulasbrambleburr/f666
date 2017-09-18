@@ -12,9 +12,9 @@ Fortran::Driver::Driver() :
     m_location(0) {
 }
 
-AST* Fortran::Driver::createRoot() {
+node_ptr Fortran::Driver::createRoot() {
     m_root = std::move(createNode<ExecutableProgram>(node_ptrs{}));
-    return m_root.get();
+    return m_root;
 }
 
 template<typename NodeType, typename ...Args>

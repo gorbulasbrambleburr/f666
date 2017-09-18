@@ -27,8 +27,6 @@
         class Driver;
         class Scanner;
     }
-
-    using std::move;
 }
 
 // Parameters given to the Parser constructor
@@ -100,16 +98,16 @@
 %token<Fortran::op::arithmetic> ASSIGN "=";
 
 // Token semantic types
-%token<Fortran::type> TYPE          "TYPE identifier";
-%token<Fortran::integer> INTEGER    "INTEGER value";
-%token<Fortran::real> REAL          "REAL value";
-%token<Fortran::boolean> BOOLEAN    "BOOLEAN value";
-%token<Fortran::string> STRING      "STRING value";
-%token<Fortran::string> ID          "ID identifier";
+%token<Fortran::type> TYPE           "TYPE identifier";
+%token<Fortran::integer> INTEGER     "INTEGER value";
+%token<Fortran::real> REAL           "REAL value";
+%token<Fortran::boolean> BOOLEAN     "BOOLEAN value";
+%token<Fortran::string> STRING       "STRING value";
+%token<Fortran::string> ID           "ID identifier";
 %token<Fortran::op::comp> COMPARISON "COMPARISON operator";
 
 // AST node types
-%type<AST*> ExecutableProgram
+%type<AST::node_ptr> ExecutableProgram
 %type<AST::node_ptr> Subprogram
 %type<AST::node_ptr> MainProgram
 %type<AST::node_ptr> Subroutine
@@ -126,49 +124,73 @@
 %%
 
 ExecutableProgram
-    : ExecutableProgram Subprogram                         { $$ = $1; $$->addChild(move($2)); }
-    | Subprogram                                           { $$ = driver.createRoot(); $$->addChild(move($1)); }
-    ;
+    : ExecutableProgram Subprogram {
+        $$ = std::move($1); $$->addChild(std::move($2));
+    }
+    | Subprogram {
+        $$ = driver.createRoot(); $$->addChild(std::move($1));
+    };
 
 Subprogram
-    : MainProgram                                          { $$ = move($1); }
-    | Subroutine                                           { $$ = move($1); }
-    | Function                                             { $$ = move($1); }
-    ;
+    : MainProgram {
+        $$ = std::move($1);
+    }
+    | Subroutine {
+        $$ = std::move($1);
+    }
+    | Function {
+        $$ = std::move($1);
+    };
 
 MainProgram
-    : PROGRAM ID Body STOP END                             { $$ = driver.createNode<MainProgram>(move($2), move($3)); }
-    ;
+    : PROGRAM ID Body STOP END {
+        $$ = driver.createNode<MainProgram>(std::move($2), std::move($3));
+    };
 
 Subroutine
-    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.createNode<Subroutine>(move($2), move($4), move($6); }
-    | SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.createNode<Subroutine>(move($2), {}, move($5); }
-    ;
+    : SUBROUTINE ID LP ParameterList RP Body RETURN END {
+        $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6);
+    }
+    | SUBROUTINE ID LP RP Body RETURN END {
+        $$ = driver.createNode<Subroutine>(std::move($2), {}, std::move($5);
+    };
 
 Function
-    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.createNode<Function>(move($1), move($3), move($5), move($7); }
-    | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.createNode<Function>(move($1), move($3), {}, move($6); }
-    ;
+    : Type FUNCTION ID LP ParameterList RP Body RETURN END {
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7);
+    }
+    | Type FUNCTION ID LP RP Body RETURN END {
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), {}, std::move($6);
+    };
 
 ParameterList
-    : Parameter                                            { $$ = driver.createNodeList(move($1)); }
-    | ParameterList COMMA Parameter                        { $$ = move($1); $$.emplace_back(move($3)); }
-    ;
+    : Parameter {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | ParameterList COMMA Parameter {
+        $$ = std::move($1); $$.emplace_back(std::move($3));
+    };
 
 Parameter
-    : ID                                                   { $$ = driver.createNode<Identifier>(move($1)); }
-    ;
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1));
+    };
 
 Type
-    : INTEGER                                              { $$ = driver.createNode<Type>(move($1)); }
-    | REAL                                                 { $$ = driver.createNode<Type>(move($1)); }
+    : INTEGER {
+        $$ = driver.createNode<Type>(std::move($1));
+    }
+    | REAL {
+        $$ = driver.createNode<Type>(std::move($1));
+    };
 
-Body: %empty                                               { $$ = driver.createNode<Body>(std::nullptr_t); }
-    ;
+Body: %empty {
+        $$ = driver.createNode<Body>(std::nullptr_t);
+    };
 
 /*
     : BodyConstruct                                        { $$ = $1; }
-    | Body BodyConstruct                                   { $$ = move($3); }
+    | Body BodyConstruct                                   { $$ = std::move($3); }
     ;
 
 BodyConstruct
@@ -183,7 +205,7 @@ SpecificationConstruct
 
 DeclarationConstruct
     : Declaration                                          { $$ = driver.declarationConstruct($1); }
-    | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, move($2)); }
+    | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, std::move($2)); }
     ;
 
 Declaration

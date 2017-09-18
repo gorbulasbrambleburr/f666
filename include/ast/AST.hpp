@@ -9,7 +9,7 @@
 class AST {
 
 public:
-    using node_ptr = std::unique_ptr<AST>;
+    using node_ptr = std::shared_ptr<AST>;
     using node_ptrs = std::vector<node_ptr>;
 
     AST();

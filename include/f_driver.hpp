@@ -12,7 +12,7 @@
 #include "../include/ast/Subroutine.hpp"
 #include "../include/ast/Function.hpp"
 
-using node_ptr = std::unique_ptr<AST>;
+using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;
 
 namespace Fortran {
@@ -38,7 +38,7 @@ namespace Fortran {
 
         int parse(const char * const filename);
 
-        AST* createRoot();
+        node_ptr createRoot();
 
         // Used by the Parser to create AST nodes
         template<typename NodeType, typename... Args>

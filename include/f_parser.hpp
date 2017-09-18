@@ -55,9 +55,7 @@
         class Scanner;
     }
 
-    using std::move;
-
-#line 61 "include/f_parser.hpp" // lalr1.cc:377
+#line 59 "include/f_parser.hpp" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -134,7 +132,7 @@
 
 #line 10 "bison/f_parser.y" // lalr1.cc:377
 namespace  Fortran  {
-#line 138 "include/f_parser.hpp" // lalr1.cc:377
+#line 136 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
@@ -302,8 +300,6 @@ namespace  Fortran  {
     union union_type
     {
       // ExecutableProgram
-      char dummy1[sizeof(AST*)];
-
       // Subprogram
       // MainProgram
       // Subroutine
@@ -311,36 +307,36 @@ namespace  Fortran  {
       // Parameter
       // Type
       // Body
-      char dummy2[sizeof(AST::node_ptr)];
+      char dummy1[sizeof(AST::node_ptr)];
 
       // ParameterList
-      char dummy3[sizeof(AST::node_ptrs)];
+      char dummy2[sizeof(AST::node_ptrs)];
 
       // "BOOLEAN value"
-      char dummy4[sizeof(Fortran::boolean)];
+      char dummy3[sizeof(Fortran::boolean)];
 
       // "INTEGER value"
-      char dummy5[sizeof(Fortran::integer)];
+      char dummy4[sizeof(Fortran::integer)];
 
       // "+"
       // "-"
       // "*"
       // "/"
       // "="
-      char dummy6[sizeof(Fortran::op::arithmetic)];
+      char dummy5[sizeof(Fortran::op::arithmetic)];
 
       // "COMPARISON operator"
-      char dummy7[sizeof(Fortran::op::comp)];
+      char dummy6[sizeof(Fortran::op::comp)];
 
       // "REAL value"
-      char dummy8[sizeof(Fortran::real)];
+      char dummy7[sizeof(Fortran::real)];
 
       // "STRING value"
       // "ID identifier"
-      char dummy9[sizeof(Fortran::string)];
+      char dummy8[sizeof(Fortran::string)];
 
       // "TYPE identifier"
-      char dummy10[sizeof(Fortran::type)];
+      char dummy9[sizeof(Fortran::type)];
 };
 
     /// Symbol semantic values.
@@ -436,8 +432,6 @@ namespace  Fortran  {
       /// Constructor for valueless symbols, and symbols from each type.
 
   basic_symbol (typename Base::kind_type t, const location_type& l);
-
-  basic_symbol (typename Base::kind_type t, const AST* v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const AST::node_ptr v, const location_type& l);
 
@@ -967,9 +961,6 @@ namespace  Fortran  {
       switch (other.type_get ())
     {
       case 40: // ExecutableProgram
-        value.copy< AST* > (other.value);
-        break;
-
       case 41: // Subprogram
       case 42: // MainProgram
       case 43: // Subroutine
@@ -1035,9 +1026,6 @@ namespace  Fortran  {
       switch (this->type_get ())
     {
       case 40: // ExecutableProgram
-        value.copy< AST* > (v);
-        break;
-
       case 41: // Subprogram
       case 42: // MainProgram
       case 43: // Subroutine
@@ -1097,13 +1085,6 @@ namespace  Fortran  {
    Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const location_type& l)
     : Base (t)
     , value ()
-    , location (l)
-  {}
-
-  template <typename Base>
-   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const AST* v, const location_type& l)
-    : Base (t)
-    , value (v)
     , location (l)
   {}
 
@@ -1197,9 +1178,6 @@ namespace  Fortran  {
     switch (yytype)
     {
       case 40: // ExecutableProgram
-        value.template destroy< AST* > ();
-        break;
-
       case 41: // Subprogram
       case 42: // MainProgram
       case 43: // Subroutine
@@ -1271,9 +1249,6 @@ namespace  Fortran  {
       switch (this->type_get ())
     {
       case 40: // ExecutableProgram
-        value.move< AST* > (s.value);
-        break;
-
       case 41: // Subprogram
       case 42: // MainProgram
       case 43: // Subroutine
@@ -1609,7 +1584,7 @@ namespace  Fortran  {
 
 #line 10 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1613 "include/f_parser.hpp" // lalr1.cc:377
+#line 1588 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
