@@ -1,8 +1,8 @@
 %skeleton "lalr1.cc"
 %require "3.0"       // Bison version
 
-%output "src/f_parser.cpp" 
-%defines "include/f_parser.hpp"
+//%output "src/f_parser.cpp" 
+%defines// "include/f_parser.hpp"
 
 %define api.token.constructor
 %define api.token.prefix {TOKEN_}
@@ -20,8 +20,8 @@
     #include <vector>
     #include <stdint.h>
     #include "Types.hpp"
+    #include "Operators.hpp"
     #include "ast/AST.hpp"
-    #include "../stack.hh"
 
     namespace Fortran {
         class Driver;
@@ -32,28 +32,32 @@
 }
 
 // Parameters given to the Parser constructor
-%parse-param { Scanner &scanner }
-%parse-param { Driver &driver }
+%parse-param { Fortran::Scanner &scanner }
+%parse-param { Fortran::Driver &driver }
 
 // Code to be placed in the beggining of the parser implementation file
 %code {
     #include <iostream>
-    #include "../include/f_scanner.hpp"
-    #include "../include/f_parser.hpp"
-    #include "../include/f_driver.hpp"
-    #include "../location.hh"
+    #include "f_scanner.hpp"
+    #include "f_parser.hpp"
+    #include "f_driver.hpp"
+    #include "location.hh"
 
     // This function is called only inside Bison, so we make it static to limit
     // symbol visibility for the linker to avoid potential linking conflicts.
     static Fortran::Parser::symbol_type yylex(
-            Fortran::Scanner &scanner, Fortran::Driver &driver) {
+            Fortran::Scanner &scanner) {
         return scanner.getNextToken();
     }
+    //static Fortran::Parser::symbol_type yylex(
+    //        Fortran::Scanner &scanner, Fortran::Driver &driver) {
+    //    return scanner.getNextToken();
+    //}
 }
 
 // Parameters to flex and bison
 %lex-param { Fortran::Scanner &scanner }
-%lex-param { Fortran::Driver &driver }
+//%lex-param { Fortran::Driver &driver }
 %parse-param { Fortran::Scanner &scanner }
 %parse-param { Fortran::Driver &driver }
 
@@ -89,31 +93,31 @@
 %token RP      "right parenthesis"
 
 // Arithmetic operators
-%token<Fortran::op:arithmetic> PLUS   "+";
-%token<Fortran::op:arithmetic> MINUS  "-";
-%token<Fortran::op:arithmetic> TIMES  "*";
-%token<Fortran::op:arithmetic> DIVIDE "/";
-%token<Fortran::op:arithmetic> ASSIGN "=";
+%token<Fortran::op::arithmetic> PLUS   "+";
+%token<Fortran::op::arithmetic> MINUS  "-";
+%token<Fortran::op::arithmetic> TIMES  "*";
+%token<Fortran::op::arithmetic> DIVIDE "/";
+%token<Fortran::op::arithmetic> ASSIGN "=";
 
 // Token semantic types
 %token<Fortran::type> TYPE          "TYPE identifier";
 %token<Fortran::integer> INTEGER    "INTEGER value";
 %token<Fortran::real> REAL          "REAL value";
-%token<Fortran::boolean> BOOL       "BOOL value";
-%token<std::string> STRING          "STRING value";
-%token<std::string> ID              "ID identifier";
-%token<Fortran::op:comp> COMPARISON "COMPARISON operator";
+%token<Fortran::boolean> BOOLEAN    "BOOLEAN value";
+%token<Fortran::string> STRING      "STRING value";
+%token<Fortran::string> ID          "ID identifier";
+%token<Fortran::op::comp> COMPARISON "COMPARISON operator";
 
 // AST node types
-%type<node_ptr> ExecutableProgram
-%type<node_ptr> Subprogram
-%type<node_ptr> MainProgram
-%type<node_ptr> Subroutine
-%type<node_ptr> Function
-%type<node_ptr> Parameter
-%type<node_ptr> Type
-%type<node_ptr> Body
-%type<node_ptrs> ParameterList
+%type<AST*> ExecutableProgram
+%type<AST::node_ptr> Subprogram
+%type<AST::node_ptr> MainProgram
+%type<AST::node_ptr> Subroutine
+%type<AST::node_ptr> Function
+%type<AST::node_ptr> Parameter
+%type<AST::node_ptr> Type
+%type<AST::node_ptr> Body
+%type<AST::node_ptrs> ParameterList
 
 %start ExecutableProgram
 
@@ -122,8 +126,8 @@
 %%
 
 ExecutableProgram
-    : ExecutableProgram Subprogram                         { $$ = move($1); $$->addChild(move($2)); }
-    | Subprogram                                           { $$ = driver.createNode<ExecutableProgram>(); $$->addChild(move($1)); }
+    : ExecutableProgram Subprogram                         { $$ = $1; $$->addChild(move($2)); }
+    | Subprogram                                           { $$ = driver.createRoot(); $$->addChild(move($1)); }
     ;
 
 Subprogram
@@ -137,12 +141,12 @@ MainProgram
     ;
 
 Subroutine
-    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.createNode<Subroutine>(move($2), $4, move($6); }
+    : SUBROUTINE ID LP ParameterList RP Body RETURN END    { $$ = driver.createNode<Subroutine>(move($2), move($4), move($6); }
     | SUBROUTINE ID LP RP Body RETURN END                  { $$ = driver.createNode<Subroutine>(move($2), {}, move($5); }
     ;
 
 Function
-    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.createNode<Function>(move($1), move($3), $5, move($7); }
+    : Type FUNCTION ID LP ParameterList RP Body RETURN END { $$ = driver.createNode<Function>(move($1), move($3), move($5), move($7); }
     | Type FUNCTION ID LP RP Body RETURN END               { $$ = driver.createNode<Function>(move($1), move($3), {}, move($6); }
     ;
 

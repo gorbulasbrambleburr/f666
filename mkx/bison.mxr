@@ -1,0 +1,30 @@
+###################### Copyright (C) 2016 Marleson Graf #######################
+######################### <github.com/aszdrick/mkm/> ##########################
+############################ <aszdrick@gmail.com> #############################
+###############################################################################
+## Licensed under the Apache License, Version 2.0 (the "License");           ##
+## you may not use this file except in compliance with the License.          ##
+## You may obtain a copy of the License at                                   ##
+##                                                                           ##
+##     http://www.apache.org/licenses/LICENSE-2.0                            ##
+##                                                                           ##
+## Unless required by applicable law or agreed to in writing, software       ##
+## distributed under the License is distributed on an "AS IS" BASIS,         ##
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  ##
+## See the License for the specific language governing permissions and       ##
+## limitations under the License.                                            ##
+###############################################################################
+
+#################################### RULES ####################################
+$(SRCDIR)/%.cpp $(HDRDIR)/%.hpp: $(BISONDIR)/%.y
+	@echo "[ $(BISON) ] $^ -> .hpp .cpp"
+	@$(BISON) --defines=$(HDRDIR)/$*.hpp --output=$(SRCDIR)/$*.cpp $^
+	@mv $(SRCDIR)/location.hh $(HDRDIR)/ 2> /dev/null
+	@mv $(SRCDIR)/position.hh $(HDRDIR)/ 2> /dev/null
+	@mv $(SRCDIR)/stack.hh $(HDRDIR)/ 2> /dev/null
+
+clean_bison:
+	@$(RM) $(BISONOUT) $(BISONDEF)
+	@$(RM) $(HDRDIR)/location.hh
+	@$(RM) $(HDRDIR)/position.hh
+	@$(RM) $(HDRDIR)/stack.hh

@@ -1,25 +1,23 @@
-#pragma once
+#ifndef __AST_MAIN_PROGRAM_HPP__
+#define __AST_MAIN_PROGRAM_HPP__
 
-#include <string>
 #include "AST.hpp"
 
 class MainProgram : public AST {
 public:
     MainProgram(node_ptr id, node_ptr body)
-        : _id(id), _body(body) {
+        : m_id(std::move(id)), m_body(std::move(body)) {
     }
-    ~MainProgram();
-    std::string print() const {
-        std::string code = "MainProgram (" + _name + ")\n";
-        for (AST *child : children) {
-            if (child != nullptr) {
-                code += " " + child->print() + "\n";
-            }
-        }
-        return code;
+    ~MainProgram() {}
+    void print() const {
+        std::cout << "MainProgram"<< std::endl;
+        m_id->print();
+        m_body->print();
     }
 
 private:
-    ode_ptr _id;
-    node_ptr _body;
+    node_ptr m_id;
+    node_ptr m_body;
 };
+
+#endif /* END __AST_MAIN_PROGRAM_HPP__ */

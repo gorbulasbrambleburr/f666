@@ -1,0 +1,5 @@
+PROGRAM TESTE
+
+
+STOP
+END

@@ -1,24 +1,17 @@
-#pragma once
+#ifndef __AST_EXECUTABLE_PROGRAM_HPP__
+#define __AST_EXECUTABLE_PROGRAM_HPP__
 
-#include <string>
 #include "AST.hpp"
 
 class ExecutableProgram : public AST {
 public:
-    ExecutableProgram(node_ptrs subprograms)
-        : _subprograms(subprograms) {
-    }
-    virtual ~ExecutableProgram();
-    virtual std::string print() const {
-        std::string code = "ExecutableProgram\n";
-        for (AST *child : children) {
-            if (child != nullptr) {
-                code += " " + child.print() + "\n";
-            }
-        }
-        return code;
-    }
+    ExecutableProgram(node_ptrs&& subprograms);
+    ~ExecutableProgram();
+    void print() const;
+    void addChild(node_ptr child);
 
 private:
-    node_ptrs _subprograms;
+    node_ptrs m_subprograms;
 };
+
+#endif /* END __AST_EXECUTABLE_PROGRAM_HPP__ */

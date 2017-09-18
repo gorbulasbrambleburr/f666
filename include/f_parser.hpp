@@ -40,15 +40,15 @@
 #ifndef YY_YY_INCLUDE_F_PARSER_HPP_INCLUDED
 # define YY_YY_INCLUDE_F_PARSER_HPP_INCLUDED
 // //                    "%code requires" blocks.
-#line 17 "parser.y" // lalr1.cc:377
+#line 17 "bison/f_parser.y" // lalr1.cc:377
 
     #include <iostream>
     #include <string>
     #include <vector>
     #include <stdint.h>
     #include "Types.hpp"
+    #include "Operators.hpp"
     #include "ast/AST.hpp"
-    #include "../stack.hh"
 
     namespace Fortran {
         class Driver;
@@ -132,7 +132,7 @@
 # define YYDEBUG 1
 #endif
 
-#line 10 "parser.y" // lalr1.cc:377
+#line 10 "bison/f_parser.y" // lalr1.cc:377
 namespace  Fortran  {
 #line 138 "include/f_parser.hpp" // lalr1.cc:377
 
@@ -301,29 +301,9 @@ namespace  Fortran  {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
-      // "BOOL value"
-      char dummy1[sizeof(Fortran::boolean)];
-
-      // "INTEGER value"
-      char dummy2[sizeof(Fortran::integer)];
-
-      // "+"
-      // "-"
-      // "*"
-      // "/"
-      // "="
-      char dummy3[sizeof(Fortran::op:arithmetic)];
-
-      // "COMPARISON operator"
-      char dummy4[sizeof(Fortran::op:comp)];
-
-      // "REAL value"
-      char dummy5[sizeof(Fortran::real)];
-
-      // "TYPE identifier"
-      char dummy6[sizeof(Fortran::type)];
-
       // ExecutableProgram
+      char dummy1[sizeof(AST*)];
+
       // Subprogram
       // MainProgram
       // Subroutine
@@ -331,14 +311,36 @@ namespace  Fortran  {
       // Parameter
       // Type
       // Body
-      char dummy7[sizeof(node_ptr)];
+      char dummy2[sizeof(AST::node_ptr)];
 
       // ParameterList
-      char dummy8[sizeof(node_ptrs)];
+      char dummy3[sizeof(AST::node_ptrs)];
+
+      // "BOOLEAN value"
+      char dummy4[sizeof(Fortran::boolean)];
+
+      // "INTEGER value"
+      char dummy5[sizeof(Fortran::integer)];
+
+      // "+"
+      // "-"
+      // "*"
+      // "/"
+      // "="
+      char dummy6[sizeof(Fortran::op::arithmetic)];
+
+      // "COMPARISON operator"
+      char dummy7[sizeof(Fortran::op::comp)];
+
+      // "REAL value"
+      char dummy8[sizeof(Fortran::real)];
 
       // "STRING value"
       // "ID identifier"
-      char dummy9[sizeof(std::string)];
+      char dummy9[sizeof(Fortran::string)];
+
+      // "TYPE identifier"
+      char dummy10[sizeof(Fortran::type)];
 };
 
     /// Symbol semantic values.
@@ -394,7 +396,7 @@ namespace  Fortran  {
         TOKEN_TYPE = 287,
         TOKEN_INTEGER = 288,
         TOKEN_REAL = 289,
-        TOKEN_BOOL = 290,
+        TOKEN_BOOLEAN = 290,
         TOKEN_STRING = 291,
         TOKEN_ID = 292,
         TOKEN_COMPARISON = 293
@@ -435,23 +437,25 @@ namespace  Fortran  {
 
   basic_symbol (typename Base::kind_type t, const location_type& l);
 
+  basic_symbol (typename Base::kind_type t, const AST* v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const AST::node_ptr v, const location_type& l);
+
+  basic_symbol (typename Base::kind_type t, const AST::node_ptrs v, const location_type& l);
+
   basic_symbol (typename Base::kind_type t, const Fortran::boolean v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const Fortran::integer v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const Fortran::op:arithmetic v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const Fortran::op::arithmetic v, const location_type& l);
 
-  basic_symbol (typename Base::kind_type t, const Fortran::op:comp v, const location_type& l);
+  basic_symbol (typename Base::kind_type t, const Fortran::op::comp v, const location_type& l);
 
   basic_symbol (typename Base::kind_type t, const Fortran::real v, const location_type& l);
 
+  basic_symbol (typename Base::kind_type t, const Fortran::string v, const location_type& l);
+
   basic_symbol (typename Base::kind_type t, const Fortran::type v, const location_type& l);
-
-  basic_symbol (typename Base::kind_type t, const node_ptr v, const location_type& l);
-
-  basic_symbol (typename Base::kind_type t, const node_ptrs v, const location_type& l);
-
-  basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l);
 
 
       /// Constructor for symbols with semantic value.
@@ -622,23 +626,23 @@ namespace  Fortran  {
 
     static inline
     symbol_type
-    make_PLUS (const Fortran::op:arithmetic& v, const location_type& l);
+    make_PLUS (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
     symbol_type
-    make_MINUS (const Fortran::op:arithmetic& v, const location_type& l);
+    make_MINUS (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
     symbol_type
-    make_TIMES (const Fortran::op:arithmetic& v, const location_type& l);
+    make_TIMES (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
     symbol_type
-    make_DIVIDE (const Fortran::op:arithmetic& v, const location_type& l);
+    make_DIVIDE (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
     symbol_type
-    make_ASSIGN (const Fortran::op:arithmetic& v, const location_type& l);
+    make_ASSIGN (const Fortran::op::arithmetic& v, const location_type& l);
 
     static inline
     symbol_type
@@ -654,23 +658,23 @@ namespace  Fortran  {
 
     static inline
     symbol_type
-    make_BOOL (const Fortran::boolean& v, const location_type& l);
+    make_BOOLEAN (const Fortran::boolean& v, const location_type& l);
 
     static inline
     symbol_type
-    make_STRING (const std::string& v, const location_type& l);
+    make_STRING (const Fortran::string& v, const location_type& l);
 
     static inline
     symbol_type
-    make_ID (const std::string& v, const location_type& l);
+    make_ID (const Fortran::string& v, const location_type& l);
 
     static inline
     symbol_type
-    make_COMPARISON (const Fortran::op:comp& v, const location_type& l);
+    make_COMPARISON (const Fortran::op::comp& v, const location_type& l);
 
 
     /// Build a parser object.
-     Parser  (Scanner &scanner_yyarg, Driver &driver_yyarg, Fortran::Scanner &scanner_yyarg, Fortran::Driver &driver_yyarg);
+     Parser  (Fortran::Scanner &scanner_yyarg, Fortran::Driver &driver_yyarg, Fortran::Scanner &scanner_yyarg, Fortran::Driver &driver_yyarg);
     virtual ~ Parser  ();
 
     /// Parse.
@@ -883,8 +887,8 @@ namespace  Fortran  {
 
 
     // User arguments.
-    Scanner &scanner;
-    Driver &driver;
+    Fortran::Scanner &scanner;
+    Fortran::Driver &driver;
     Fortran::Scanner &scanner;
     Fortran::Driver &driver;
   };
@@ -962,7 +966,25 @@ namespace  Fortran  {
   {
       switch (other.type_get ())
     {
-      case 35: // "BOOL value"
+      case 40: // ExecutableProgram
+        value.copy< AST* > (other.value);
+        break;
+
+      case 41: // Subprogram
+      case 42: // MainProgram
+      case 43: // Subroutine
+      case 44: // Function
+      case 46: // Parameter
+      case 47: // Type
+      case 48: // Body
+        value.copy< AST::node_ptr > (other.value);
+        break;
+
+      case 45: // ParameterList
+        value.copy< AST::node_ptrs > (other.value);
+        break;
+
+      case 35: // "BOOLEAN value"
         value.copy< Fortran::boolean > (other.value);
         break;
 
@@ -975,39 +997,24 @@ namespace  Fortran  {
       case 29: // "*"
       case 30: // "/"
       case 31: // "="
-        value.copy< Fortran::op:arithmetic > (other.value);
+        value.copy< Fortran::op::arithmetic > (other.value);
         break;
 
       case 38: // "COMPARISON operator"
-        value.copy< Fortran::op:comp > (other.value);
+        value.copy< Fortran::op::comp > (other.value);
         break;
 
       case 34: // "REAL value"
         value.copy< Fortran::real > (other.value);
         break;
 
-      case 32: // "TYPE identifier"
-        value.copy< Fortran::type > (other.value);
-        break;
-
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
-        value.copy< node_ptr > (other.value);
-        break;
-
-      case 45: // ParameterList
-        value.copy< node_ptrs > (other.value);
-        break;
-
       case 36: // "STRING value"
       case 37: // "ID identifier"
-        value.copy< std::string > (other.value);
+        value.copy< Fortran::string > (other.value);
+        break;
+
+      case 32: // "TYPE identifier"
+        value.copy< Fortran::type > (other.value);
         break;
 
       default:
@@ -1027,7 +1034,25 @@ namespace  Fortran  {
     (void) v;
       switch (this->type_get ())
     {
-      case 35: // "BOOL value"
+      case 40: // ExecutableProgram
+        value.copy< AST* > (v);
+        break;
+
+      case 41: // Subprogram
+      case 42: // MainProgram
+      case 43: // Subroutine
+      case 44: // Function
+      case 46: // Parameter
+      case 47: // Type
+      case 48: // Body
+        value.copy< AST::node_ptr > (v);
+        break;
+
+      case 45: // ParameterList
+        value.copy< AST::node_ptrs > (v);
+        break;
+
+      case 35: // "BOOLEAN value"
         value.copy< Fortran::boolean > (v);
         break;
 
@@ -1040,39 +1065,24 @@ namespace  Fortran  {
       case 29: // "*"
       case 30: // "/"
       case 31: // "="
-        value.copy< Fortran::op:arithmetic > (v);
+        value.copy< Fortran::op::arithmetic > (v);
         break;
 
       case 38: // "COMPARISON operator"
-        value.copy< Fortran::op:comp > (v);
+        value.copy< Fortran::op::comp > (v);
         break;
 
       case 34: // "REAL value"
         value.copy< Fortran::real > (v);
         break;
 
-      case 32: // "TYPE identifier"
-        value.copy< Fortran::type > (v);
-        break;
-
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
-        value.copy< node_ptr > (v);
-        break;
-
-      case 45: // ParameterList
-        value.copy< node_ptrs > (v);
-        break;
-
       case 36: // "STRING value"
       case 37: // "ID identifier"
-        value.copy< std::string > (v);
+        value.copy< Fortran::string > (v);
+        break;
+
+      case 32: // "TYPE identifier"
+        value.copy< Fortran::type > (v);
         break;
 
       default:
@@ -1091,6 +1101,27 @@ namespace  Fortran  {
   {}
 
   template <typename Base>
+   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const AST* v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const AST::node_ptr v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
+   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const AST::node_ptrs v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
    Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::boolean v, const location_type& l)
     : Base (t)
     , value (v)
@@ -1105,14 +1136,14 @@ namespace  Fortran  {
   {}
 
   template <typename Base>
-   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::op:arithmetic v, const location_type& l)
+   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::op::arithmetic v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
   {}
 
   template <typename Base>
-   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::op:comp v, const location_type& l)
+   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::op::comp v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1126,28 +1157,14 @@ namespace  Fortran  {
   {}
 
   template <typename Base>
+   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::string v, const location_type& l)
+    : Base (t)
+    , value (v)
+    , location (l)
+  {}
+
+  template <typename Base>
    Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const Fortran::type v, const location_type& l)
-    : Base (t)
-    , value (v)
-    , location (l)
-  {}
-
-  template <typename Base>
-   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const node_ptr v, const location_type& l)
-    : Base (t)
-    , value (v)
-    , location (l)
-  {}
-
-  template <typename Base>
-   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const node_ptrs v, const location_type& l)
-    : Base (t)
-    , value (v)
-    , location (l)
-  {}
-
-  template <typename Base>
-   Parser ::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, const std::string v, const location_type& l)
     : Base (t)
     , value (v)
     , location (l)
@@ -1179,7 +1196,25 @@ namespace  Fortran  {
     // Type destructor.
     switch (yytype)
     {
-      case 35: // "BOOL value"
+      case 40: // ExecutableProgram
+        value.template destroy< AST* > ();
+        break;
+
+      case 41: // Subprogram
+      case 42: // MainProgram
+      case 43: // Subroutine
+      case 44: // Function
+      case 46: // Parameter
+      case 47: // Type
+      case 48: // Body
+        value.template destroy< AST::node_ptr > ();
+        break;
+
+      case 45: // ParameterList
+        value.template destroy< AST::node_ptrs > ();
+        break;
+
+      case 35: // "BOOLEAN value"
         value.template destroy< Fortran::boolean > ();
         break;
 
@@ -1192,39 +1227,24 @@ namespace  Fortran  {
       case 29: // "*"
       case 30: // "/"
       case 31: // "="
-        value.template destroy< Fortran::op:arithmetic > ();
+        value.template destroy< Fortran::op::arithmetic > ();
         break;
 
       case 38: // "COMPARISON operator"
-        value.template destroy< Fortran::op:comp > ();
+        value.template destroy< Fortran::op::comp > ();
         break;
 
       case 34: // "REAL value"
         value.template destroy< Fortran::real > ();
         break;
 
-      case 32: // "TYPE identifier"
-        value.template destroy< Fortran::type > ();
-        break;
-
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
-        value.template destroy< node_ptr > ();
-        break;
-
-      case 45: // ParameterList
-        value.template destroy< node_ptrs > ();
-        break;
-
       case 36: // "STRING value"
       case 37: // "ID identifier"
-        value.template destroy< std::string > ();
+        value.template destroy< Fortran::string > ();
+        break;
+
+      case 32: // "TYPE identifier"
+        value.template destroy< Fortran::type > ();
         break;
 
       default:
@@ -1250,7 +1270,25 @@ namespace  Fortran  {
     super_type::move(s);
       switch (this->type_get ())
     {
-      case 35: // "BOOL value"
+      case 40: // ExecutableProgram
+        value.move< AST* > (s.value);
+        break;
+
+      case 41: // Subprogram
+      case 42: // MainProgram
+      case 43: // Subroutine
+      case 44: // Function
+      case 46: // Parameter
+      case 47: // Type
+      case 48: // Body
+        value.move< AST::node_ptr > (s.value);
+        break;
+
+      case 45: // ParameterList
+        value.move< AST::node_ptrs > (s.value);
+        break;
+
+      case 35: // "BOOLEAN value"
         value.move< Fortran::boolean > (s.value);
         break;
 
@@ -1263,39 +1301,24 @@ namespace  Fortran  {
       case 29: // "*"
       case 30: // "/"
       case 31: // "="
-        value.move< Fortran::op:arithmetic > (s.value);
+        value.move< Fortran::op::arithmetic > (s.value);
         break;
 
       case 38: // "COMPARISON operator"
-        value.move< Fortran::op:comp > (s.value);
+        value.move< Fortran::op::comp > (s.value);
         break;
 
       case 34: // "REAL value"
         value.move< Fortran::real > (s.value);
         break;
 
-      case 32: // "TYPE identifier"
-        value.move< Fortran::type > (s.value);
-        break;
-
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 46: // Parameter
-      case 47: // Type
-      case 48: // Body
-        value.move< node_ptr > (s.value);
-        break;
-
-      case 45: // ParameterList
-        value.move< node_ptrs > (s.value);
-        break;
-
       case 36: // "STRING value"
       case 37: // "ID identifier"
-        value.move< std::string > (s.value);
+        value.move< Fortran::string > (s.value);
+        break;
+
+      case 32: // "TYPE identifier"
+        value.move< Fortran::type > (s.value);
         break;
 
       default:
@@ -1512,31 +1535,31 @@ namespace  Fortran  {
   }
 
    Parser ::symbol_type
-   Parser ::make_PLUS (const Fortran::op:arithmetic& v, const location_type& l)
+   Parser ::make_PLUS (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_PLUS, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_MINUS (const Fortran::op:arithmetic& v, const location_type& l)
+   Parser ::make_MINUS (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_MINUS, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_TIMES (const Fortran::op:arithmetic& v, const location_type& l)
+   Parser ::make_TIMES (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_TIMES, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_DIVIDE (const Fortran::op:arithmetic& v, const location_type& l)
+   Parser ::make_DIVIDE (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_DIVIDE, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_ASSIGN (const Fortran::op:arithmetic& v, const location_type& l)
+   Parser ::make_ASSIGN (const Fortran::op::arithmetic& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_ASSIGN, v, l);
   }
@@ -1560,33 +1583,33 @@ namespace  Fortran  {
   }
 
    Parser ::symbol_type
-   Parser ::make_BOOL (const Fortran::boolean& v, const location_type& l)
+   Parser ::make_BOOLEAN (const Fortran::boolean& v, const location_type& l)
   {
-    return symbol_type (token::TOKEN_BOOL, v, l);
+    return symbol_type (token::TOKEN_BOOLEAN, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_STRING (const std::string& v, const location_type& l)
+   Parser ::make_STRING (const Fortran::string& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_STRING, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_ID (const std::string& v, const location_type& l)
+   Parser ::make_ID (const Fortran::string& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_ID, v, l);
   }
 
    Parser ::symbol_type
-   Parser ::make_COMPARISON (const Fortran::op:comp& v, const location_type& l)
+   Parser ::make_COMPARISON (const Fortran::op::comp& v, const location_type& l)
   {
     return symbol_type (token::TOKEN_COMPARISON, v, l);
   }
 
 
-#line 10 "parser.y" // lalr1.cc:377
+#line 10 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1590 "include/f_parser.hpp" // lalr1.cc:377
+#line 1613 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

@@ -1,19 +1,21 @@
-#pragma once
+#ifndef __AST_HPP__
+#define __AST_HPP__
 
-#include <string>
+#include <iostream>
+#include <memory>
 #include <vector>
 #include "../Types.hpp"
 
-using node_ptr = std::unique_ptr<AST>;
-using node_ptrs = std::vector<node_ptr>;
-
 class AST {
+
 public:
+    using node_ptr = std::unique_ptr<AST>;
+    using node_ptrs = std::vector<node_ptr>;
+
     AST();
     virtual ~AST();
-    virtual std::string print() const;
+    virtual void print() const;
     virtual void addChild(node_ptr child);
-
-protected:
-    std::vector<std::unique_ptr<AST>> children;
 };
+
+#endif /* END __AST_HPP__ */

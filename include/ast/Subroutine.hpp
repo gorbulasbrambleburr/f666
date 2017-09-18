@@ -1,27 +1,27 @@
-#pragma once
+#ifndef __AST_SUBROUTINE_HPP__
+#define __AST_SUBROUTINE_HPP__
 
-#include <string>
 #include "AST.hpp"
-
 
 class Subroutine : public AST {
 public:
-    Subroutine(node_ptr id, node_ptr params, node_ptr body)
-        : _id(id), _params(params), _body(body) {
+    Subroutine(node_ptr id, node_ptrs&& params, node_ptr body)
+        : m_id(std::move(id)), m_params(std::forward<node_ptrs>(params)), m_body(std::move(body)) {
     }
-    ~Subroutine();
-    std::string print() const {
-        std::string code = "- Subroutine\n";
-        for (AST *child : children) {
-            if (child != nullptr) {
-                code += " " + child->print() + "\n";
-            }
+    ~Subroutine() {}
+    void print() const {
+        std::cout << "Subroutine" << std::endl;
+        m_id->print();
+        for (auto& param : m_params) {
+            param->print();
         }
-        return code;
+        m_body->print();
     }
 
 private:
-    node_ptr _id;
-    node_ptr _params;
-    node_ptr _body;
+    node_ptr m_id;
+    node_ptrs m_params;
+    node_ptr m_body;
 };
+
+#endif /* END __AST_SUBROUTINE_HPP__ */

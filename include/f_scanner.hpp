@@ -21,20 +21,19 @@
 #define YY_DECL Fortran::Parser::symbol_type Fortran::Scanner::getNextToken()
 
 #include "f_parser.hpp" // this is needed for symbol_type
-//#include "../location.hh"
 
 namespace Fortran {
 
-    class Driver;
+    //class Driver;
 
     class Scanner : public yyFlexLexer {
     public:
-        Scanner(Driver &driver) : m_driver(driver) {}
+        Scanner(Fortran::Driver &driver) : m_driver(driver) {}
         virtual ~Scanner() {}
         virtual Fortran::Parser::symbol_type getNextToken();
 
     private:
-        Driver m_driver;
+        Fortran::Driver &m_driver;
     };
 }
 

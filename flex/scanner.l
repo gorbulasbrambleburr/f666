@@ -1,9 +1,9 @@
 %{
     #include <iostream>
     #include <cstdlib>
-    #include "include/f_scanner.hpp"
-    #include "include/f_driver.hpp"
-    #include "include/f_parser.hpp"
+    #include "f_scanner.hpp"
+    #include "f_driver.hpp"
+    #include "f_parser.hpp"
     #include "location.hh"
 
     #include <string>
@@ -67,15 +67,15 @@ ws          [ \t]+
 }
 
 "INTEGER" {
-    return Fortran::Parser::make_TYPE(ast::type::INTEGER, falk::location());
+    return Fortran::Parser::make_TYPE(Fortran::type::INTEGER, falk::location());
 }
 
 "REAL" {
-    return Fortran::Parser::make_TYPE(ast::type::REAL, falk::location());
+    return Fortran::Parser::make_TYPE(Fortran::type::REAL, falk::location());
 }
 
 "BOOLEAN" {
-    return Fortran::Parser::make_TYPE(ast::type::BOOLEAN, falk::location());
+    return Fortran::Parser::make_TYPE(Fortran::type::BOOLEAN, falk::location());
 }
 
 "CYCLE" {
@@ -173,12 +173,12 @@ ws          [ \t]+
 
 ".TRUE." {
     auto rvalue = driver.createBoolean(yytext);
-    return Fortran::Parser::make_BOOL(std::move(rvalue), falk::location());
+    return Fortran::Parser::make_BOOLEAN(std::move(rvalue), falk::location());
 }
 
 ".FALSE." {
     auto rvalue = driver.createBoolean(yytext);
-    return Fortran::Parser::make_BOOL(std::move(rvalue), falk::location());
+    return Fortran::Parser::make_BOOLEAN(std::move(rvalue), falk::location());
 }
 
 "," {

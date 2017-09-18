@@ -4,12 +4,13 @@
 #include <string>
 #include <vector>
 #include <memory>
-//#include <cstddef>
-//#include <istream>
 
 #include "f_scanner.hpp"
-#include "../parser.tab.h"
-//#include "ast/AST.hpp"
+#include "ast/AST.hpp"
+#include "../include/ast/ExecutableProgram.hpp"
+#include "../include/ast/MainProgram.hpp"
+#include "../include/ast/Subroutine.hpp"
+#include "../include/ast/Function.hpp"
 
 using node_ptr = std::unique_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;
@@ -18,7 +19,7 @@ namespace Fortran {
 
     // Forward declare the AST node class so we
     // can declare container for it without the header
-    class AST;
+    //class AST;
 
     /**
      * This class is the interface for our scanner/lexer. The end user
@@ -32,14 +33,25 @@ namespace Fortran {
         Driver();
 
         bool createBoolean(const std::string &);
-        bool createInteger(const std::string &);
-        bool createReal(const std::string &);
+        int createInteger(const std::string &);
+        float createReal(const std::string &);
 
-        void parse(const char *filename);
+        int parse(const char * const filename);
 
+        AST* createRoot();
+
+        // Used by the Parser to create AST nodes
+        template<typename NodeType, typename... Args>
+        node_ptr createNode(Args&&... args);
+
+        // Used by the Parser to create AST node lists
+        template<typename... Args>
+        node_ptrs createNodeList(Args&&... args);
+
+        void switchInputStream(std::istream *is);
 
         // Print AST
-        std::string print() const;
+        void print() const;
 
         /**
          * This is needed so that Scanner and Parser can call some
@@ -49,16 +61,7 @@ namespace Fortran {
         friend class Scanner;
 
     private:
-
-        // Used by the Parser to create AST nodes
-        template<typename NodeType, typename... Args>
-        node_ptr Fortran::Driver::createNode(Args&&... args);
-
-        // Used by the Parser to create AST node lists
-        template<typename... Args>
-        node_ptrs Fortran::Driver::createNodeList(Args&&... args);
-
-        void parse_helper(std::istream &stream);
+        void clear();
 
         // Used internally by Scanner YY_USER_ACTION to update location indicator
         void increaseLocation(unsigned int loc);
@@ -67,9 +70,9 @@ namespace Fortran {
         unsigned int location() const;
 
     private:
-        Parser m_parser;
+        node_ptr m_root;
         Scanner m_scanner;
-        node_ptrs m_nodes;
+        Parser m_parser;
         unsigned int m_location; // Used by scanner
     };
 }
