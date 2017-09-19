@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <iomanip>  // For std::setw(int n)
 #include "../Types.hpp"
 
 class AST {
@@ -14,8 +15,9 @@ public:
 
     AST() {}
     virtual ~AST() {}
-    virtual void print() const {}
+    virtual void print(int width) const {}
     virtual void addChild(node_ptr child) {}
 };
+    
 
 #endif /* END __AST_HPP__ */

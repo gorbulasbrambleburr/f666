@@ -17,16 +17,6 @@ node_ptr Fortran::Driver::createRoot() {
     return m_root;
 }
 
-// template<typename NodeType, typename ...Args>
-// node_ptr Fortran::Driver::createNode(Args&&... args) {
-//     return node_ptr(new NodeType(std::forward<Args>(args)...));
-// }
-
-// template<typename ...Args>
-// node_ptrs Fortran::Driver::createNodeList(Args&&... args) {
-//     return node_ptrs(args...);
-// }
-
 bool Fortran::Driver::createBoolean(const std::string &text) {
     if (text == "TRUE") {
         return true;
@@ -65,7 +55,7 @@ void Fortran::Driver::clear() {
 
 void Fortran::Driver::print() const {
     std::cout << "Results:" << std::endl;
-    m_root->print();
+    m_root->print(4);
 }
 
 void Fortran::Driver::increaseLocation(unsigned int loc) {

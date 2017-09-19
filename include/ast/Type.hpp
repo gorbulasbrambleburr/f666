@@ -1,27 +1,30 @@
 #ifndef __AST_TYPE_HPP__
 #define __AST_TYPE_HPP__
 
-#include <string>
 #include "AST.hpp"
+#include "../Types.hpp"
 
 class Type : public AST {
 public:
-    Type(int type)
-        : m_type("int") {
-    }
-    Type(float type)
-        : m_type("float") {
-    }
-    Type(bool type)
-        : m_type("bool") {
+    Type(const Fortran::type &type)
+        : m_type(type) {
     }
     ~Type() {}
-    void print() const {
-        std::cout << "Type (" << m_type << ")" << std::endl;
+    void print(int width) const {
+        std::cout << std::setw(width) << "- " << "Type [" << str(m_type) << "]" << std::endl;
+    }
+    std::string str(Fortran::type type) const {
+        std::string s;
+        switch (type) {
+            case (Fortran::type::INTEGER): s = "INTEGER"; break; 
+            case (Fortran::type::REAL): s = "REAL"; break; 
+            case (Fortran::type::BOOLEAN): s = "BOOLEAN"; break; 
+        }
+        return s;
     }
 
 private:
-    std::string m_type;
+    const Fortran::type m_type;
 };
 
 #endif /* END __AST_TYPE_HPP__ */

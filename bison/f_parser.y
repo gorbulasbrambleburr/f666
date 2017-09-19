@@ -174,13 +174,7 @@ Parameter
     };
 
 Type
-    : INTEGER {
-        $$ = driver.createNode<Type>($1);
-    }
-    | REAL {
-        $$ = driver.createNode<Type>($1);
-    }
-    | BOOLEAN {
+    : TYPE {
         $$ = driver.createNode<Type>($1);
     };
 

@@ -9,14 +9,14 @@ public:
         : m_type(std::move(type)), m_id(std::move(id)), m_params(std::forward<node_ptrs>(params)), m_body(std::move(body)) {
     }
     ~Function() {}
-    void print() const {
-        std::cout << "Function" << std::endl;
-        m_type->print();
-        m_id->print();
+    void print(int width) const {
+        std::cout << std::setw(width) << "- " << "Function:" << std::endl;
+        m_type->print(width + 4);
+        m_id->print(width + 4);
         for (auto& param : m_params) {
-            param->print();
+            param->print(width + 4);
         }
-        m_body->print();
+        m_body->print(width + 4);
     }
 
 private:

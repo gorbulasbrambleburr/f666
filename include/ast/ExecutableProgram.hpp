@@ -7,7 +7,7 @@ class ExecutableProgram : public AST {
 public:
     ExecutableProgram(node_ptrs&& subprograms);
     ~ExecutableProgram();
-    void print() const;
+    void print(int width) const;
     void addChild(node_ptr child);
 
 private:

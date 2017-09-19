@@ -784,37 +784,21 @@ namespace  Fortran  {
   case 16:
 #line 177 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::integer > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::type > ());
     }
 #line 790 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 17:
-#line 180 "bison/f_parser.y" // lalr1.cc:859
+#line 181 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::real > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Body>(node_ptrs{});
     }
 #line 798 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 18:
-#line 183 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::boolean > ());
-    }
-#line 806 "src/f_parser.cpp" // lalr1.cc:859
-    break;
 
-  case 19:
-#line 187 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Body>(node_ptrs{});
-    }
-#line 814 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-
-#line 818 "src/f_parser.cpp" // lalr1.cc:859
+#line 802 "src/f_parser.cpp" // lalr1.cc:859
             default:
               break;
             }
@@ -1069,86 +1053,84 @@ namespace  Fortran  {
   }
 
 
-  const signed char  Parser ::yypact_ninf_ = -33;
+  const signed char  Parser ::yypact_ninf_ = -30;
 
   const signed char  Parser ::yytable_ninf_ = -1;
 
   const signed char
    Parser ::yypact_[] =
   {
-       3,   -32,   -32,   -33,   -33,   -33,     0,   -33,   -33,   -33,
-     -33,    13,   -33,   -33,    -6,   -33,   -33,   -32,    14,   -24,
-      -4,    16,   -33,   -33,   -12,   -33,   -15,   -33,    18,   -11,
-     -33,   -33,    -9,    19,   -33,    21,    22,   -33,   -33,    23,
-      24,    32,   -33,   -33,    33,   -33
+      -2,   -29,   -29,   -30,     0,   -30,   -30,   -30,   -30,     6,
+     -30,   -30,   -13,   -30,   -30,   -29,     3,   -19,    -3,     8,
+     -30,   -30,    -9,   -30,   -16,   -30,    17,   -11,   -30,   -30,
+      -1,    19,   -30,    21,    22,   -30,   -30,    23,    25,    27,
+     -30,   -30,    28,   -30
   };
 
   const unsigned char
    Parser ::yydefact_[] =
   {
-       0,     0,     0,    16,    17,    18,     0,     3,     4,     5,
-       6,     0,    12,    19,     0,     1,     2,     0,     0,     0,
-       0,     0,    19,    15,     0,    13,     0,     7,     0,     0,
-      19,    19,     0,     0,    14,     0,     0,    19,     9,     0,
-       0,     0,     8,    11,     0,    10
+       0,     0,     0,    16,     0,     3,     4,     5,     6,     0,
+      12,    17,     0,     1,     2,     0,     0,     0,     0,     0,
+      17,    15,     0,    13,     0,     7,     0,     0,    17,    17,
+       0,     0,    14,     0,     0,    17,     9,     0,     0,     0,
+       8,    11,     0,    10
   };
 
   const signed char
    Parser ::yypgoto_[] =
   {
-     -33,   -33,    34,   -33,   -33,   -33,     6,     4,    15,   -33,
-     -21
+     -30,   -30,    31,   -30,   -30,   -30,     4,    13,    11,   -30,
+     -15
   };
 
   const signed char
    Parser ::yydefgoto_[] =
   {
-      -1,     6,     7,     8,     9,    10,    13,    24,    25,    11,
-      18
+      -1,     4,     5,     6,     7,     8,    11,    22,    23,     9,
+      16
   };
 
   const unsigned char
    Parser ::yytable_[] =
   {
-      15,    28,    22,     1,     2,    12,     1,     2,    14,    35,
-      36,    31,    29,    23,    30,    29,    41,    37,    17,    19,
-      21,    26,    23,    20,    27,    33,    23,    38,    39,    40,
-      32,    42,    43,     3,     4,     5,     3,     4,     5,    44,
-      16,    45,     0,     0,    34
+      13,     1,     2,     1,     2,    26,    12,    20,    10,    19,
+      29,    15,    17,    33,    34,    27,    25,    28,    21,    18,
+      39,    21,    24,    27,    31,    35,    21,    36,    37,    38,
+       3,    40,     3,    41,    42,    14,    43,    30,    32
   };
 
-  const signed char
+  const unsigned char
    Parser ::yycheck_[] =
   {
-       0,    22,    26,     3,     4,    37,     3,     4,     2,    30,
-      31,    26,    24,    37,    26,    24,    37,    26,     5,    25,
-       6,    25,    37,    17,     8,     7,    37,     8,     7,     7,
-      26,     8,     8,    33,    34,    35,    33,    34,    35,     7,
-       6,     8,    -1,    -1,    29
+       0,     3,     4,     3,     4,    20,     2,    26,    37,     6,
+      26,     5,    25,    28,    29,    24,     8,    26,    37,    15,
+      35,    37,    25,    24,     7,    26,    37,     8,     7,     7,
+      32,     8,    32,     8,     7,     4,     8,    24,    27
   };
 
   const unsigned char
    Parser ::yystos_[] =
   {
-       0,     3,     4,    33,    34,    35,    40,    41,    42,    43,
-      44,    48,    37,    45,    45,     0,    41,     5,    49,    25,
-      45,     6,    26,    37,    46,    47,    25,     8,    49,    24,
-      26,    26,    46,     7,    47,    49,    49,    26,     8,     7,
-       7,    49,     8,     8,     7,     8
+       0,     3,     4,    32,    40,    41,    42,    43,    44,    48,
+      37,    45,    45,     0,    41,     5,    49,    25,    45,     6,
+      26,    37,    46,    47,    25,     8,    49,    24,    26,    26,
+      46,     7,    47,    49,    49,    26,     8,     7,     7,    49,
+       8,     8,     7,     8
   };
 
   const unsigned char
    Parser ::yyr1_[] =
   {
        0,    39,    40,    40,    41,    41,    41,    42,    43,    43,
-      44,    44,    45,    46,    46,    47,    48,    48,    48,    49
+      44,    44,    45,    46,    46,    47,    48,    49
   };
 
   const unsigned char
    Parser ::yyr2_[] =
   {
        0,     2,     2,     1,     1,     1,     1,     5,     8,     7,
-       9,     8,     1,     1,     3,     1,     1,     1,     1,     0
+       9,     8,     1,     1,     3,     1,     1,     0
   };
 
 
@@ -1179,7 +1161,7 @@ namespace  Fortran  {
    Parser ::yyrline_[] =
   {
        0,   116,   116,   120,   126,   129,   132,   137,   142,   145,
-     150,   153,   158,   163,   166,   172,   177,   180,   183,   187
+     150,   153,   158,   163,   166,   172,   177,   181
   };
 
   // Print the state stack on the debug stream.
@@ -1214,8 +1196,8 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:1167
 } //  Fortran 
-#line 1218 "src/f_parser.cpp" // lalr1.cc:1167
-#line 407 "bison/f_parser.y" // lalr1.cc:1168
+#line 1200 "src/f_parser.cpp" // lalr1.cc:1167
+#line 401 "bison/f_parser.y" // lalr1.cc:1168
 
 
 void Fortran::Parser::error(const location &loc, const std::string &message) {

@@ -9,13 +9,13 @@ public:
         : m_id(std::move(id)), m_params(std::forward<node_ptrs>(params)), m_body(std::move(body)) {
     }
     ~Subroutine() {}
-    void print() const {
-        std::cout << "Subroutine" << std::endl;
-        m_id->print();
+    void print(int width) const {
+        std::cout << std::setw(width) << "- " << "Subroutine:" << std::endl;
+        m_id->print(width + 4);
         for (auto& param : m_params) {
-            param->print();
+            param->print(width + 4);
         }
-        m_body->print();
+        m_body->print(width + 4);
     }
 
 private:

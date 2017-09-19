@@ -10,8 +10,8 @@ public:
         : m_id(id) {
     }
     ~Identifier() {}
-    void print() const {
-        std::cout << "ID (" << m_id << ")" << std::endl;
+    void print(int width) const {
+        std::cout << std::setw(width) << "- " << "id [" << m_id << "]" << std::endl;
     }
 
 private:

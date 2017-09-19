@@ -9,10 +9,10 @@ public:
         : m_id(std::move(id)), m_body(std::move(body)) {
     }
     ~MainProgram() {}
-    void print() const {
-        std::cout << "MainProgram"<< std::endl;
-        m_id->print();
-        m_body->print();
+    void print(int width) const {
+        std::cout << std::setw(width) << "- " << "MainProgram:"<< std::endl;
+        m_id->print(width + 4);
+        m_body->print(width + 4);
     }
 
 private:

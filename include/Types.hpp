@@ -1,7 +1,7 @@
 #ifndef __FTYPES_HPP__
 #define __FTYPES_HPP__
 
-#include <string>
+#include <type_traits>
 
 namespace Fortran {
 
@@ -12,6 +12,7 @@ namespace Fortran {
             BOOLEAN,
         };
     }
+
 
     using type = vartype::type;
     using integer = int;

@@ -7,10 +7,10 @@ ExecutableProgram::ExecutableProgram(node_ptrs&& subprograms)
 ExecutableProgram::~ExecutableProgram() {
 }
 
-void ExecutableProgram::print() const {
-    std::cout << "ExecutableProgram" << std::endl;
+void ExecutableProgram::print(int width) const {
+    std::cout << std::setw(width) << "- " << "ExecutableProgram:" << std::endl;
     for (auto &child : m_subprograms) {
-        child->print();
+        child->print(width + 4);
     }
 }
 

@@ -9,10 +9,10 @@ public:
         : m_constructs(constructs) {
     }
     ~Body() {}
-    void print() const {
-        std::cout << "Body" << std::endl;
+    void print(int width) const {
+        std::cout << std::setw(width) << "- " << "Body:" << std::endl;
         for (auto& construct : m_constructs) {
-            construct->print();
+            construct->print(width + 4);
         }
     }
 
