@@ -101,10 +101,17 @@
 %type<AST::node_ptr> Subroutine
 %type<AST::node_ptr> Function
 %type<AST::node_ptr> Identifier
-%type<AST::node_ptr> Parameter
+%type<AST::node_ptrs> ArgumentList
+%type<AST::node_ptr> Argument
 %type<AST::node_ptr> Type
 %type<AST::node_ptr> Body
-%type<AST::node_ptrs> ParameterList
+%type<AST::node_ptr> SpecificationConstruct
+%type<AST::node_ptr> ExecutableConstruct
+%type<AST::node_ptrs> SpecificationList
+%type<AST::node_ptr> Specification
+%type<AST::node_ptr> DeclarationConstruct
+%type<AST::node_ptr> ParameterStatement
+%type<AST::node_ptrs> ConstantList
 
 %start ExecutableProgram
 
@@ -139,7 +146,7 @@ MainProgram
     };
 
 Subroutine
-    : SUBROUTINE Identifier LP ParameterList RP Body RETURN END {
+    : SUBROUTINE Identifier LP ArgumentList RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
     }
     | SUBROUTINE Identifier LP RP Body RETURN END {
@@ -147,7 +154,7 @@ Subroutine
     };
 
 Function
-    : Type FUNCTION Identifier LP ParameterList RP Body RETURN END {
+    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
     }
     | Type FUNCTION Identifier LP RP Body RETURN END {
@@ -159,16 +166,16 @@ Identifier
         $$ = driver.createNode<Identifier>(std::move($1));
     };
 
-ParameterList
-    : Parameter {
+ArgumentList
+    : Argument {
         $$ = driver.createNodeList(std::move($1));
     }
-    | ParameterList COMMA Parameter {
+    | ArgumentList COMMA Argument {
         $$ = std::move($1);
         $$.emplace_back(std::move($3));
     };
 
-Parameter
+Argument
     : ID {
         $$ = driver.createNode<Identifier>(std::move($1));
     };
@@ -178,26 +185,39 @@ Type
         $$ = driver.createNode<Type>($1);
     };
 
-Body: %empty {
-        $$ = driver.createNode<Body>(node_ptrs{});
+Body
+    : SpecificationConstruct ExecutableConstruct {
+        $$ = driver.createNode<Body>(std::move($1), std::move($2));
+    };
+
+SpecificationConstruct
+    : SpecificationList {
+        $$ = driver.createNode<SpecificationConstruct>(std::move($1));
+    };
+
+SpecificationList
+    : Specification {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | SpecificationList Specification {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($2));
+    };
+
+Specification
+    : DeclarationConstruct {
+        $$ = std::move($1);
+    }
+    | ParameterStatement {
+        $$ = std::move($1);
+    };
+
+DeclarationConstruct
+    : %empty {
+        $$ = driver.createNode<DeclarationConstruct>(node_ptrs{});
     };
 
 /*
-    : BodyConstruct                                        { $$ = $1; }
-    | Body BodyConstruct                                   { $$ = std::move($3); }
-    ;
-
-BodyConstruct
-    : SpecificationConstruct                               { $$ = driver.specificationConstruct($1); }
-    | ExecutableConstruct                                  { $$ = driver.executableConstruct($1); }
-    ;
-
-SpecificationConstruct
-    : DeclarationConstruct                                 { $$ = $1; }
-    | ParameterStatement                                   { $$ = $1; }
-    ;
-
-DeclarationConstruct
     : Declaration                                          { $$ = driver.declarationConstruct($1); }
     | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, std::move($2)); }
     ;
@@ -214,12 +234,18 @@ IdentifierDeclaration
     : ID                                                   { $$ = driver.identifier($1); }
     | ID LP INT RP                                         { $$ = driver.arrayIdentifier($1, $3); }
     ;
+*/
 
 ParameterStatement
-    : PARAMETER LP ConstantList RP                         { $$ = driver.parameterStatement($3); }
-    ;
+    : PARAMETER LP ConstantList RP {
+        $$ = driver.createNode<ParameterStatement>(std::move($3));
+    };
 
 ConstantList
+    : %empty {
+        $$ = std::move(node_ptrs{});
+    };
+/*
     : ConstantDefinition                                   { $$ = driver.constantList($1); }
     | ConstantList COMMA ConstantDefinition                { $$ = driver.constantList($1, $3); }
     ;
@@ -237,8 +263,13 @@ Number
     : INT                                                  { $$ = driver.intNumeber($1); }
     | FLOAT                                                { $$ = driver.floatNumber($1); }
     ;
-
+*/
 ExecutableConstruct
+    : %empty {
+        $$ = driver.createNode<ExecutableConstruct>(node_ptrs{});
+    };
+
+/*
     : Statement
     | ExecutableConstruct Statement
     ;
@@ -301,7 +332,7 @@ PrintItem
     ;
 
 ReadStatement
-    : "READ" ParameterList
+    : "READ" ArgumentList
     ;
 
 IfConstruct
@@ -385,7 +416,7 @@ EndWhileStatement
     ;
 
 CallStatement
-    : "CALL" ID LP ParameterList RP
+    : "CALL" ID LP ArgumentList RP
     | "CALL" ID LP RP
     ;
 

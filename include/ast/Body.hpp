@@ -5,19 +5,20 @@
 
 class Body : public AST {
 public:
-    Body(node_ptrs&& constructs)
-        : m_constructs(constructs) {
+    Body(node_ptr specificationConstruct, node_ptr executionConstruct)
+        : m_specificationConstruct(specificationConstruct),
+          m_executionConstruct(executionConstruct) {
     }
     ~Body() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "Body:" << std::endl;
-        for (auto& construct : m_constructs) {
-            construct->print(width + 4);
-        }
+        m_specificationConstruct->print(width + 4);
+        m_executionConstruct->print(width + 4);
     }
 
 private:
-    node_ptrs m_constructs;
+    node_ptr m_specificationConstruct;
+    node_ptr m_executionConstruct;
 };
 
 #endif /* END __AST_BODY_HPP__ */

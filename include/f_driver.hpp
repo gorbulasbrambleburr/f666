@@ -15,6 +15,10 @@
 #include "ast/Identifier.hpp"
 #include "ast/Type.hpp"
 #include "ast/Body.hpp"
+#include "ast/SpecificationConstruct.hpp"
+#include "ast/DeclarationConstruct.hpp"
+#include "ast/ExecutableConstruct.hpp"
+#include "ast/ParameterStatement.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

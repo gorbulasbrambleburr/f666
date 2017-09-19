@@ -305,12 +305,19 @@ namespace  Fortran  {
       // Subroutine
       // Function
       // Identifier
-      // Parameter
+      // Argument
       // Type
       // Body
+      // SpecificationConstruct
+      // Specification
+      // DeclarationConstruct
+      // ParameterStatement
+      // ExecutableConstruct
       char dummy1[sizeof(AST::node_ptr)];
 
-      // ParameterList
+      // ArgumentList
+      // SpecificationList
+      // ConstantList
       char dummy2[sizeof(AST::node_ptrs)];
 
       // "BOOLEAN value"
@@ -751,7 +758,7 @@ namespace  Fortran  {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const unsigned char yytable_[];
 
-  static const unsigned char yycheck_[];
+  static const signed char yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -772,7 +779,7 @@ namespace  Fortran  {
     static const char* const yytname_[];
 #if YYDEBUG
   // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-  static const unsigned char yyrline_[];
+  static const unsigned short int yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r);
     /// Print the state stack on the debug stream.
@@ -871,8 +878,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 38,     ///< Last index in yytable_.
-      yynnts_ = 11,  ///< Number of nonterminal symbols.
+      yylast_ = 43,     ///< Last index in yytable_.
+      yynnts_ = 18,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -964,13 +971,20 @@ namespace  Fortran  {
       case 43: // Subroutine
       case 44: // Function
       case 45: // Identifier
-      case 47: // Parameter
+      case 47: // Argument
       case 48: // Type
       case 49: // Body
+      case 50: // SpecificationConstruct
+      case 52: // Specification
+      case 53: // DeclarationConstruct
+      case 54: // ParameterStatement
+      case 56: // ExecutableConstruct
         value.copy< AST::node_ptr > (other.value);
         break;
 
-      case 46: // ParameterList
+      case 46: // ArgumentList
+      case 51: // SpecificationList
+      case 55: // ConstantList
         value.copy< AST::node_ptrs > (other.value);
         break;
 
@@ -1029,13 +1043,20 @@ namespace  Fortran  {
       case 43: // Subroutine
       case 44: // Function
       case 45: // Identifier
-      case 47: // Parameter
+      case 47: // Argument
       case 48: // Type
       case 49: // Body
+      case 50: // SpecificationConstruct
+      case 52: // Specification
+      case 53: // DeclarationConstruct
+      case 54: // ParameterStatement
+      case 56: // ExecutableConstruct
         value.copy< AST::node_ptr > (v);
         break;
 
-      case 46: // ParameterList
+      case 46: // ArgumentList
+      case 51: // SpecificationList
+      case 55: // ConstantList
         value.copy< AST::node_ptrs > (v);
         break;
 
@@ -1181,13 +1202,20 @@ namespace  Fortran  {
       case 43: // Subroutine
       case 44: // Function
       case 45: // Identifier
-      case 47: // Parameter
+      case 47: // Argument
       case 48: // Type
       case 49: // Body
+      case 50: // SpecificationConstruct
+      case 52: // Specification
+      case 53: // DeclarationConstruct
+      case 54: // ParameterStatement
+      case 56: // ExecutableConstruct
         value.template destroy< AST::node_ptr > ();
         break;
 
-      case 46: // ParameterList
+      case 46: // ArgumentList
+      case 51: // SpecificationList
+      case 55: // ConstantList
         value.template destroy< AST::node_ptrs > ();
         break;
 
@@ -1252,13 +1280,20 @@ namespace  Fortran  {
       case 43: // Subroutine
       case 44: // Function
       case 45: // Identifier
-      case 47: // Parameter
+      case 47: // Argument
       case 48: // Type
       case 49: // Body
+      case 50: // SpecificationConstruct
+      case 52: // Specification
+      case 53: // DeclarationConstruct
+      case 54: // ParameterStatement
+      case 56: // ExecutableConstruct
         value.move< AST::node_ptr > (s.value);
         break;
 
-      case 46: // ParameterList
+      case 46: // ArgumentList
+      case 51: // SpecificationList
+      case 55: // ConstantList
         value.move< AST::node_ptrs > (s.value);
         break;
 
@@ -1582,7 +1617,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1586 "include/f_parser.hpp" // lalr1.cc:377
+#line 1621 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
