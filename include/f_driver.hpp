@@ -21,6 +21,8 @@
 #include "ast/DeclarationStatement.hpp"
 #include "ast/ParameterStatement.hpp"
 #include "ast/IdentifierDeclaration.hpp"
+#include "ast/AssignmentStatement.hpp"
+#include "ast/LogicalExpression.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

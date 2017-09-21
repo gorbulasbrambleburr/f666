@@ -28,13 +28,13 @@ public:
                 break;
             }
             case (stype::ARRAY): {
-                 std::cout << "ARRAY" << std::endl;
-                 if (m_intId == nullptr) {
+                std::cout << "ARRAY" << std::endl;
+                if (m_intId == nullptr) {
                     std::cout << std::setw(width + 4) << "- " << "Size: " << m_arraySize << std::endl;
-                 } else {
+                } else {
                     m_intId->print(width + 4);
-                 }
-                 break;
+                }
+                break;
             }
         }
     }

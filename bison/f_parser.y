@@ -111,9 +111,12 @@
 %type<AST::node_ptr> Specification
 %type<AST::node_ptr> DeclarationStatement
 %type<AST::node_ptr> ParameterStatement
-%type<AST::node_ptrs> ConstantList
 %type<AST::node_ptr> IdentifierDeclaration
 %type<AST::node_ptrs> IdentifierDeclarationList
+%type<AST::node_ptrs> AssignmentStatementList
+%type<AST::node_ptr> AssignmentStatement
+%type<AST::node_ptr> Expression
+%type<AST::node_ptr> LogicalExpression
 
 %start ExecutableProgram
 
@@ -243,32 +246,66 @@ IdentifierDeclaration
     };
 
 ParameterStatement
-    : PARAMETER LP ConstantList RP {
+    : PARAMETER LP AssignmentStatementList RP {
         $$ = driver.createNode<ParameterStatement>(std::move($3));
     };
 
-ConstantList
-    : %empty {
-        $$ = std::move(node_ptrs{});
+AssignmentStatementList
+    : AssignmentStatement {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | AssignmentStatementList COMMA AssignmentStatement {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($3));
     };
+
+AssignmentStatement
+    : Identifier ASSIGN Expression {
+        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
+    }
+    | Identifier LP Expression RP ASSIGN Expression {
+        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3), std::move($6));
+    };
+
+Expression
+    : LogicalExpression {
+        $$ = std::move($1);
+    }
+    /*| NumericExpression {
+        $$ = std::move($1);
+    }*/;
+
+LogicalExpression
+    : %empty {
+        $$ = driver.createNode<LogicalExpression>();
+    }
 /*
-    : ConstantDefinition                                   { $$ = driver.constantList($1); }
-    | ConstantList COMMA ConstantDefinition                { $$ = driver.constantList($1, $3); }
+    : Expression Op Expression
+    | LogicalConstant
     ;
 
-ConstantDefinition
-    : ID ASSIGN ConstantExpression                         { $$ = driver.constantDefinition($1, $3); }
+NumericExpression
+    : %empty {
+        $$ = driver.createNode<NumericExpression>();
+    }
+
+    : Factor
+    | NumericExpression "+" Factor
+    | NumericExpression "-" Factor
     ;
 
-ConstantExpression
-    : Number                                               { $$ = driver.constantExpression($1); }
-    | STRING                                               { $$ = driver.stringLiteral($1); }
+ExpressionList
+    : Expression
+    | ExpressionList "," Expression
     ;
 
 Number
-    : INT                                                  { $$ = driver.intNumeber($1); }
-    | FLOAT                                                { $$ = driver.floatNumber($1); }
-    ;
+    : INT {
+        $$ = driver.intNumeber($1);
+    }
+    | FLOAT {
+        $$ = driver.floatNumber($1);
+    };
 */
 ExecutableConstruct
     : %empty {
@@ -292,17 +329,6 @@ Statement
     | ExitStatement
     ;
 
-AssignmentStatement
-    : ID "=" Expression
-    | ID LP INT RP "=" Expression
-    ;
-
-Expression
-    : Factor
-    | Expression "+" Factor
-    | Expression "-" Factor
-    ;
-
 Factor
     : Term
     | Factor "*" Term
@@ -310,17 +336,12 @@ Factor
     ;
 
 Term
-    : LP Expression RP
+    : LP NumericExpression RP
     | ID LP ExpressionList RP
     | ID LP RP
     | ID
     | Number
     | "-" Term
-    ;
-
-ExpressionList
-    : Expression
-    | ExpressionList "," Expression
     ;
 
 PrintStatement
@@ -370,12 +391,6 @@ ElseIfStatement
 ElseConstruct
     : "ELSE" Expression "END"
     ;
-
-LogicalExpression
-    : Expression Op Expression
-    | LogicalConstant
-    ;
-
 Op
     : ".AND."
     | ".OR."

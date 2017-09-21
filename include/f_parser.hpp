@@ -313,13 +313,16 @@ namespace  Fortran  {
       // DeclarationStatement
       // IdentifierDeclaration
       // ParameterStatement
+      // AssignmentStatement
+      // Expression
+      // LogicalExpression
       // ExecutableConstruct
       char dummy1[sizeof(AST::node_ptr)];
 
       // ArgumentList
       // SpecificationList
       // IdentifierDeclarationList
-      // ConstantList
+      // AssignmentStatementList
       char dummy2[sizeof(AST::node_ptrs)];
 
       // "BOOLEAN value"
@@ -880,8 +883,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 62,     ///< Last index in yytable_.
-      yynnts_ = 20,  ///< Number of nonterminal symbols.
+      yylast_ = 66,     ///< Last index in yytable_.
+      yynnts_ = 23,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -981,14 +984,17 @@ namespace  Fortran  {
       case 53: // DeclarationStatement
       case 55: // IdentifierDeclaration
       case 56: // ParameterStatement
-      case 58: // ExecutableConstruct
+      case 58: // AssignmentStatement
+      case 59: // Expression
+      case 60: // LogicalExpression
+      case 61: // ExecutableConstruct
         value.copy< AST::node_ptr > (other.value);
         break;
 
       case 46: // ArgumentList
       case 51: // SpecificationList
       case 54: // IdentifierDeclarationList
-      case 57: // ConstantList
+      case 57: // AssignmentStatementList
         value.copy< AST::node_ptrs > (other.value);
         break;
 
@@ -1055,14 +1061,17 @@ namespace  Fortran  {
       case 53: // DeclarationStatement
       case 55: // IdentifierDeclaration
       case 56: // ParameterStatement
-      case 58: // ExecutableConstruct
+      case 58: // AssignmentStatement
+      case 59: // Expression
+      case 60: // LogicalExpression
+      case 61: // ExecutableConstruct
         value.copy< AST::node_ptr > (v);
         break;
 
       case 46: // ArgumentList
       case 51: // SpecificationList
       case 54: // IdentifierDeclarationList
-      case 57: // ConstantList
+      case 57: // AssignmentStatementList
         value.copy< AST::node_ptrs > (v);
         break;
 
@@ -1216,14 +1225,17 @@ namespace  Fortran  {
       case 53: // DeclarationStatement
       case 55: // IdentifierDeclaration
       case 56: // ParameterStatement
-      case 58: // ExecutableConstruct
+      case 58: // AssignmentStatement
+      case 59: // Expression
+      case 60: // LogicalExpression
+      case 61: // ExecutableConstruct
         value.template destroy< AST::node_ptr > ();
         break;
 
       case 46: // ArgumentList
       case 51: // SpecificationList
       case 54: // IdentifierDeclarationList
-      case 57: // ConstantList
+      case 57: // AssignmentStatementList
         value.template destroy< AST::node_ptrs > ();
         break;
 
@@ -1296,14 +1308,17 @@ namespace  Fortran  {
       case 53: // DeclarationStatement
       case 55: // IdentifierDeclaration
       case 56: // ParameterStatement
-      case 58: // ExecutableConstruct
+      case 58: // AssignmentStatement
+      case 59: // Expression
+      case 60: // LogicalExpression
+      case 61: // ExecutableConstruct
         value.move< AST::node_ptr > (s.value);
         break;
 
       case 46: // ArgumentList
       case 51: // SpecificationList
       case 54: // IdentifierDeclarationList
-      case 57: // ConstantList
+      case 57: // AssignmentStatementList
         value.move< AST::node_ptrs > (s.value);
         break;
 
@@ -1627,7 +1642,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1631 "include/f_parser.hpp" // lalr1.cc:377
+#line 1646 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
