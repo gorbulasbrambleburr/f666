@@ -11,7 +11,7 @@ public:
     }
     ~Type() {}
     void print(int width) const {
-        std::cout << std::setw(width) << "- " << "Type [" << str(m_type) << "]" << std::endl;
+        std::cout << std::setw(width) << "- " << "Type:" << str(m_type) << std::endl;
     }
     std::string str(Fortran::type type) const {
         std::string s;

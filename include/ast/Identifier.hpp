@@ -11,7 +11,7 @@ public:
     }
     ~Identifier() {}
     void print(int width) const {
-        std::cout << std::setw(width) << "- " << "id [" << m_id << "]" << std::endl;
+        std::cout << std::setw(width) << "- " << "id: " << m_id << std::endl;
     }
 
 private:

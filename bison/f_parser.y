@@ -109,9 +109,11 @@
 %type<AST::node_ptr> ExecutableConstruct
 %type<AST::node_ptrs> SpecificationList
 %type<AST::node_ptr> Specification
-%type<AST::node_ptr> DeclarationConstruct
+%type<AST::node_ptr> DeclarationStatement
 %type<AST::node_ptr> ParameterStatement
 %type<AST::node_ptrs> ConstantList
+%type<AST::node_ptr> IdentifierDeclaration
+%type<AST::node_ptrs> IdentifierDeclarationList
 
 %start ExecutableProgram
 
@@ -193,6 +195,9 @@ Body
 SpecificationConstruct
     : SpecificationList {
         $$ = driver.createNode<SpecificationConstruct>(std::move($1));
+    }
+    | %empty {
+        $$ = driver.createNode<SpecificationConstruct>(node_ptrs{});
     };
 
 SpecificationList
@@ -205,36 +210,37 @@ SpecificationList
     };
 
 Specification
-    : DeclarationConstruct {
+    : DeclarationStatement {
         $$ = std::move($1);
     }
     | ParameterStatement {
         $$ = std::move($1);
     };
 
-DeclarationConstruct
-    : %empty {
-        $$ = driver.createNode<DeclarationConstruct>(node_ptrs{});
+DeclarationStatement
+    : Type IdentifierDeclarationList {
+        $$ = driver.createNode<DeclarationStatement>(std::move($1), std::move($2));
     };
 
-/*
-    : Declaration                                          { $$ = driver.declarationConstruct($1); }
-    | DeclarationConstruct Declaration                     { $$ = driver.declarationConstruct($1, std::move($2)); }
-    ;
-
-Declaration
-    : Type IdentifierDeclarationList                       { $$ = driver.declaration($1,$2); }
-
 IdentifierDeclarationList
-    : IdentifierDeclaration                                  { $$ = $1; }
-    | IdentifierDeclarationList COMMA IdentifierDeclaration  { $$ = driver.identifierDeclarationList($1, $3); }
-    ;
+    : IdentifierDeclaration {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | IdentifierDeclarationList COMMA IdentifierDeclaration {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($3));
+    };
 
 IdentifierDeclaration
-    : ID                                                   { $$ = driver.identifier($1); }
-    | ID LP INT RP                                         { $$ = driver.arrayIdentifier($1, $3); }
-    ;
-*/
+    : Identifier {
+        $$ = driver.createNode<IdentifierDeclaration>(std::move($1));
+    }
+    | Identifier LP INTEGER RP {
+        $$ = driver.createNode<IdentifierDeclaration>(std::move($1), $3);
+    }
+    | Identifier LP Identifier RP {
+        $$ = driver.createNode<IdentifierDeclaration>(std::move($1), std::move($3));
+    };
 
 ParameterStatement
     : PARAMETER LP ConstantList RP {

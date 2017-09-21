@@ -13,6 +13,12 @@ namespace Fortran {
         };
     }
 
+    namespace structural {
+        enum class type {
+            SCALAR,
+            ARRAY,
+        };
+    }
 
     using type = vartype::type;
     using integer = int;

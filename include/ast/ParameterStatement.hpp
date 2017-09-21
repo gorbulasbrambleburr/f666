@@ -11,13 +11,13 @@ public:
     ~ParameterStatement() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "ParameterStatement:" << std::endl;
-        for (auto &child : m_constants) {
-            child->print(width + 4);
+        if (m_constants.empty()) {
+            std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
+        } else {
+            for (auto &child : m_constants) {
+                child->print(width + 4);
+            }
         }
-    }
-
-    void addChild(node_ptr child) {
-        m_constants.emplace_back(std::move(child));
     }
 
 private:

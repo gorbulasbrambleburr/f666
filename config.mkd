@@ -29,10 +29,7 @@ TESTDIR  :=tests
 DEPDIR   :=.deps
 # Compiler & linker flags
 CXX      :=g++
-#CXXFLAGS :=-std=c++14 -fcxx-exceptions -Wno-deprecated-register -Wall\
-#            -Wno-unused-function -Wno-unneeded-internal-declaration
-CXXFLAGS :=-std=c++11 -Wno-deprecated-register -Wall\
-            -Wno-unused-function -Wno-unneeded-internal-declaration
+CXXFLAGS :=-std=c++11 -Wno-unused-function -Wall
 LDFLAGS  :=
 LDLIBS   :=-pthread
 INCLUDE  :=-I$(HDRDIR)

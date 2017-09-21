@@ -11,8 +11,13 @@ public:
     ~ExecutableConstruct() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "ExecutableConstruct:" << std::endl;
-        for (auto &child : m_statements) {
-            child->print(width + 4);
+        if (m_statements.empty()) {
+            std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
+        } else {
+            for (auto &child : m_statements) {
+                std::cout << "blablabla" << std::endl;
+                child->print(width + 4);
+            }
         }
     }
 

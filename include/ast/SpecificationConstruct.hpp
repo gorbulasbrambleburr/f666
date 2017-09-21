@@ -11,8 +11,12 @@ public:
     ~SpecificationConstruct() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "SpecificationConstruct:" << std::endl;
-        for (auto &child : m_specifications) {
-            child->print(width + 4);
+        if (m_specifications.empty()) {
+            std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
+        } else {
+            for (auto &child : m_specifications) {
+                child->print(width + 4);
+            }
         }
     }
 
