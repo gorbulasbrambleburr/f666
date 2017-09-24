@@ -1,10 +1,13 @@
+#ifndef __FOPERATORS_HPP__
+#define __FOPERATORS_HPP__
+
 namespace Fortran {
-    struct op {
+    namespace op {
         enum class arithmetic {
             ADD,
             SUB,
             DIV,
-            MULT
+            MULT,
         };
 
         enum class comp {
@@ -19,7 +22,7 @@ namespace Fortran {
         enum class logic {
             AND,
             OR,
-            NOT
+            NOT,
         };
 
         enum class assignment {
@@ -27,7 +30,9 @@ namespace Fortran {
             ADD,
             SUB,
             DIV,
-            MULT
+            MULT,
         };
-    };
-};
+    }
+}
+
+#endif /* __FOPERATORS_HPP__ */

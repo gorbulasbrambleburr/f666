@@ -276,14 +276,14 @@ Expression
     }*/;
 
 LogicalExpression
-    : %empty {
-        $$ = driver.createNode<LogicalExpression>();
+    : Expression COMPARISON Expression {
+        $$ = driver.createNode<LogicalExpression>(std::move($1), std::move($2), std::move($3));
     }
-/*
-    : Expression Op Expression
-    | LogicalConstant
-    ;
+    | BOOLEAN {
+        $$ = driver.createNode<LogicalExpression>($1);
+    };
 
+/*
 NumericExpression
     : %empty {
         $$ = driver.createNode<NumericExpression>();
@@ -390,21 +390,6 @@ ElseIfStatement
 
 ElseConstruct
     : "ELSE" Expression "END"
-    ;
-Op
-    : ".AND."
-    | ".OR."
-    | ".EQ."
-    | ".NE."
-    | ".GT."
-    | ".GE."
-    | ".LT."
-    | ".LE."
-    ;
-
-LogicalConstant
-    : ".TRUE."
-    | ".FALSE."
     ;
 
 DoConstruct

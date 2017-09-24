@@ -4,7 +4,7 @@
 #include "AST.hpp"
 #include "../Types.hpp"
 
-using stype = Fortran::structural::type;;
+using stype = Fortran::structural::type;
 
 class AssignmentStatement : public AST {
 public:
