@@ -17,6 +17,7 @@ END
 //------------------------------------------
 
 INTEGER FUNCTION C()
-REAL W, Z
+REAL W, Z, X
+PARAMETER (Z = W + 2)
 RETURN
 END

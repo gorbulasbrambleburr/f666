@@ -294,38 +294,39 @@ LogicalExpression
 
 NumericExpression
     : Factor {
-        $$ = driver.createNode<NumericExpression>(std::move($1));
+        $$ = std::move($1);
     }
     | NumericExpression PLUS Factor {
-        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
     }
     | NumericExpression MINUS Factor {
-        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
     };
 
 Factor
     : Term {
-        $$ = driver.createNode<Factor>(std::move($1));
+        $$ = std::move($1);
     }
     | Factor TIMES Term {
-        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
     }
     | Factor DIVIDE Term {
-        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
     };
 
 Term
     : LP NumericExpression RP {
-        $$ = driver.createNode<Term>(std::move($2));
+        $$ = std::move($2);
     }
     | Identifier {
-        $$ = driver.createNode<Term>(std::move($1));
+        $$ = std::move($1);
     }
     | Number {
-        $$ = driver.createNode<Term>(std::move($1));
+        $$ = std::move($1);
     }
     | MINUS Term {
-        $$ = driver.createNode<Term>($1, std::move($2));
+        node_ptr node = driver.createNode<Number>(0);
+        $$ = driver.createNode<NumericExpression>(node, $1, std::move($2));
     };
 
 Number
