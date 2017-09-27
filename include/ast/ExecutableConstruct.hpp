@@ -6,7 +6,7 @@
 class ExecutableConstruct : public AST {
 public:
     ExecutableConstruct(node_ptrs&& statements)
-    : m_statements(std::forward<node_ptrs>(statements)) {
+        : m_statements(std::forward<node_ptrs>(statements)) {
     }
     ~ExecutableConstruct() {}
     void print(int width) const {
@@ -15,14 +15,9 @@ public:
             std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
         } else {
             for (auto &child : m_statements) {
-                std::cout << "blablabla" << std::endl;
                 child->print(width + 4);
             }
         }
-    }
-
-    void addChild(node_ptr child) {
-        m_statements.emplace_back(std::move(child));
     }
 
 private:

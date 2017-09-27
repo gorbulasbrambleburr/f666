@@ -1,17 +1,17 @@
-#ifndef __AST_NUMERIC_EXPRESSION_HPP__
-#define __AST_NUMERIC_EXPRESSION_HPP__
+#ifndef __AST_EXPRESSION_HPP__
+#define __AST_EXPRESSION_HPP__
 
 #include "AST.hpp"
 #include "../Operators.hpp"
 
-class NumericExpression : public AST {
+class Expression : public AST {
 public:
-    NumericExpression(node_ptr left, Fortran::op::arithmetic op, node_ptr right)
-        : m_left(std::move(left)), m_operator(op), m_right(std::move(right)) {
+    Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
+        : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
     }
-    ~NumericExpression() {}
+    ~Expression() {}
     void print(int width) const {
-        std::cout << std::setw(width) << "- " << "NumericExpression:" << std::endl;
+        std::cout << std::setw(width) << "- " << "Expression:" << std::endl;
         std::cout << std::setw(width + 4) << "- ";
         printOp();
         m_left->print(width + 8);
@@ -23,13 +23,14 @@ public:
             case (Fortran::op::arithmetic::SUB): std::cout << "SUB:" << std::endl; break;
             case (Fortran::op::arithmetic::DIV): std::cout << "DIV:" << std::endl; break;
             case (Fortran::op::arithmetic::MUL): std::cout << "MUL:" << std::endl; break;
+            default: break;
         }
     }
 
 private:
     node_ptr m_left = nullptr;
-    Fortran::op::arithmetic m_operator;
     node_ptr m_right = nullptr;
+    Fortran::op::arithmetic m_operator;
 };
 
-#endif /* END __AST_NUMERIC_EXPRESSION_HPP__ */
+#endif /* END __AST_EXPRESSION_HPP__ */

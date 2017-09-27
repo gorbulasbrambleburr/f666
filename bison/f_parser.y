@@ -116,13 +116,12 @@
 %type<AST::node_ptrs> AssignmentStatementList
 %type<AST::node_ptr> AssignmentStatement
 %type<AST::node_ptr> Expression
-%type<AST::node_ptr> LogicalExpression
-%type<AST::node_ptr> NumericExpression
-%type<AST::node_ptr> Factor
-%type<AST::node_ptr> Term
-%type<AST::node_ptr> Number
+%type<AST::node_ptr> Literal
+%type<AST::node_ptrs> ExecutableList
+%type<AST::node_ptr> Statement
 
 // Order of expressions
+%left COMPARISON
 %left PLUS MINUS
 %left TIMES DIVIDE
 
@@ -276,21 +275,46 @@ AssignmentStatement
     };
 
 Expression
-    : LogicalExpression {
+    : Expression COMPARISON Expression {
+        $$ = driver.createNode<Comparison>(std::move($1), std::move($3), $2);
+    }
+    | Expression PLUS Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Expression MINUS Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Expression TIMES Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Expression DIVIDE Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Identifier {
         $$ = std::move($1);
     }
-    | NumericExpression {
+    | Literal {
         $$ = std::move($1);
     };
 
-LogicalExpression
-    : Expression COMPARISON Expression {
-        $$ = driver.createNode<LogicalExpression>(std::move($1), std::move($2), std::move($3));
+Literal
+    : INTEGER {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | REAL {
+        $$ = driver.createNode<Literal>($1);
     }
     | BOOLEAN {
-        $$ = driver.createNode<LogicalExpression>($1);
+        $$ = driver.createNode<Literal>($1);
     };
 
+/*
+    : NumericExpression {
+        $$ = std::move($1);
+    }
+    | Expression COMPARISON Expression {
+        $$ = driver.createNode<LogicalExpression>(std::move($1), std::move($2), std::move($3));
+    };
 
 NumericExpression
     : Factor {
@@ -344,27 +368,53 @@ ExpressionList
     ;
 */
 ExecutableConstruct
-    : %empty {
+    : ExecutableList {
+        $$ = driver.createNode<ExecutableConstruct>(std::move($1));
+    }
+    | %empty {
         $$ = driver.createNode<ExecutableConstruct>(node_ptrs{});
+    };;
+
+ExecutableList
+    : Statement {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | ExecutableList Statement {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($2));
     };
 
-/*
-    : Statement
-    | ExecutableConstruct Statement
-    ;
 
 Statement
-    : AssignmentStatement
-    | PrintStatement
-    | ReadStatement
-    | IfConstruct
-    | DoConstruct
-    | WhileConstruct
-    | CallStatement
-    | CycleStatement
-    | ExitStatement
-    ;
+    : AssignmentStatement {
+        $$ = std::move($1);
+    }/*
+    | PrintStatement {
+        $$ = std::move($1);
+    }
+    | ReadStatement {
+        $$ = std::move($1);
+    }
+    | IfConstruct {
+        $$ = std::move($1);
+    }
+    | DoConstruct {
+        $$ = std::move($1);
+    }
+    | WhileConstruct {
+        $$ = std::move($1);
+    }
+    | CallStatement {
+        $$ = std::move($1);
+    }
+    | CycleStatement {
+        $$ = std::move($1);
+    }
+    | ExitStatement {
+        $$ = std::move($1);
+    }*/;
 
+/*
 PrintStatement
     : "PRINT" PrintList
     ;

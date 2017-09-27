@@ -18,7 +18,7 @@
 #################################### RULES ####################################
 $(SRCDIR)/%.cpp $(HDRDIR)/%.hpp: $(BISONDIR)/%.y
 	@echo "[ $(BISON) ] $^ -> .hpp .cpp"
-	@$(BISON) --defines=$(HDRDIR)/$*.hpp --output=$(SRCDIR)/$*.cpp $^
+	@$(BISON) -v --defines=$(HDRDIR)/$*.hpp --output=$(SRCDIR)/$*.cpp $^
 	@mv $(SRCDIR)/location.hh $(HDRDIR)/ 2> /dev/null
 	@mv $(SRCDIR)/position.hh $(HDRDIR)/ 2> /dev/null
 	@mv $(SRCDIR)/stack.hh $(HDRDIR)/ 2> /dev/null

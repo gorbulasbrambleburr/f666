@@ -35,3 +35,4 @@ bin
 # Bison generated files
 *.hh
 *.tab.c
+*.output
