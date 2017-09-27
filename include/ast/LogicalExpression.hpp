@@ -18,6 +18,7 @@ public:
         std::cout << std::setw(width) << "- " << "LogicalExpression:" << std::endl;
         if (m_leftExpression != nullptr) {
             m_leftExpression->print(width + 4);
+            std::cout << std::setw(width + 4) << "- ";
             printOp();
             m_rightExpression->print(width + 4);
         } else {
