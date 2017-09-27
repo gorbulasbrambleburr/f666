@@ -1082,7 +1082,7 @@ case 25:
 YY_RULE_SETUP
 #line 139 "flex/scanner.l"
 {
-    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MULT, Fortran::location());
+    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MUL, Fortran::location());
 }
 	YY_BREAK
 case 26:

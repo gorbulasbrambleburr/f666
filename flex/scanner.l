@@ -137,7 +137,7 @@ newline     \n
 }
 
 "*" {
-    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MULT, Fortran::location());
+    return Fortran::Parser::make_TIMES(Fortran::op::arithmetic::MUL, Fortran::location());
 }
 
 "/" {

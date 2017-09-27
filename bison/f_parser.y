@@ -117,6 +117,14 @@
 %type<AST::node_ptr> AssignmentStatement
 %type<AST::node_ptr> Expression
 %type<AST::node_ptr> LogicalExpression
+%type<AST::node_ptr> NumericExpression
+%type<AST::node_ptr> Factor
+%type<AST::node_ptr> Term
+%type<AST::node_ptr> Number
+
+// Order of expressions
+%left PLUS MINUS
+%left TIMES DIVIDE
 
 %start ExecutableProgram
 
@@ -271,9 +279,9 @@ Expression
     : LogicalExpression {
         $$ = std::move($1);
     }
-    /*| NumericExpression {
+    | NumericExpression {
         $$ = std::move($1);
-    }*/;
+    };
 
 LogicalExpression
     : Expression COMPARISON Expression {
@@ -283,29 +291,56 @@ LogicalExpression
         $$ = driver.createNode<LogicalExpression>($1);
     };
 
-/*
+
 NumericExpression
-    : %empty {
-        $$ = driver.createNode<NumericExpression>();
+    : Factor {
+        $$ = driver.createNode<NumericExpression>(std::move($1));
     }
+    | NumericExpression PLUS Factor {
+        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+    }
+    | NumericExpression MINUS Factor {
+        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+    };
 
-    : Factor
-    | NumericExpression "+" Factor
-    | NumericExpression "-" Factor
-    ;
+Factor
+    : Term {
+        $$ = driver.createNode<Factor>(std::move($1));
+    }
+    | Factor TIMES Term {
+        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+    }
+    | Factor DIVIDE Term {
+        $$ = driver.createNode<Factor>(std::move($1), $2, std::move($3));
+    };
 
+Term
+    : LP NumericExpression RP {
+        $$ = driver.createNode<Term>(std::move($2));
+    }
+    | Identifier {
+        $$ = driver.createNode<Term>(std::move($1));
+    }
+    | Number {
+        $$ = driver.createNode<Term>(std::move($1));
+    }
+    | MINUS Term {
+        $$ = driver.createNode<Term>($1, std::move($2));
+    };
+
+Number
+    : INTEGER {
+        $$ = driver.createNode<Number>($1);
+    }
+    | REAL {
+        $$ = driver.createNode<Number>($1);
+    };
+
+/*
 ExpressionList
     : Expression
     | ExpressionList "," Expression
     ;
-
-Number
-    : INT {
-        $$ = driver.intNumeber($1);
-    }
-    | FLOAT {
-        $$ = driver.floatNumber($1);
-    };
 */
 ExecutableConstruct
     : %empty {
@@ -327,21 +362,6 @@ Statement
     | CallStatement
     | CycleStatement
     | ExitStatement
-    ;
-
-Factor
-    : Term
-    | Factor "*" Term
-    | Factor "/" Term
-    ;
-
-Term
-    : LP NumericExpression RP
-    | ID LP ExpressionList RP
-    | ID LP RP
-    | ID
-    | Number
-    | "-" Term
     ;
 
 PrintStatement

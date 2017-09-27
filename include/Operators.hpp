@@ -7,7 +7,7 @@ namespace Fortran {
             ADD,
             SUB,
             DIV,
-            MULT,
+            MUL,
         };
 
         enum class comp {

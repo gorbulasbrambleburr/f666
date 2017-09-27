@@ -316,6 +316,10 @@ namespace  Fortran  {
       // AssignmentStatement
       // Expression
       // LogicalExpression
+      // NumericExpression
+      // Factor
+      // Term
+      // Number
       // ExecutableConstruct
       char dummy1[sizeof(AST::node_ptr)];
 
@@ -883,8 +887,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 71,     ///< Last index in yytable_.
-      yynnts_ = 23,  ///< Number of nonterminal symbols.
+      yylast_ = 94,     ///< Last index in yytable_.
+      yynnts_ = 27,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -987,7 +991,11 @@ namespace  Fortran  {
       case 58: // AssignmentStatement
       case 59: // Expression
       case 60: // LogicalExpression
-      case 61: // ExecutableConstruct
+      case 61: // NumericExpression
+      case 62: // Factor
+      case 63: // Term
+      case 64: // Number
+      case 65: // ExecutableConstruct
         value.copy< AST::node_ptr > (other.value);
         break;
 
@@ -1064,7 +1072,11 @@ namespace  Fortran  {
       case 58: // AssignmentStatement
       case 59: // Expression
       case 60: // LogicalExpression
-      case 61: // ExecutableConstruct
+      case 61: // NumericExpression
+      case 62: // Factor
+      case 63: // Term
+      case 64: // Number
+      case 65: // ExecutableConstruct
         value.copy< AST::node_ptr > (v);
         break;
 
@@ -1228,7 +1240,11 @@ namespace  Fortran  {
       case 58: // AssignmentStatement
       case 59: // Expression
       case 60: // LogicalExpression
-      case 61: // ExecutableConstruct
+      case 61: // NumericExpression
+      case 62: // Factor
+      case 63: // Term
+      case 64: // Number
+      case 65: // ExecutableConstruct
         value.template destroy< AST::node_ptr > ();
         break;
 
@@ -1311,7 +1327,11 @@ namespace  Fortran  {
       case 58: // AssignmentStatement
       case 59: // Expression
       case 60: // LogicalExpression
-      case 61: // ExecutableConstruct
+      case 61: // NumericExpression
+      case 62: // Factor
+      case 63: // Term
+      case 64: // Number
+      case 65: // ExecutableConstruct
         value.move< AST::node_ptr > (s.value);
         break;
 
@@ -1642,7 +1662,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1646 "include/f_parser.hpp" // lalr1.cc:377
+#line 1666 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

@@ -23,6 +23,10 @@
 #include "ast/IdentifierDeclaration.hpp"
 #include "ast/AssignmentStatement.hpp"
 #include "ast/LogicalExpression.hpp"
+#include "ast/NumericExpression.hpp"
+#include "ast/Factor.hpp"
+#include "ast/Term.hpp"
+#include "ast/Number.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;
