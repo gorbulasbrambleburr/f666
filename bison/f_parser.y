@@ -60,6 +60,7 @@
 %token CYCLE       "CYCLE keyword";
 %token EXIT        "EXIT keyword";
 %token IF          "IF keyword";
+%token THEN        "THEN keyword";
 %token ELSE        "ELSE keyword";
 %token ELSEIF      "ELSEIF keyword";
 %token ENDIF       "ENDIF keyword";
@@ -119,6 +120,11 @@
 %type<AST::node_ptr> Literal
 %type<AST::node_ptrs> ExecutableList
 %type<AST::node_ptr> Statement
+%type<AST::node_ptrs> StatementList
+%type<AST::node_ptr> IfStatement
+%type<AST::node_ptrs> ElseStatement
+%type<AST::node_ptr> ElseIfStatement
+%type<AST::node_ptrs> ElseIfStatementList
 
 // Order of expressions
 %left COMPARISON
@@ -309,59 +315,6 @@ Literal
     };
 
 /*
-    : NumericExpression {
-        $$ = std::move($1);
-    }
-    | Expression COMPARISON Expression {
-        $$ = driver.createNode<LogicalExpression>(std::move($1), std::move($2), std::move($3));
-    };
-
-NumericExpression
-    : Factor {
-        $$ = std::move($1);
-    }
-    | NumericExpression PLUS Factor {
-        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
-    }
-    | NumericExpression MINUS Factor {
-        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
-    };
-
-Factor
-    : Term {
-        $$ = std::move($1);
-    }
-    | Factor TIMES Term {
-        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
-    }
-    | Factor DIVIDE Term {
-        $$ = driver.createNode<NumericExpression>(std::move($1), $2, std::move($3));
-    };
-
-Term
-    : LP NumericExpression RP {
-        $$ = std::move($2);
-    }
-    | Identifier {
-        $$ = std::move($1);
-    }
-    | Number {
-        $$ = std::move($1);
-    }
-    | MINUS Term {
-        node_ptr node = driver.createNode<Number>(0);
-        $$ = driver.createNode<NumericExpression>(node, $1, std::move($2));
-    };
-
-Number
-    : INTEGER {
-        $$ = driver.createNode<Number>($1);
-    }
-    | REAL {
-        $$ = driver.createNode<Number>($1);
-    };
-
-/*
 ExpressionList
     : Expression
     | ExpressionList "," Expression
@@ -384,20 +337,14 @@ ExecutableList
         $$.emplace_back(std::move($2));
     };
 
-
 Statement
     : AssignmentStatement {
         $$ = std::move($1);
-    }/*
-    | PrintStatement {
+    }
+    | IfStatement {
         $$ = std::move($1);
     }
-    | ReadStatement {
-        $$ = std::move($1);
-    }
-    | IfConstruct {
-        $$ = std::move($1);
-    }
+    /*
     | DoConstruct {
         $$ = std::move($1);
     }
@@ -412,7 +359,52 @@ Statement
     }
     | ExitStatement {
         $$ = std::move($1);
+    };
+    | PrintStatement {
+        $$ = std::move($1);
+    }
+    | ReadStatement {
+        $$ = std::move($1);
     }*/;
+
+IfStatement
+    : IF LP Expression RP THEN StatementList ENDIF {
+        $$ = driver.createNode<IfStatement>(std::move($3), std::move($6), node_ptrs{}, node_ptrs{});
+    }
+    | IF LP Expression RP THEN StatementList ElseIfStatementList ElseStatement {
+        $$ = driver.createNode<IfStatement>(std::move($3), std::move($6), std::move($7), std::move($8));
+    }
+    | IF LP Expression RP THEN StatementList ElseStatement {
+        $$ = driver.createNode<IfStatement>(std::move($3), std::move($6), node_ptrs{}, std::move($7));
+    };
+
+ElseIfStatementList
+    : ElseIfStatement {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | ElseIfStatementList ElseIfStatement {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($2));
+    };
+
+ElseIfStatement
+    : ELSEIF LP Expression RP THEN StatementList {
+        $$ = driver.createNode<ElseIfStatement>(std::move($3), std::move($6));
+    };
+
+ElseStatement
+    : ELSE StatementList ENDIF {
+        $$ = std::move($2);
+    };
+
+StatementList
+    : Statement {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | StatementList Statement {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($2));
+    };
 
 /*
 PrintStatement
@@ -433,35 +425,6 @@ ReadStatement
     : "READ" ArgumentList
     ;
 
-IfConstruct
-    : IfThenStatement ThenConstruct
-    ;
-
-IfThenStatement
-    : "IF" LogicalExpression "THEN"
-    ;
-
-ThenConstruct
-    : Statement EndIfStatement
-    | Statement ElseIfConstruct
-    | Statement ElseConstruct
-    ;
-
-EndIfStatement
-    : "ENDIF"
-    ;
-
-ElseIfConstruct
-    : ElseIfStatement ThenConstruct
-    ;
-
-ElseIfStatement
-    : "ELSEIF" Expression "THEN"
-    ;
-
-ElseConstruct
-    : "ELSE" Expression "END"
-    ;
 
 DoConstruct
     : DoStatement DoLoopControl EndDoStatement

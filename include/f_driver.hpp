@@ -25,6 +25,8 @@
 #include "ast/Expression.hpp"
 #include "ast/Comparison.hpp"
 #include "ast/Literal.hpp"
+#include "ast/IfStatement.hpp"
+#include "ast/ElseIfStatement.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

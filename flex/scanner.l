@@ -91,6 +91,10 @@ newline     \n
     return Fortran::Parser::make_IF(Fortran::location());
 }
 
+"THEN" {
+    return Fortran::Parser::make_THEN(Fortran::location());
+}
+
 "ELSE" {
     return Fortran::Parser::make_ELSE(Fortran::location());
 }

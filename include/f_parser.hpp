@@ -318,6 +318,8 @@ namespace  Fortran  {
       // Literal
       // ExecutableConstruct
       // Statement
+      // IfStatement
+      // ElseIfStatement
       char dummy1[sizeof(AST::node_ptr)];
 
       // ArgumentList
@@ -325,6 +327,9 @@ namespace  Fortran  {
       // IdentifierDeclarationList
       // AssignmentStatementList
       // ExecutableList
+      // ElseIfStatementList
+      // ElseStatement
+      // StatementList
       char dummy2[sizeof(AST::node_ptrs)];
 
       // "BOOLEAN value"
@@ -384,32 +389,33 @@ namespace  Fortran  {
         TOKEN_CYCLE = 265,
         TOKEN_EXIT = 266,
         TOKEN_IF = 267,
-        TOKEN_ELSE = 268,
-        TOKEN_ELSEIF = 269,
-        TOKEN_ENDIF = 270,
-        TOKEN_WHILE = 271,
-        TOKEN_DO = 272,
-        TOKEN_ENDDO = 273,
-        TOKEN_PRINT = 274,
-        TOKEN_READ = 275,
-        TOKEN_CALL = 276,
-        TOKEN_ERR = 277,
-        TOKEN_NEWLINE = 278,
-        TOKEN_COMMA = 279,
-        TOKEN_LP = 280,
-        TOKEN_RP = 281,
-        TOKEN_ASSIGN = 282,
-        TOKEN_PLUS = 283,
-        TOKEN_MINUS = 284,
-        TOKEN_TIMES = 285,
-        TOKEN_DIVIDE = 286,
-        TOKEN_TYPE = 287,
-        TOKEN_INTEGER = 288,
-        TOKEN_REAL = 289,
-        TOKEN_BOOLEAN = 290,
-        TOKEN_STRING = 291,
-        TOKEN_ID = 292,
-        TOKEN_COMPARISON = 293
+        TOKEN_THEN = 268,
+        TOKEN_ELSE = 269,
+        TOKEN_ELSEIF = 270,
+        TOKEN_ENDIF = 271,
+        TOKEN_WHILE = 272,
+        TOKEN_DO = 273,
+        TOKEN_ENDDO = 274,
+        TOKEN_PRINT = 275,
+        TOKEN_READ = 276,
+        TOKEN_CALL = 277,
+        TOKEN_ERR = 278,
+        TOKEN_NEWLINE = 279,
+        TOKEN_COMMA = 280,
+        TOKEN_LP = 281,
+        TOKEN_RP = 282,
+        TOKEN_ASSIGN = 283,
+        TOKEN_PLUS = 284,
+        TOKEN_MINUS = 285,
+        TOKEN_TIMES = 286,
+        TOKEN_DIVIDE = 287,
+        TOKEN_TYPE = 288,
+        TOKEN_INTEGER = 289,
+        TOKEN_REAL = 290,
+        TOKEN_BOOLEAN = 291,
+        TOKEN_STRING = 292,
+        TOKEN_ID = 293,
+        TOKEN_COMPARISON = 294
       };
     };
 
@@ -575,6 +581,10 @@ namespace  Fortran  {
     static inline
     symbol_type
     make_IF (const location_type& l);
+
+    static inline
+    symbol_type
+    make_THEN (const location_type& l);
 
     static inline
     symbol_type
@@ -755,7 +765,7 @@ namespace  Fortran  {
   static const unsigned char yydefact_[];
 
   // YYPGOTO[NTERM-NUM].
-  static const signed char yypgoto_[];
+  static const short int yypgoto_[];
 
   // YYDEFGOTO[NTERM-NUM].
   static const signed char yydefgoto_[];
@@ -885,12 +895,12 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 99,     ///< Last index in yytable_.
-      yynnts_ = 25,  ///< Number of nonterminal symbols.
+      yylast_ = 143,     ///< Last index in yytable_.
+      yynnts_ = 30,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
-      yyntokens_ = 39  ///< Number of tokens.
+      yyntokens_ = 40  ///< Number of tokens.
     };
 
 
@@ -937,9 +947,9 @@ namespace  Fortran  {
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38
+      35,    36,    37,    38,    39
     };
-    const unsigned int user_token_number_max_ = 293;
+    const unsigned int user_token_number_max_ = 294;
     const token_number_type undef_token_ = 2;
 
     if (static_cast<int>(t) <= yyeof_)
@@ -972,65 +982,70 @@ namespace  Fortran  {
   {
       switch (other.type_get ())
     {
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 45: // Identifier
-      case 47: // Argument
-      case 48: // Type
-      case 49: // Body
-      case 50: // SpecificationConstruct
-      case 52: // Specification
-      case 53: // DeclarationStatement
-      case 55: // IdentifierDeclaration
-      case 56: // ParameterStatement
-      case 58: // AssignmentStatement
-      case 59: // Expression
-      case 60: // Literal
-      case 61: // ExecutableConstruct
-      case 63: // Statement
+      case 41: // ExecutableProgram
+      case 42: // Subprogram
+      case 43: // MainProgram
+      case 44: // Subroutine
+      case 45: // Function
+      case 46: // Identifier
+      case 48: // Argument
+      case 49: // Type
+      case 50: // Body
+      case 51: // SpecificationConstruct
+      case 53: // Specification
+      case 54: // DeclarationStatement
+      case 56: // IdentifierDeclaration
+      case 57: // ParameterStatement
+      case 59: // AssignmentStatement
+      case 60: // Expression
+      case 61: // Literal
+      case 62: // ExecutableConstruct
+      case 64: // Statement
+      case 65: // IfStatement
+      case 67: // ElseIfStatement
         value.copy< AST::node_ptr > (other.value);
         break;
 
-      case 46: // ArgumentList
-      case 51: // SpecificationList
-      case 54: // IdentifierDeclarationList
-      case 57: // AssignmentStatementList
-      case 62: // ExecutableList
+      case 47: // ArgumentList
+      case 52: // SpecificationList
+      case 55: // IdentifierDeclarationList
+      case 58: // AssignmentStatementList
+      case 63: // ExecutableList
+      case 66: // ElseIfStatementList
+      case 68: // ElseStatement
+      case 69: // StatementList
         value.copy< AST::node_ptrs > (other.value);
         break;
 
-      case 35: // "BOOLEAN value"
+      case 36: // "BOOLEAN value"
         value.copy< Fortran::boolean > (other.value);
         break;
 
-      case 33: // "INTEGER value"
+      case 34: // "INTEGER value"
         value.copy< Fortran::integer > (other.value);
         break;
 
-      case 28: // "+"
-      case 29: // "-"
-      case 30: // "*"
-      case 31: // "/"
+      case 29: // "+"
+      case 30: // "-"
+      case 31: // "*"
+      case 32: // "/"
         value.copy< Fortran::op::arithmetic > (other.value);
         break;
 
-      case 38: // "COMPARISON operator"
+      case 39: // "COMPARISON operator"
         value.copy< Fortran::op::comp > (other.value);
         break;
 
-      case 34: // "REAL value"
+      case 35: // "REAL value"
         value.copy< Fortran::real > (other.value);
         break;
 
-      case 36: // "STRING value"
-      case 37: // "ID identifier"
+      case 37: // "STRING value"
+      case 38: // "ID identifier"
         value.copy< Fortran::string > (other.value);
         break;
 
-      case 32: // "TYPE identifier"
+      case 33: // "TYPE identifier"
         value.copy< Fortran::type > (other.value);
         break;
 
@@ -1051,65 +1066,70 @@ namespace  Fortran  {
     (void) v;
       switch (this->type_get ())
     {
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 45: // Identifier
-      case 47: // Argument
-      case 48: // Type
-      case 49: // Body
-      case 50: // SpecificationConstruct
-      case 52: // Specification
-      case 53: // DeclarationStatement
-      case 55: // IdentifierDeclaration
-      case 56: // ParameterStatement
-      case 58: // AssignmentStatement
-      case 59: // Expression
-      case 60: // Literal
-      case 61: // ExecutableConstruct
-      case 63: // Statement
+      case 41: // ExecutableProgram
+      case 42: // Subprogram
+      case 43: // MainProgram
+      case 44: // Subroutine
+      case 45: // Function
+      case 46: // Identifier
+      case 48: // Argument
+      case 49: // Type
+      case 50: // Body
+      case 51: // SpecificationConstruct
+      case 53: // Specification
+      case 54: // DeclarationStatement
+      case 56: // IdentifierDeclaration
+      case 57: // ParameterStatement
+      case 59: // AssignmentStatement
+      case 60: // Expression
+      case 61: // Literal
+      case 62: // ExecutableConstruct
+      case 64: // Statement
+      case 65: // IfStatement
+      case 67: // ElseIfStatement
         value.copy< AST::node_ptr > (v);
         break;
 
-      case 46: // ArgumentList
-      case 51: // SpecificationList
-      case 54: // IdentifierDeclarationList
-      case 57: // AssignmentStatementList
-      case 62: // ExecutableList
+      case 47: // ArgumentList
+      case 52: // SpecificationList
+      case 55: // IdentifierDeclarationList
+      case 58: // AssignmentStatementList
+      case 63: // ExecutableList
+      case 66: // ElseIfStatementList
+      case 68: // ElseStatement
+      case 69: // StatementList
         value.copy< AST::node_ptrs > (v);
         break;
 
-      case 35: // "BOOLEAN value"
+      case 36: // "BOOLEAN value"
         value.copy< Fortran::boolean > (v);
         break;
 
-      case 33: // "INTEGER value"
+      case 34: // "INTEGER value"
         value.copy< Fortran::integer > (v);
         break;
 
-      case 28: // "+"
-      case 29: // "-"
-      case 30: // "*"
-      case 31: // "/"
+      case 29: // "+"
+      case 30: // "-"
+      case 31: // "*"
+      case 32: // "/"
         value.copy< Fortran::op::arithmetic > (v);
         break;
 
-      case 38: // "COMPARISON operator"
+      case 39: // "COMPARISON operator"
         value.copy< Fortran::op::comp > (v);
         break;
 
-      case 34: // "REAL value"
+      case 35: // "REAL value"
         value.copy< Fortran::real > (v);
         break;
 
-      case 36: // "STRING value"
-      case 37: // "ID identifier"
+      case 37: // "STRING value"
+      case 38: // "ID identifier"
         value.copy< Fortran::string > (v);
         break;
 
-      case 32: // "TYPE identifier"
+      case 33: // "TYPE identifier"
         value.copy< Fortran::type > (v);
         break;
 
@@ -1217,65 +1237,70 @@ namespace  Fortran  {
     // Type destructor.
     switch (yytype)
     {
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 45: // Identifier
-      case 47: // Argument
-      case 48: // Type
-      case 49: // Body
-      case 50: // SpecificationConstruct
-      case 52: // Specification
-      case 53: // DeclarationStatement
-      case 55: // IdentifierDeclaration
-      case 56: // ParameterStatement
-      case 58: // AssignmentStatement
-      case 59: // Expression
-      case 60: // Literal
-      case 61: // ExecutableConstruct
-      case 63: // Statement
+      case 41: // ExecutableProgram
+      case 42: // Subprogram
+      case 43: // MainProgram
+      case 44: // Subroutine
+      case 45: // Function
+      case 46: // Identifier
+      case 48: // Argument
+      case 49: // Type
+      case 50: // Body
+      case 51: // SpecificationConstruct
+      case 53: // Specification
+      case 54: // DeclarationStatement
+      case 56: // IdentifierDeclaration
+      case 57: // ParameterStatement
+      case 59: // AssignmentStatement
+      case 60: // Expression
+      case 61: // Literal
+      case 62: // ExecutableConstruct
+      case 64: // Statement
+      case 65: // IfStatement
+      case 67: // ElseIfStatement
         value.template destroy< AST::node_ptr > ();
         break;
 
-      case 46: // ArgumentList
-      case 51: // SpecificationList
-      case 54: // IdentifierDeclarationList
-      case 57: // AssignmentStatementList
-      case 62: // ExecutableList
+      case 47: // ArgumentList
+      case 52: // SpecificationList
+      case 55: // IdentifierDeclarationList
+      case 58: // AssignmentStatementList
+      case 63: // ExecutableList
+      case 66: // ElseIfStatementList
+      case 68: // ElseStatement
+      case 69: // StatementList
         value.template destroy< AST::node_ptrs > ();
         break;
 
-      case 35: // "BOOLEAN value"
+      case 36: // "BOOLEAN value"
         value.template destroy< Fortran::boolean > ();
         break;
 
-      case 33: // "INTEGER value"
+      case 34: // "INTEGER value"
         value.template destroy< Fortran::integer > ();
         break;
 
-      case 28: // "+"
-      case 29: // "-"
-      case 30: // "*"
-      case 31: // "/"
+      case 29: // "+"
+      case 30: // "-"
+      case 31: // "*"
+      case 32: // "/"
         value.template destroy< Fortran::op::arithmetic > ();
         break;
 
-      case 38: // "COMPARISON operator"
+      case 39: // "COMPARISON operator"
         value.template destroy< Fortran::op::comp > ();
         break;
 
-      case 34: // "REAL value"
+      case 35: // "REAL value"
         value.template destroy< Fortran::real > ();
         break;
 
-      case 36: // "STRING value"
-      case 37: // "ID identifier"
+      case 37: // "STRING value"
+      case 38: // "ID identifier"
         value.template destroy< Fortran::string > ();
         break;
 
-      case 32: // "TYPE identifier"
+      case 33: // "TYPE identifier"
         value.template destroy< Fortran::type > ();
         break;
 
@@ -1302,65 +1327,70 @@ namespace  Fortran  {
     super_type::move(s);
       switch (this->type_get ())
     {
-      case 40: // ExecutableProgram
-      case 41: // Subprogram
-      case 42: // MainProgram
-      case 43: // Subroutine
-      case 44: // Function
-      case 45: // Identifier
-      case 47: // Argument
-      case 48: // Type
-      case 49: // Body
-      case 50: // SpecificationConstruct
-      case 52: // Specification
-      case 53: // DeclarationStatement
-      case 55: // IdentifierDeclaration
-      case 56: // ParameterStatement
-      case 58: // AssignmentStatement
-      case 59: // Expression
-      case 60: // Literal
-      case 61: // ExecutableConstruct
-      case 63: // Statement
+      case 41: // ExecutableProgram
+      case 42: // Subprogram
+      case 43: // MainProgram
+      case 44: // Subroutine
+      case 45: // Function
+      case 46: // Identifier
+      case 48: // Argument
+      case 49: // Type
+      case 50: // Body
+      case 51: // SpecificationConstruct
+      case 53: // Specification
+      case 54: // DeclarationStatement
+      case 56: // IdentifierDeclaration
+      case 57: // ParameterStatement
+      case 59: // AssignmentStatement
+      case 60: // Expression
+      case 61: // Literal
+      case 62: // ExecutableConstruct
+      case 64: // Statement
+      case 65: // IfStatement
+      case 67: // ElseIfStatement
         value.move< AST::node_ptr > (s.value);
         break;
 
-      case 46: // ArgumentList
-      case 51: // SpecificationList
-      case 54: // IdentifierDeclarationList
-      case 57: // AssignmentStatementList
-      case 62: // ExecutableList
+      case 47: // ArgumentList
+      case 52: // SpecificationList
+      case 55: // IdentifierDeclarationList
+      case 58: // AssignmentStatementList
+      case 63: // ExecutableList
+      case 66: // ElseIfStatementList
+      case 68: // ElseStatement
+      case 69: // StatementList
         value.move< AST::node_ptrs > (s.value);
         break;
 
-      case 35: // "BOOLEAN value"
+      case 36: // "BOOLEAN value"
         value.move< Fortran::boolean > (s.value);
         break;
 
-      case 33: // "INTEGER value"
+      case 34: // "INTEGER value"
         value.move< Fortran::integer > (s.value);
         break;
 
-      case 28: // "+"
-      case 29: // "-"
-      case 30: // "*"
-      case 31: // "/"
+      case 29: // "+"
+      case 30: // "-"
+      case 31: // "*"
+      case 32: // "/"
         value.move< Fortran::op::arithmetic > (s.value);
         break;
 
-      case 38: // "COMPARISON operator"
+      case 39: // "COMPARISON operator"
         value.move< Fortran::op::comp > (s.value);
         break;
 
-      case 34: // "REAL value"
+      case 35: // "REAL value"
         value.move< Fortran::real > (s.value);
         break;
 
-      case 36: // "STRING value"
-      case 37: // "ID identifier"
+      case 37: // "STRING value"
+      case 38: // "ID identifier"
         value.move< Fortran::string > (s.value);
         break;
 
-      case 32: // "TYPE identifier"
+      case 33: // "TYPE identifier"
         value.move< Fortran::type > (s.value);
         break;
 
@@ -1422,7 +1452,7 @@ namespace  Fortran  {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,   287,   288,   289,   290,   291,   292,   293
+     285,   286,   287,   288,   289,   290,   291,   292,   293,   294
     };
     return static_cast<token_type> (yytoken_number_[type]);
   }
@@ -1491,6 +1521,12 @@ namespace  Fortran  {
    Parser ::make_IF (const location_type& l)
   {
     return symbol_type (token::TOKEN_IF, l);
+  }
+
+   Parser ::symbol_type
+   Parser ::make_THEN (const location_type& l)
+  {
+    return symbol_type (token::TOKEN_THEN, l);
   }
 
    Parser ::symbol_type
@@ -1652,7 +1688,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1656 "include/f_parser.hpp" // lalr1.cc:377
+#line 1692 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
