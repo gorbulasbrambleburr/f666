@@ -27,6 +27,7 @@
 #include "ast/Literal.hpp"
 #include "ast/IfStatement.hpp"
 #include "ast/ElseIfStatement.hpp"
+#include "ast/DoStatement.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

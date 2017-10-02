@@ -320,6 +320,7 @@ namespace  Fortran  {
       // Statement
       // IfStatement
       // ElseIfStatement
+      // DoStatement
       char dummy1[sizeof(AST::node_ptr)];
 
       // ArgumentList
@@ -757,7 +758,7 @@ namespace  Fortran  {
     // Tables.
   // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
   // STATE-NUM.
-  static const signed char yypact_[];
+  static const short int yypact_[];
 
   // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
   // Performed when YYTABLE does not specify something else to do.  Zero
@@ -775,7 +776,7 @@ namespace  Fortran  {
   // number is the opposite.  If YYTABLE_NINF, syntax error.
   static const unsigned char yytable_[];
 
-  static const signed char yycheck_[];
+  static const short int yycheck_[];
 
   // YYSTOS[STATE-NUM] -- The (internal number of the) accessing
   // symbol of state STATE-NUM.
@@ -895,8 +896,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 143,     ///< Last index in yytable_.
-      yynnts_ = 30,  ///< Number of nonterminal symbols.
+      yylast_ = 187,     ///< Last index in yytable_.
+      yynnts_ = 31,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -1003,6 +1004,7 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
+      case 70: // DoStatement
         value.copy< AST::node_ptr > (other.value);
         break;
 
@@ -1087,6 +1089,7 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
+      case 70: // DoStatement
         value.copy< AST::node_ptr > (v);
         break;
 
@@ -1258,6 +1261,7 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
+      case 70: // DoStatement
         value.template destroy< AST::node_ptr > ();
         break;
 
@@ -1348,6 +1352,7 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
+      case 70: // DoStatement
         value.move< AST::node_ptr > (s.value);
         break;
 
@@ -1688,7 +1693,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1692 "include/f_parser.hpp" // lalr1.cc:377
+#line 1697 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

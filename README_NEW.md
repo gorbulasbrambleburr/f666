@@ -1,18 +1,17 @@
-# Análise Semantica F666
+# Análise Semântica F666
 
-A análise semântica da nossa linguagem F666, verificará se o programa escrito pelo desenvolvedor respeita a definição semântica definida por nós.
+A análise semântica da linguagem F666 verificará se o programa escrito pelo desenvolvedor respeita a definição semântica por nós definida.
 
-Nessa etapa do processo de compilação, o programa fonte não é mais utilizado pela ferramenta, e sim a árvore sintática gerada após passar pelos 2 processos de análise anteriores (análise léxica, análise sintática). No entanto nós gostariamos de propor uma abordagem um pouco diferente, a ideia é procurar por incoerências na árvore sintática, alguns exemplos são:
-		
+Nessa etapa do processo de compilação, o programa fonte não é mais utilizado pela ferramenta, e sim a árvore sintática gerada após passar pelos dois processos de análise anteriores (análise léxica e sintática). No entanto, gostariamos de propor uma abordagem um pouco diferente: a ideia é procurar por incoerências na árvore sintática. Alguns exemplos são:
+
 	- Operandos incompatíveis com operadores;
 	- Variáveis não declaradas;
 	- Re-declaração de variáveis ou funções;
 	- Chamadas de funções com número incorreto de parâmetros;
 	- Comandos fora de contexto.
 
-## Aspectos semânticos  
-
-A linguagem Fortram 666 terá as regras semânticas bem semelhantes a linguagem Fortram, pois ela esta baseada nas variaveis do Fortram na versão 6 e 7, que serviu de inspiração para o nosso projeto.  
+## Aspectos semânticos:
+A linguagem Fortran 666 terá as regras semânticas bem semelhantes a linguagem Fortran, pois ela está baseada nas variáveis do Fortran 77, que serviu de inspiração para o nosso projeto.  
 
 ### Declaração de variáveis e funções
 
@@ -396,7 +395,7 @@ Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenham
 
 #### Exemplo:
 
-```Fortram
+```Fortran
 	REAL FUNCTION R(M,T)
 		INTEGER M
 		REAL T
@@ -477,7 +476,7 @@ Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenham
 
 #### Exemplo:
 
-```Fortram
+```Fortran
   CHAR A[32] = B
 ```
 
@@ -506,7 +505,7 @@ Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenham
 ### Garantir que não seja possivel acessar variável não iniciada:
 
 #### Exemplo:
-```Fortram
+```Fortran
 	INTEGER A, B
 	A = B
 ```
@@ -547,7 +546,7 @@ Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenham
 
 #### Exemplo
 
-```Fortram
+```Fortran
 	INTEGER A, B
 	A = 1
 	B = 2
@@ -611,7 +610,7 @@ Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenham
 
 #### Exemplo
 
-```Fortram
+```Fortran
 	INTEGER A
 	CHAR A
 ```
@@ -637,7 +636,7 @@ Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenham
 
 #### Exemplo
 
-```Fortram
+```Fortran
 	REAL FUNCTION R(M,T)
 		
 		R = M + T

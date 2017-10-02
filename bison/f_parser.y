@@ -125,6 +125,7 @@
 %type<AST::node_ptrs> ElseStatement
 %type<AST::node_ptr> ElseIfStatement
 %type<AST::node_ptrs> ElseIfStatementList
+%type<AST::node_ptr> DoStatement
 
 // Order of expressions
 %left COMPARISON
@@ -344,10 +345,9 @@ Statement
     | IfStatement {
         $$ = std::move($1);
     }
-    /*
-    | DoConstruct {
+    | DoStatement {
         $$ = std::move($1);
-    }
+    }/*
     | WhileConstruct {
         $$ = std::move($1);
     }
@@ -425,24 +425,19 @@ ReadStatement
     : "READ" ArgumentList
     ;
 
-
-DoConstruct
-    : DoStatement DoLoopControl EndDoStatement
-    ;
-
+*/
 DoStatement
-    : "DO"
-    ;
+    : DO Identifier ASSIGN Expression COMMA Expression StatementList ENDDO {
+        node_ptr unitary = driver.createNode<Literal>(1);
+        $$ = driver.createNode<DoStatement>(std::move($2),
+            std::move($4), std::move($6), std::move(unitary), std::move($7));
+    }
+    | DO Identifier ASSIGN Expression COMMA Expression COMMA Expression StatementList ENDDO {
+        $$ = driver.createNode<DoStatement>(std::move($2),
+            std::move($4), std::move($6), std::move($8), std::move($9));
+    };
 
-DoLoopControl
-    : ID "=" Expression "," Expression
-    | ID "=" Expression "," Expression "," Expression
-    ;
-
-EndDoStatement
-    : Statement "ENDDO"
-    ;
-
+/*
 WhileConstruct
     : WhileStatement EndWhileStatement
     ;

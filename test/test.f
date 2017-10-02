@@ -24,9 +24,14 @@ END
 //------------------------------------------
 
 SUBROUTINE B()
-INTEGER X, Y
+INTEGER X, Y, Z
 PARAMETER (X = 5 * 3 + 4)
 PARAMETER (Y = 666)
+
+DO X = 1, Y, 2
+    Z = Z + 1
+ENDDO
+
 RETURN
 END
 
