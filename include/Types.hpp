@@ -10,6 +10,7 @@ namespace Fortran {
             INTEGER,
             REAL,
             BOOLEAN,
+            STRING,
         };
     }
 

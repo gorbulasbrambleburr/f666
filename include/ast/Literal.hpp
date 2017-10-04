@@ -15,6 +15,9 @@ public:
     Literal(bool value, Fortran::type type = Fortran::type::BOOLEAN)
         : m_bValue(value), m_type(type) {
     }
+    Literal(std::string value, Fortran::type type = Fortran::type::STRING)
+        : m_sValue(value), m_type(type) {
+    }
     ~Literal() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "Literal: ";
@@ -22,6 +25,7 @@ public:
             case (Fortran::type::INTEGER): std::cout << "INTEGER [" << m_iValue << "]" << std::endl; break;
             case (Fortran::type::REAL): std::cout << "REAL [" << m_fValue << "]" << std::endl; break;
             case (Fortran::type::BOOLEAN): std::cout << "BOOLEAN [" << m_bValue << "]" << std::endl; break;
+            case (Fortran::type::STRING): std::cout << "STRING [" << m_sValue << "]" << std::endl; break;
         }
     }
 
@@ -29,6 +33,7 @@ private:
     int m_iValue;
     float m_fValue;
     bool m_bValue;
+    std::string m_sValue;
     Fortran::type m_type;
 };
 

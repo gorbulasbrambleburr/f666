@@ -128,6 +128,8 @@
 %type<AST::node_ptr> DoStatement
 %type<AST::node_ptr> WhileStatement
 %type<AST::node_ptr> ReadStatement
+%type<AST::node_ptr> PrintStatement
+%type<AST::node_ptrs> PrintList
 
 // Order of expressions
 %left COMPARISON
@@ -318,6 +320,9 @@ Literal
     }
     | BOOLEAN {
         $$ = driver.createNode<Literal>($1);
+    }
+    | STRING {
+        $$ = driver.createNode<Literal>($1);
     };
 
 /*
@@ -359,6 +364,9 @@ Statement
     | ReadStatement {
         $$ = std::move($1);
     }
+    | PrintStatement {
+        $$ = std::move($1);
+    }
     /*
     | CallStatement {
         $$ = std::move($1);
@@ -369,9 +377,7 @@ Statement
     | ExitStatement {
         $$ = std::move($1);
     };
-    | PrintStatement {
-        $$ = std::move($1);
-    }*/
+    */
     ;
 
 IfStatement
@@ -413,24 +419,23 @@ StatementList
         $$.emplace_back(std::move($2));
     };
 
-/*
-PrintStatement
-    : "PRINT" PrintList
-    ;
-
-PrintList
-    : PrintItem
-    | PrintList "," PrintItem
-    ;
-
-PrintItem
-    : STRING
-    | Expression
-    ;
-*/
 ReadStatement
     : READ ArgumentList {
         $$ = driver.createNode<ReadStatement>(std::move($2));
+    };
+
+PrintStatement
+    : PRINT PrintList {
+        $$ = driver.createNode<PrintStatement>(std::move($2));
+    };
+
+PrintList
+    : Expression {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | PrintList COMMA Expression {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($3));
     };
 
 DoStatement

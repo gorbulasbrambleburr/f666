@@ -19,6 +19,7 @@ public:
             case (Fortran::type::INTEGER): s = "INTEGER"; break; 
             case (Fortran::type::REAL): s = "REAL"; break; 
             case (Fortran::type::BOOLEAN): s = "BOOLEAN"; break; 
+            case (Fortran::type::STRING): s = "STRING"; break; 
         }
         return s;
     }

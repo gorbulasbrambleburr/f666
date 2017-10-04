@@ -20,6 +20,8 @@ ENDIF
 
 WHILE ((X + Y) .GT. 0) DO
     READ X, Y
+    Z = X * Y
+    PRINT 'Z = ', Z
 ENDDO
 
 STOP
