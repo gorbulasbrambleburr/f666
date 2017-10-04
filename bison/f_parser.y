@@ -126,6 +126,7 @@
 %type<AST::node_ptr> ElseIfStatement
 %type<AST::node_ptrs> ElseIfStatementList
 %type<AST::node_ptr> DoStatement
+%type<AST::node_ptr> WhileStatement
 
 // Order of expressions
 %left COMPARISON
@@ -347,10 +348,10 @@ Statement
     }
     | DoStatement {
         $$ = std::move($1);
-    }/*
-    | WhileConstruct {
-        $$ = std::move($1);
     }
+    | WhileStatement {
+        $$ = std::move($1);
+    }/*
     | CallStatement {
         $$ = std::move($1);
     }
@@ -437,19 +438,12 @@ DoStatement
             std::move($4), std::move($6), std::move($8), std::move($9));
     };
 
-/*
-WhileConstruct
-    : WhileStatement EndWhileStatement
-    ;
-
 WhileStatement
-    : "WHILE" LogicalExpression "DO"
-    ;
+    : WHILE LP Expression RP DO StatementList ENDDO {
+        $$ = driver.createNode<WhileStatement>(std::move($3), std::move($6));
+    };
 
-EndWhileStatement
-    : Statement "ENDDO"
-    ;
-
+/*
 CallStatement
     : "CALL" ID LP ArgumentList RP
     | "CALL" ID LP RP

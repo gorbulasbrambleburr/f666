@@ -18,6 +18,10 @@ ELSE
 ENDIF
 
 
+WHILE (X .GT. 0) DO
+    X = X - Y 
+ENDDO
+
 STOP
 END
 
