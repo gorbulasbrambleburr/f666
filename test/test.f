@@ -18,8 +18,8 @@ ELSE
 ENDIF
 
 
-WHILE (X .GT. 0) DO
-    X = X - Y 
+WHILE ((X + Y) .GT. 0) DO
+    READ X, Y
 ENDDO
 
 STOP

@@ -29,6 +29,7 @@
 #include "ast/ElseIfStatement.hpp"
 #include "ast/DoStatement.hpp"
 #include "ast/WhileStatement.hpp"
+#include "ast/ReadStatement.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

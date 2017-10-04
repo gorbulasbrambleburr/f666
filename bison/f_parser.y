@@ -127,6 +127,7 @@
 %type<AST::node_ptrs> ElseIfStatementList
 %type<AST::node_ptr> DoStatement
 %type<AST::node_ptr> WhileStatement
+%type<AST::node_ptr> ReadStatement
 
 // Order of expressions
 %left COMPARISON
@@ -298,6 +299,9 @@ Expression
     | Expression DIVIDE Expression {
         $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
     }
+    | LP Expression RP {
+        $$ = std::move($2);
+    }
     | Identifier {
         $$ = std::move($1);
     }
@@ -351,7 +355,11 @@ Statement
     }
     | WhileStatement {
         $$ = std::move($1);
-    }/*
+    }
+    | ReadStatement {
+        $$ = std::move($1);
+    }
+    /*
     | CallStatement {
         $$ = std::move($1);
     }
@@ -363,10 +371,8 @@ Statement
     };
     | PrintStatement {
         $$ = std::move($1);
-    }
-    | ReadStatement {
-        $$ = std::move($1);
-    }*/;
+    }*/
+    ;
 
 IfStatement
     : IF LP Expression RP THEN StatementList ENDIF {
@@ -421,12 +427,12 @@ PrintItem
     : STRING
     | Expression
     ;
-
-ReadStatement
-    : "READ" ArgumentList
-    ;
-
 */
+ReadStatement
+    : READ ArgumentList {
+        $$ = driver.createNode<ReadStatement>(std::move($2));
+    };
+
 DoStatement
     : DO Identifier ASSIGN Expression COMMA Expression StatementList ENDDO {
         node_ptr unitary = driver.createNode<Literal>(1);

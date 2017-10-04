@@ -320,6 +320,7 @@ namespace  Fortran  {
       // Statement
       // IfStatement
       // ElseIfStatement
+      // ReadStatement
       // DoStatement
       // WhileStatement
       char dummy1[sizeof(AST::node_ptr)];
@@ -770,7 +771,7 @@ namespace  Fortran  {
   static const short int yypgoto_[];
 
   // YYDEFGOTO[NTERM-NUM].
-  static const signed char yydefgoto_[];
+  static const short int yydefgoto_[];
 
   // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
   // positive, shift that token.  If negative, reduce the rule whose
@@ -897,8 +898,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 211,     ///< Last index in yytable_.
-      yynnts_ = 32,  ///< Number of nonterminal symbols.
+      yylast_ = 239,     ///< Last index in yytable_.
+      yynnts_ = 33,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -1005,8 +1006,9 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
-      case 70: // DoStatement
-      case 71: // WhileStatement
+      case 70: // ReadStatement
+      case 71: // DoStatement
+      case 72: // WhileStatement
         value.copy< AST::node_ptr > (other.value);
         break;
 
@@ -1091,8 +1093,9 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
-      case 70: // DoStatement
-      case 71: // WhileStatement
+      case 70: // ReadStatement
+      case 71: // DoStatement
+      case 72: // WhileStatement
         value.copy< AST::node_ptr > (v);
         break;
 
@@ -1264,8 +1267,9 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
-      case 70: // DoStatement
-      case 71: // WhileStatement
+      case 70: // ReadStatement
+      case 71: // DoStatement
+      case 72: // WhileStatement
         value.template destroy< AST::node_ptr > ();
         break;
 
@@ -1356,8 +1360,9 @@ namespace  Fortran  {
       case 64: // Statement
       case 65: // IfStatement
       case 67: // ElseIfStatement
-      case 70: // DoStatement
-      case 71: // WhileStatement
+      case 70: // ReadStatement
+      case 71: // DoStatement
+      case 72: // WhileStatement
         value.move< AST::node_ptr > (s.value);
         break;
 
@@ -1698,7 +1703,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1702 "include/f_parser.hpp" // lalr1.cc:377
+#line 1707 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
