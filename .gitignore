@@ -36,3 +36,5 @@ bin
 *.hh
 *.tab.c
 *.output
+include/f_parser.hpp
+src/f_parser.cpp
