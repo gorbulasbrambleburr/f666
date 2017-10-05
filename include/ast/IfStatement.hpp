@@ -13,32 +13,21 @@ public:
     }
     ~IfStatement() {}
     void print(int width) const {
-        std::cout << std::setw(width) << "- " << "IF" << std::endl;
-        std::cout << std::setw(width + 4) << "- " << "Condition:" << std::endl;
-        m_condition->print(width + 8);
-        std::cout << std::setw(width + 4) << "- " << "Body:" << std::endl;
-        if (m_ifStatements.empty()) {
-            std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
-        } else {
-            for (auto &child : m_ifStatements) {
-                child->print(width + 4);
-            }
+        std::cout << std::setw(width) << "- " << "IfStatement" << std::endl;
+        std::cout << std::setw(width + 4) << "- " << "IF" << std::endl;
+        std::cout << std::setw(width + 8) << "- " << "condition:" << std::endl;
+        m_condition->print(width + 12);
+        std::cout << std::setw(width + 8) << "- " << "body:" << std::endl;
+        for (auto &child : m_ifStatements) {
+            child->print(width + 12);
         }
-        if (m_elseIfStatements.empty()) {
-            std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
-        } else {
-            for (auto &child : m_elseIfStatements) {
-                std::cout << std::setw(width) << "- " << "ELSEIF" << std::endl;
-                child->print(width + 4);
-            }
+        for (auto &child : m_elseIfStatements) {
+            std::cout << std::setw(width + 4) << "- " << "ELSEIF" << std::endl;
+            child->print(width + 8);
         }
-        std::cout << std::setw(width) << "- " << "ELSE" << std::endl;
-        if (m_elseStatements.empty()) {
-            std::cout << std::setw(width + 4) << "- " << "EMPTY" << std::endl;
-        } else {
-            for (auto &child : m_elseStatements) {
-                child->print(width + 4);
-            }
+        std::cout << std::setw(width + 4) << "- " << "ELSE" << std::endl;
+        for (auto &child : m_elseStatements) {
+            child->print(width + 8);
         }
     }
 
