@@ -324,6 +324,7 @@ namespace  Fortran  {
       // PrintStatement
       // DoStatement
       // WhileStatement
+      // CallStatement
       char dummy1[sizeof(AST::node_ptr)];
 
       // ArgumentList
@@ -900,8 +901,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 249,     ///< Last index in yytable_.
-      yynnts_ = 35,  ///< Number of nonterminal symbols.
+      yylast_ = 272,     ///< Last index in yytable_.
+      yynnts_ = 36,  ///< Number of nonterminal symbols.
       yyfinal_ = 13, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -1012,6 +1013,7 @@ namespace  Fortran  {
       case 71: // PrintStatement
       case 73: // DoStatement
       case 74: // WhileStatement
+      case 75: // CallStatement
         value.copy< AST::node_ptr > (other.value);
         break;
 
@@ -1101,6 +1103,7 @@ namespace  Fortran  {
       case 71: // PrintStatement
       case 73: // DoStatement
       case 74: // WhileStatement
+      case 75: // CallStatement
         value.copy< AST::node_ptr > (v);
         break;
 
@@ -1277,6 +1280,7 @@ namespace  Fortran  {
       case 71: // PrintStatement
       case 73: // DoStatement
       case 74: // WhileStatement
+      case 75: // CallStatement
         value.template destroy< AST::node_ptr > ();
         break;
 
@@ -1372,6 +1376,7 @@ namespace  Fortran  {
       case 71: // PrintStatement
       case 73: // DoStatement
       case 74: // WhileStatement
+      case 75: // CallStatement
         value.move< AST::node_ptr > (s.value);
         break;
 
@@ -1713,7 +1718,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1717 "include/f_parser.hpp" // lalr1.cc:377
+#line 1722 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

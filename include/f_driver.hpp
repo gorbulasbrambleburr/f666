@@ -31,6 +31,7 @@
 #include "ast/WhileStatement.hpp"
 #include "ast/ReadStatement.hpp"
 #include "ast/PrintStatement.hpp"
+#include "ast/CallStatement.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

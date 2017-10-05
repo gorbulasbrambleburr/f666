@@ -17,6 +17,7 @@ ELSE
     Y = X
 ENDIF
 
+CALL B()
 
 WHILE ((X + Y) .GT. 0) DO
     READ X, Y

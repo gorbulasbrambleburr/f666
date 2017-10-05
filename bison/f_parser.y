@@ -130,6 +130,7 @@
 %type<AST::node_ptr> ReadStatement
 %type<AST::node_ptr> PrintStatement
 %type<AST::node_ptrs> PrintList
+%type<AST::node_ptr> CallStatement
 
 // Order of expressions
 %left COMPARISON
@@ -367,10 +368,10 @@ Statement
     | PrintStatement {
         $$ = std::move($1);
     }
-    /*
     | CallStatement {
         $$ = std::move($1);
     }
+    /*
     | CycleStatement {
         $$ = std::move($1);
     }
@@ -454,12 +455,14 @@ WhileStatement
         $$ = driver.createNode<WhileStatement>(std::move($3), std::move($6));
     };
 
-/*
 CallStatement
-    : "CALL" ID LP ArgumentList RP
-    | "CALL" ID LP RP
-    ;
-
+    : CALL Identifier LP ArgumentList RP {
+        $$ = driver.createNode<CallStatement>(std::move($2), std::move($4));
+    }
+    | CALL Identifier LP RP {
+        $$ = driver.createNode<CallStatement>(std::move($2), std::move(node_ptrs{}));
+    };
+/*
 CycleStatement
     : "CONTINUE"
     ;
