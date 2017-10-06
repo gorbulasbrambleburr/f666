@@ -428,7 +428,7 @@ Fortran::type type() { return m_type; }
 
 ### Utilização de variáveis não declaradas
 
-Embora as versões mais antigas do Fortran permitiam a utilização de variáveis implícitas, decidiu-se que todas as variáveis devem ser declaradas antes de serem utilizadas. Para o trecho de código abaixo,
+Embora as versões mais antigas do Fortran permitiam a utilização de variáveis implícitas, decidiu-se que todas as variáveis devem ser declaradas antes de serem utilizadas. Para impor essa regra semântica, far-se-á o uso de uma tabela de símbolos. Para o trecho de código abaixo,
 
 ```Fortran
   PROGRAM TESTE
@@ -437,6 +437,7 @@ Embora as versões mais antigas do Fortran permitiam a utilização de variávei
   STOP
   END
 ```
+
 a seguinte árvore de sintaxe será criada:
 
 ```
@@ -463,21 +464,51 @@ a seguinte árvore de sintaxe será criada:
 
 A criação do nó `AssignmentExpression` recebe como parâmetro um `Identifier`, como pode ser visto na produção a seguir:
 
-```ebnf
+```c++
     AssignmentStatement
     : Identifier ASSIGN Expression {
         $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
     };
 ```
-A verificação de variáveis declaradas pode ser feito no construtor de cada nó do tipo `Identifier`:
+A verificação de variáveis declaradas pode ser feito no construtor de cada nó do tipo `Identifier` através de uma busca na tabela de símbolos:
 
 ```c++
-    Identifier(std::string id)
-            : m_id(id) {
+    Identifier(std::string id) : m_id(id) {
         assert(lookup(m_id));
     }
   
 ```
+
+
+
+
+### Re-declaração de variáveis ou funções
+
+Essa regra é semelhante à anterior. Contudo, faz-se a verificação no nó `DeclarationStatement`. Neste caso, espera-se que a pesquisa na tabela de símbolos não retorne nenhum resultado:
+
+```c++
+    DeclarationStatement(node_ptr type, node_ptrs&& ids)
+            : m_type(std::move(type)), m_ids(std::forward<node_ptrs>(ids)) {
+        for (auto id : m_ids) {
+            assert(lookup(id) == 0);
+        }
+    }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -487,50 +518,50 @@ A verificação de variáveis declaradas pode ser feito no construtor de cada n�
 #### Exemplo:
 
 ```Fortran
-	REAL FUNCTION R(M,T)
-		INTEGER M
-		REAL T
+    REAL FUNCTION R(M,T)
+        INTEGER M
+        REAL T
 
-		R = 0.1*T * (M*(M+14) + 46)
-		IF (R .LT. 0) THEN
-		   R = 0.0
-		ENDIF
+        R = 0.1*T * (M*(M+14) + 46)
+        IF (R .LT. 0) THEN
+           R = 0.0
+        ENDIF
 
-		RETURN
-	END
+        RETURN
+    END
 
-	R(A,B,C)
+    R(A,B,C)
 ```
 
 #### Grámatica de atributos
 
 ```c
-	for_stat:  FOR ID 'IN' INTV 'BY' NUMBER ':' suite 
-	           { ID[0].max_val = INTV[0].upperbound }
-	           ;
+    for_stat:  FOR ID 'IN' INTV 'BY' NUMBER ':' suite 
+               { ID[0].max_val = INTV[0].upperbound }
+               ;
 
-	exp :      ( '(' exp ')' | BIN | HEX | ID | call_stat ) INTV? 
-	           { INTV[0].upperbound <= ID[0].size }
-	           ;
+    exp :      ( '(' exp ')' | BIN | HEX | ID | call_stat ) INTV? 
+               { INTV[0].upperbound <= ID[0].size }
+               ;
 
-	INTV :     '<' NUMBEREXP ( ':' NUMBEREXP )? '>' 
-	           { 
-	          	 NUMBEREXP[0 ].max_val < NUMBEREXP[1].max_val & 
-	           	 INTV.upperbound = NUMB EREXP[1].max_val 
-	           }
-	           ;
-	SIZE :     '[' NUMBER ']' 
-	           { SIZE.size = NUMBER[0].val }
-	           ;
+    INTV :     '<' NUMBEREXP ( ':' NUMBEREXP )? '>' 
+               { 
+                 NUMBEREXP[0 ].max_val < NUMBEREXP[1].max_val & 
+                 INTV.upperbound = NUMB EREXP[1].max_val 
+               }
+               ;
+    SIZE :     '[' NUMBER ']' 
+               { SIZE.size = NUMBER[0].val }
+               ;
 
-	func_stat: FUNC ID '(' ( param ( ',' param )* )? ')' SIZE ':' suite     
+    func_stat: FUNC ID '(' ( param ( ',' param )* )? ')' SIZE ':' suite     
              { ID[0].nparams = count(param) }
              ;
-	call_stat: ID '(' ( exp ( ',' exp )* )? ')' 
-	           {
-	           	  lookup(ID[0].type) == 'func' & 
-	              count(exp) == lookup(ID[0].nparams) 
-	           };
+    call_stat: ID '(' ( exp ( ',' exp )* )? ')' 
+               {
+                  lookup(ID[0].type) == 'func' & 
+                  count(exp) == lookup(ID[0].nparams) 
+               };
 
   // our proposition
 
@@ -550,7 +581,7 @@ A verificação de variáveis declaradas pode ser feito no construtor de cada n�
 
   // original grammar
 
-	IdentifierDeclaration
+    IdentifierDeclaration
     : Identifier {
         $$ = driver.createNode<IdentifierDeclaration>(std::move($1));
     }
@@ -563,68 +594,28 @@ A verificação de variáveis declaradas pode ser feito no construtor de cada n�
   ...
 ```
 
-### Garantir que não seja possivel acessar variável não iniciada:
-
-#### Exemplo:
-```Fortran
-	INTEGER A, B
-	A = B
-```
-
-#### Grámatica de atributos
-
-```c
-
-  // example
-
-	exp : ( '(' exp ')' | BIN | HEX | ID | call_stat ) INTV? 
-	      { lookup(ID.val) != null }
-
-	// our proposition
-
-	AssignmentStatement
-    : Identifier ASSIGN Expression {
-        driver.lookup($1, $3) != null;
-    }
-    | Identifier LP Expression RP ASSIGN Expression {
-        driver.lookup($1, $6) != null;
-    };
-
-
-	// original grammar
-
-	AssignmentStatement
-    : Identifier ASSIGN Expression {
-        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
-    }
-    | Identifier LP Expression RP ASSIGN Expression {
-        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3), std::move($6));
-    };
-
-```
-
 ### Garantir que não seja possivel chamar função não declarada:
 
 #### Exemplo
 
 ```Fortran
-	INTEGER A, B
-	A = 1
-	B = 2
+    INTEGER A, B
+    A = 1
+    B = 2
 
-	R(A,B) <-- not declared function
+    R(A,B) <-- not declared function
 
-	REAL FUNCTION R(M,T)
-		INTEGER M
-		REAL T
+    REAL FUNCTION R(M,T)
+        INTEGER M
+        REAL T
 
-		R = 0.1*T * (M*(M+14) + 46)
-		IF (R .LT. 0) THEN
-		   R = 0.0
-		ENDIF
+        R = 0.1*T * (M*(M+14) + 46)
+        IF (R .LT. 0) THEN
+           R = 0.0
+        ENDIF
 
-		RETURN
-	END
+        RETURN
+    END
 ```
 
 #### Gramática de atributos
@@ -633,12 +624,12 @@ A verificação de variáveis declaradas pode ser feito no construtor de cada n�
 
   // example
 
-	call_stat: ID '(' ( exp ( ',' exp )* )? ')' 
-	           { lookup(ID) != null } ;
+    call_stat: ID '(' ( exp ( ',' exp )* )? ')' 
+               { lookup(ID) != null } ;
 
   // our proposition (how we know if this is a function?)
 
-	Identifier
+    Identifier
     : ID {driver.lookup($1) != null};
 
   // original grammar
@@ -650,98 +641,19 @@ A verificação de variáveis declaradas pode ser feito no construtor de cada n�
 
   // another proposition (is posible?)
 
-  	Function: Type FUNCTION Identifier LP ArgumentList RP Body RETURN END 
-	            { driver.lookup($3) != null; }
-	            | Type FUNCTION Identifier LP RP Body RETURN END 
-		          { driver.lookup($3) != null };
+    Function: Type FUNCTION Identifier LP ArgumentList RP Body RETURN END 
+                { driver.lookup($3) != null; }
+                | Type FUNCTION Identifier LP RP Body RETURN END 
+                  { driver.lookup($3) != null };
 
   // original grammar
 
-	Function
-	    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
-	        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
-	    }
-	    | Type FUNCTION Identifier LP RP Body RETURN END {
-	        $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
-	    };
+    Function
+        : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
+            $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
+        }
+        | Type FUNCTION Identifier LP RP Body RETURN END {
+            $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
+        };
 
 ```
-
-### Garantir que não seja possivel declarar duas variáveis com o mesmo nome:
-
-#### Exemplo
-
-```Fortran
-	INTEGER A
-	CHAR A
-```
-
-#### Gramática de atributos
-
-```c
-
-  // example
-  var_stat: VAR ID SIZE (ASSIGN exp)?
-            { lookup(ID[0]) == null } ;
-
-  // our proposition (if this is not a var id but a function id?)
-
-	Identifier: ID {driver.lookup($1) == null};
-
-  // original grammar
-
-  Identifier: ID {$$ = driver.createNode<Identifier>(std::move($1));};
-```
-
-### Garantir que não seja possivel declarar duas funções com o mesmo nome:
-
-#### Exemplo
-
-```Fortran
-	REAL FUNCTION R(M,T)
-		
-		R = M + T
-
-		RETURN
-	END
-
-	REAL FUNCTION R(M,T)
-		INTEGER M
-		REAL T
-
-		R = 0.1*T * (M*(M+14) + 46)
-		IF (R .LT. 0) THEN
-		   R = 0.0
-		ENDIF
-
-		RETURN
-	END
-```
-
-#### Grámatica de atributos
-
-```sh
-
-  // example
-	func_stat:  FUNC ID '(' ( param ( ',' param )* )? ')' SIZE ':' suite 
-  	          { lookup(ID[0]) == null } ;
-
-  // our proposition
-
-	Function:   Type FUNCTION Identifier LP ArgumentList RP Body RETURN END 
-	            { driver.lookup($3) == null; }
-	          | Type FUNCTION Identifier LP RP Body RETURN END 
-		          { driver.lookup($3) == null };
-
-  // original grammar
-
-	Function
-	    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
-	        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
-	    }
-	    | Type FUNCTION Identifier LP RP Body RETURN END {
-	        $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
-	    };
-```
-
-
