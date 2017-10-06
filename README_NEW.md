@@ -354,13 +354,13 @@ A cada produção dessa gramática, pode-se associar um conjunto de regras semâ
 
 A compatibilidade de tipos de atributos será imposta nos construtores de alguns nós. Cita-se como exemplo a expressão
 
-```
+```Fortran
 X = Y + 5
 ```
 
 e a sua redução para o nó `Expression`:
 
-```
+```c++
 Expression
     : Expression PLUS Expression {
         $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
@@ -403,7 +403,7 @@ Como o Bison é um parser LR, são feitas as seguintes operações:
 
 Na última redução, cria-se um nó do tipo `Expression` cujo construtor será:
 
-```
+```c++
 Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
         : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
     assert(m_left.type() == m_right.type());
