@@ -9,7 +9,7 @@ Nessa etapa do processo de compilação, o programa fonte não é mais utilizado
 
  Os seguintes tipos de variáveis são aceitos pela linguagem:
 
-```
+```c++
 %token<Fortran::integer> INTEGER  "INTEGER value";
 %token<Fortran::real>    REAL     "REAL value";
 %token<Fortran::boolean> BOOLEAN  "BOOLEAN value";
@@ -20,7 +20,7 @@ Nessa etapa do processo de compilação, o programa fonte não é mais utilizado
 
 A gramática apresentada a seguir segue a notação utilizada pelo Bison 3.0.4. Para mais informações sobre os símbolos utilizados, verificar o arquivo `f_parser.y`.
 
-```
+```c++
 ExecutableProgram
     : ExecutableProgram Subprogram {
         $$ = std::move($1);
@@ -344,8 +344,7 @@ A análise semântica dirigida pela sintaxe considera que cada símbolo da gram�
 A cada produção dessa gramática, pode-se associar um conjunto de regras semânticas responsáveis pela verificação semântica da linguagem. As seguintes verificações serão realizadas e são discriminadas a seguir:
 
     - Compatibilidade de tipos
-    - Operandos incompatíveis com operadores;
-    - Variáveis não declaradas;
+    - Utilização de variáveis não declaradas;
     - Re-declaração de variáveis ou funções;
     - Chamadas de funções com número incorreto de parâmetros;
     - Comandos fora de contexto.
@@ -425,6 +424,61 @@ Fortran::type type() { return lookup(m_id); }
 // O tipo já é um atributo da classe.
 Fortran::type type() { return m_type; }
 ```
+
+
+### Utilização de variáveis não declaradas
+
+Embora as versões mais antigas do Fortran permitiam a utilização de variáveis implícitas, decidiu-se que todas as variáveis devem ser declaradas antes de serem utilizadas. Para o trecho de código abaixo,
+
+```Fortran
+  PROGRAM TESTE
+  REAL B
+  X = B * 2.0
+  STOP
+  END
+```
+a seguinte árvore de sintaxe será criada:
+
+```
+  - ExecutableProgram:
+      - MainProgram:
+          - id: TESTE
+          - Body:
+              - SpecificationConstruct:
+                  - DeclarationStatement:
+                      - Type:INTEGER
+                      - IdentifierDeclaration:
+                          - id: B
+                          - Structural type: SCALAR
+              - ExecutableConstruct:
+                  - AssignmentStatement:
+                      - id: X
+                      - Structural type: SCALAR
+                      - Expression:
+                          - MUL:
+                              - id: B
+                              - Literal: REAL [2.0]
+
+```
+
+A criação do nó `AssignmentExpression` recebe como parâmetro um `Identifier`, como pode ser visto na produção a seguir:
+
+```ebnf
+    AssignmentStatement
+    : Identifier ASSIGN Expression {
+        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
+    };
+```
+A verificação de variáveis declaradas pode ser feito no construtor de cada nó do tipo `Identifier`:
+
+```c++
+    Identifier(std::string id)
+            : m_id(id) {
+        assert(lookup(m_id));
+    }
+  
+```
+
 
 
 
@@ -508,36 +562,6 @@ Fortran::type type() { return m_type; }
     };
   ...
 ```
-
-### Garantir que não seja possivel acessar variável não declarada:
-
-#### Exemplo:
-
-```Fortran
-  CHAR A[32] = B
-```
-
-#### Grámatica de atributos
-
-```c
-
-	// example
-
-	exp : ( '(' exp ')' | BIN | HEX | ID | call_stat ) INTV?
-	      { lookup(ID) != null }
-      ;
-
-  // our proposition
-
-  Identifier: ID {drive.lookup($1) != null};
-
-  // original grammar
-
-  Identifier: ID {$$ = driver.createNode<Identifier>(std::move($1));};
-
-
-```
-
 
 ### Garantir que não seja possivel acessar variável não iniciada:
 
