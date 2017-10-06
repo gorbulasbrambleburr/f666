@@ -412,7 +412,7 @@ Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
 
 Aqui, `type()` é um método comum a todos os nós da árvore e que pode ser chamado recursivamente para os nós filhos. Para os nós envolvidos no exemplo acima, tem-se:
 
-```
+```c++
 \\ Expression
 \\ O tipo é obtido a partir do nó da esquerda (ou da direita, pois são compatíveis).
 Fortran::type type() { return m_left.type(); }
