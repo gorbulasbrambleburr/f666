@@ -393,6 +393,7 @@ Literal
 ```
 
 Como o Bison é um parser LR, são feitas as seguintes operações:
+
     - Leitura de `Y` pelo __scanner__ e a criação de um nó do tipo `Identifier`;
     - Redução do símbolo `Identifier` pela regra `Expression ::= Identifier`;
     - Leitura de `+` pelo __scanner__ e identificação do token `PLUS`;
