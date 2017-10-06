@@ -4,16 +4,8 @@ A análise semântica da linguagem F666 verificará se o programa escrito pelo d
 
 Nessa etapa do processo de compilação, o programa fonte não é mais utilizado pela ferramenta, e sim a árvore sintática gerada após passar pelos dois processos de análise anteriores (análise léxica e sintática). No entanto, gostariamos de propor uma abordagem um pouco diferente: a ideia é procurar por incoerências na árvore sintática. Alguns exemplos são:
 
-	- Operandos incompatíveis com operadores;
-	- Variáveis não declaradas;
-	- Re-declaração de variáveis ou funções;
-	- Chamadas de funções com número incorreto de parâmetros;
-	- Comandos fora de contexto.
 
-## Aspectos semânticos:
-A linguagem Fortran 666 terá as regras semânticas bem semelhantes a linguagem Fortran, pois ela está baseada nas variáveis do Fortran 77, que serviu de inspiração para o nosso projeto.  
-
-### Declaração de variáveis e funções
+### Tipos
 
  Os seguintes tipos de variáveis são aceitos pela linguagem:
 
@@ -26,7 +18,7 @@ A linguagem Fortran 666 terá as regras semânticas bem semelhantes a linguagem 
 
 ## Gramática
 
-A gramática apresentada a seguir segue a notação utilizada pelo Bison 3.0.4. Para mais informações sobre os símbolos utilizados, verificar o arquivo `f_parser.y`:
+A gramática apresentada a seguir segue a notação utilizada pelo Bison 3.0.4. Para mais informações sobre os símbolos utilizados, verificar o arquivo `f_parser.y`.
 
 ```
 ExecutableProgram
@@ -345,32 +337,80 @@ CallStatement
 ```
 
 
-## Descrição do processo
+## Verificações Semânticas
 
-Uma forma que pensamos em fazer o processo de analise semântica e geração de código é por meio de [Tradução dirigida pela Sintaxe](https://en.wikipedia.org/wiki/Syntax-directed_translation) - STD.  Pois em nosso projeto possuimos uma Abstract syntax tree, bem definida, e neste metodo usando essa arvore produzimos a análise semântica e a geração de código em cada passo. Então pretendemos análisar essa alternativa e se for o caso construir nossa solução usando ela. Em seguida apresentamos alguns dos pontos chave que pensamos ate o momento:
+A análise semântica dirigida pela sintaxe considera que cada símbolo da gramática possui um conjunto de atributos associados a si, que subdividem-se em atributos __sintetizados__ e __herdados__. A análise presupõe a existência de uma __Abstract Syntax Tree__ (AST) representativa da gramática da linguagem descrita no item anterior. Essa árvore será decorada com atributos seguindo a estratégia __bottom-up__ inerente ao Bison.
 
-### Garantir que um tipo declarado seja apenas daquele tipo;
+A cada produção dessa gramática, pode-se associar um conjunto de regras semânticas responsáveis pela verificação semântica da linguagem. As seguintes verificações serão realizadas e são discriminadas a seguir:
 
-Nossa AST garante os tipos na sua análise inicial. Sendo assim basta que tenhamos um metodo lookup que olhe o tipo que foi declarado e o tipo que esta sendo devolvido.
+    - Compatibilidade de tipos
+    - Operandos incompatíveis com operadores;
+    - Variáveis não declaradas;
+    - Re-declaração de variáveis ou funções;
+    - Chamadas de funções com número incorreto de parâmetros;
+    - Comandos fora de contexto.
 
-```c
+### Compatibilidade de tipos
 
-	// type declaration (example)
-
-	Type: TYPE {$$ = driver.createNode<Type>($1);};
-
-	DeclarationStatement
-    : Type IdentifierDeclarationList {
-        $$ = driver.createNode<DeclarationStatement>(std::move($1), std::move($2));
-    };
-
-
-	// type finding is intern method
-
-
-
+A compatibilidade de tipos de atributos será imposta nos construtores de alguns nós. Cita-se como exemplo a expressão
 
 ```
+X = Y + 5
+```
+
+e a sua redução para o nó `Expression`:
+
+```
+Expression
+    : Expression PLUS Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Identifier {
+        $$ = std::move($1);
+    }
+    | Literal {
+        $$ = std::move($1);
+    };
+
+Identifier
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1));
+    };
+
+Literal
+    : INTEGER {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | REAL {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | BOOLEAN {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | STRING {
+        $$ = driver.createNode<Literal>($1);
+    };
+```
+
+Como o Bison é um parser LR, são feitas as seguintes operações:
+    - Leitura de `Y` pelo __scanner__ e a criação de um nó do tipo `Identifier`;
+    - Redução do símbolo `Identifier` pela regra `Expression ::= Identifier`;
+    - Leitura de `+` pelo __scanner__ e identificação do token `PLUS`;
+    - Leitura de `5` pelo __scanner__ e a criação de um nó do tipo `Literal` que possui o tipo `INTEGER`;
+    - Redução do símbolo `Literal` pela regra `Expression ::= Literal`;
+    - Redução dos símbolos `Expression PLUS Expression` para `Expression`.
+
+Na última redução, cria-se um nó do tipo `Expression` cujo construtor será:
+
+```
+Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
+        : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
+    assert(m_left.type() == m_right.type());
+}
+```
+
+Aqui, `type()` é um método comum a todos os nós da árvore.
+
 
 
 ### Garantir que a chamada de função respeita o número de argumentos especificado:
