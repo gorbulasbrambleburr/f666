@@ -410,7 +410,21 @@ Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
 }
 ```
 
-Aqui, `type()` é um método comum a todos os nós da árvore e que pode ser chamado recursivamente para os nós filhos.
+Aqui, `type()` é um método comum a todos os nós da árvore e que pode ser chamado recursivamente para os nós filhos. Para os nós envolvidos no exemplo acima, tem-se:
+
+```
+\\ Expression
+\\ O tipo é obtido a partir do nó da esquerda (ou da direita, pois são compatíveis).
+Fortran::type type() { return m_left.type(); }
+
+\\ Identifier
+\\ O tipo é obtido através de uma consulta à tabela de símbolos.
+Fortran::type type() { return lookup(m_id); }
+
+\\ Literal
+\\ O tipo já é um atributo da classe.
+Fortran::type type() { return m_type; }
+```
 
 
 
