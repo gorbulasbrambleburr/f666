@@ -339,7 +339,7 @@ CallStatement
 
 ## Verificações Semânticas
 
-A análise semântica dirigida pela sintaxe considera que cada símbolo da gramática possui um conjunto de atributos associados a si, que subdividem-se em atributos __sintetizados__ e __herdados__. A análise presupõe a existência de uma __Abstract Syntax Tree__ (AST) representativa da gramática da linguagem descrita no item anterior. Essa árvore será decorada com atributos seguindo a estratégia __bottom-up__ inerente ao Bison.
+A análise semântica dirigida pela sintaxe considera que cada símbolo da gramática possui um conjunto de atributos associados a si, que subdividem-se em atributos _sintetizados_ e _herdados_. A análise presupõe a existência de uma _Abstract Syntax Tree_ (AST) representativa da gramática da linguagem descrita no item anterior. Essa árvore será decorada com atributos seguindo a estratégia _bottom-up_ inerente ao Bison.
 
 A cada produção dessa gramática, pode-se associar um conjunto de regras semânticas responsáveis pela verificação semântica da linguagem. As seguintes verificações serão realizadas e são discriminadas a seguir:
 
@@ -394,12 +394,12 @@ Literal
 
 Como o Bison é um parser LR, são feitas as seguintes operações:
 
-    - Leitura de `Y` pelo __scanner__ e a criação de um nó do tipo `Identifier`;
-    - Redução do símbolo `Identifier` pela regra `Expression ::= Identifier`;
-    - Leitura de `+` pelo __scanner__ e identificação do token `PLUS`;
-    - Leitura de `5` pelo __scanner__ e a criação de um nó do tipo `Literal` que possui o tipo `INTEGER`;
-    - Redução do símbolo `Literal` pela regra `Expression ::= Literal`;
-    - Redução dos símbolos `Expression PLUS Expression` para `Expression`.
+1) Leitura de `Y` pelo _scanner_ e a criação de um nó do tipo `Identifier`;
+2) Redução do símbolo `Identifier` pela regra `Expression ::= Identifier`;
+3) Leitura de `+` pelo _scanner_ e identificação do token `PLUS`;
+4) Leitura de `5` pelo _scanner_ e a criação de um nó do tipo `Literal` que possui o tipo `INTEGER`;
+5) Redução do símbolo `Literal` pela regra `Expression ::= Literal`;
+6) Redução dos símbolos `Expression PLUS Expression` para `Expression`.
 
 Na última redução, cria-se um nó do tipo `Expression` cujo construtor será:
 
@@ -410,7 +410,7 @@ Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
 }
 ```
 
-Aqui, `type()` é um método comum a todos os nós da árvore.
+Aqui, `type()` é um método comum a todos os nós da árvore e que pode ser chamado recursivamente para os nós filhos.
 
 
 
