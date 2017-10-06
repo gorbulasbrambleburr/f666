@@ -176,6 +176,18 @@ newline     \n
     return Fortran::Parser::make_COMPARISON(Fortran::op::comp::LE, Fortran::location());
 }
 
+".AND." {
+    return Fortran::Parser::make_AND(Fortran::op::logic::AND, Fortran::location());
+}
+
+".OR." {
+    return Fortran::Parser::make_OR(Fortran::op::logic::OR, Fortran::location());
+}
+
+".NOT." {
+    return Fortran::Parser::make_NOT(Fortran::op::logic::NOT, Fortran::location());
+}
+
 ".TRUE." {
     auto rvalue = m_driver.createBoolean(yytext);
     return Fortran::Parser::make_BOOLEAN(std::move(rvalue), Fortran::location());

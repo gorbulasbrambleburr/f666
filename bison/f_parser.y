@@ -86,6 +86,11 @@
 %token<Fortran::op::arithmetic> TIMES  "*";
 %token<Fortran::op::arithmetic> DIVIDE "/";
 
+// Logical operators
+%token<Fortran::op::logic> AND "&&";
+%token<Fortran::op::logic> OR  "||";
+%token<Fortran::op::logic> NOT "!";
+
 // Token semantic types
 %token<Fortran::type> TYPE           "TYPE identifier";
 %token<Fortran::integer> INTEGER     "INTEGER value";
@@ -301,6 +306,15 @@ Expression
     }
     | Expression DIVIDE Expression {
         $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Expression AND Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Expression OR Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | NOT Expression {
+        $$ = driver.createNode<Expression>(std::move($2), $1);
     }
     | LP Expression RP {
         $$ = std::move($2);

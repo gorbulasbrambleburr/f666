@@ -19,7 +19,7 @@ ENDIF
 
 CALL B()
 
-WHILE ((X + Y) .GT. 0) DO
+WHILE ((X .GT. 0) .AND. (Y .GT. 0)) DO
     READ X, Y
     Z = X * Y
     PRINT 'Z = ', Z

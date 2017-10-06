@@ -9,21 +9,40 @@ public:
     Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
         : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
     }
+    Expression(node_ptr left, node_ptr right, Fortran::op::logic op)
+        : m_left(std::move(left)), m_right(std::move(right)), m_logicOp(op) {
+        m_logic = true;
+    }
+    Expression(node_ptr right, Fortran::op::logic op)
+        : m_left(nullptr), m_right(std::move(right)), m_logicOp(op) {
+        m_logic = true;
+    }
     ~Expression() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "Expression:" << std::endl;
         std::cout << std::setw(width + 4) << "- ";
         printOp();
-        m_left->print(width + 8);
+        if (m_left != nullptr) {
+            m_left->print(width + 8);
+        }
         m_right->print(width + 8);
     }
     void printOp() const {
-        switch (m_operator) {
-            case (Fortran::op::arithmetic::ADD): std::cout << "ADD:" << std::endl; break;
-            case (Fortran::op::arithmetic::SUB): std::cout << "SUB:" << std::endl; break;
-            case (Fortran::op::arithmetic::DIV): std::cout << "DIV:" << std::endl; break;
-            case (Fortran::op::arithmetic::MUL): std::cout << "MUL:" << std::endl; break;
-            default: break;
+        if (m_logic) {
+            switch (m_logicOp) {
+                case (Fortran::op::logic::AND): std::cout << "AND:" << std::endl; break;
+                case (Fortran::op::logic::OR) : std::cout << "OR:"  << std::endl; break;
+                case (Fortran::op::logic::NOT): std::cout << "NOT:" << std::endl; break;
+                default: break;
+            }
+        } else {
+            switch (m_operator) {
+                case (Fortran::op::arithmetic::ADD): std::cout << "ADD:" << std::endl; break;
+                case (Fortran::op::arithmetic::SUB): std::cout << "SUB:" << std::endl; break;
+                case (Fortran::op::arithmetic::DIV): std::cout << "DIV:" << std::endl; break;
+                case (Fortran::op::arithmetic::MUL): std::cout << "MUL:" << std::endl; break;
+                default: break;
+            }
         }
     }
 
@@ -31,6 +50,8 @@ private:
     node_ptr m_left = nullptr;
     node_ptr m_right = nullptr;
     Fortran::op::arithmetic m_operator;
+    Fortran::op::logic m_logicOp;
+    bool m_logic = false;
 };
 
 #endif /* END __AST_EXPRESSION_HPP__ */
