@@ -15,20 +15,20 @@ A linguagem Fortran 666 terá as regras semânticas bem semelhantes a linguagem 
 
 ### Declaração de variáveis e funções
 
- Nossa linguagem aceita os seguintes tipos de variáveis:
+ Os seguintes tipos de variáveis são aceitos pela linguagem:
 
-```c
-%token<Fortran::integer> INTEGER        "INTEGER value";
-%token<Fortran::real>    REAL           "REAL value";
-%token<Fortran::boolean> BOOLEAN        "BOOLEAN value";
-%token<Fortran::string>  STRING         "STRING value";
+```
+%token<Fortran::integer> INTEGER  "INTEGER value";
+%token<Fortran::real>    REAL     "REAL value";
+%token<Fortran::boolean> BOOLEAN  "BOOLEAN value";
+%token<Fortran::string>  STRING   "STRING value";
 ```
 
 ## Gramática
 
-Primeiro vamos apresentar a gramática atual da linguagem F666, ela esta contante modificação por conta da dinamica com o flex e bison que esta sendo a parte mais complexa do projeto, neste caso essa é a ultima versão das 9:40h do dia 29/09/2017 :) ...
+A gramática apresentada a seguir segue a notação utilizada pelo Bison 3.0.4. Para mais informações sobre os símbolos utilizados, verificar o arquivo `f_parser.y`:
 
-```sh
+```
 ExecutableProgram
     : ExecutableProgram Subprogram {
         $$ = std::move($1);
@@ -188,6 +188,18 @@ Expression
     | Expression DIVIDE Expression {
         $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
     }
+    | Expression AND Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Expression OR Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | NOT Expression {
+        $$ = driver.createNode<Expression>(std::move($2), $1);
+    }
+    | LP Expression RP {
+        $$ = std::move($2);
+    }
     | Identifier {
         $$ = std::move($1);
     }
@@ -204,21 +216,18 @@ Literal
     }
     | BOOLEAN {
         $$ = driver.createNode<Literal>($1);
+    }
+    | STRING {
+        $$ = driver.createNode<Literal>($1);
     };
 
-/*
-ExpressionList
-    : Expression
-    | ExpressionList "," Expression
-    ;
-*/
 ExecutableConstruct
     : ExecutableList {
         $$ = driver.createNode<ExecutableConstruct>(std::move($1));
     }
     | %empty {
         $$ = driver.createNode<ExecutableConstruct>(node_ptrs{});
-    };;
+    };
 
 ExecutableList
     : Statement {
@@ -236,28 +245,21 @@ Statement
     | IfStatement {
         $$ = std::move($1);
     }
-    /*
-    | DoConstruct {
+    | DoStatement {
         $$ = std::move($1);
     }
-    | WhileConstruct {
-        $$ = std::move($1);
-    }
-    | CallStatement {
-        $$ = std::move($1);
-    }
-    | CycleStatement {
-        $$ = std::move($1);
-    }
-    | ExitStatement {
-        $$ = std::move($1);
-    };
-    | PrintStatement {
+    | WhileStatement {
         $$ = std::move($1);
     }
     | ReadStatement {
         $$ = std::move($1);
-    }*/;
+    }
+    | PrintStatement {
+        $$ = std::move($1);
+    }
+    | CallStatement {
+        $$ = std::move($1);
+    };
 
 IfStatement
     : IF LP Expression RP THEN StatementList ENDIF {
@@ -298,68 +300,48 @@ StatementList
         $$.emplace_back(std::move($2));
     };
 
-/*
+ReadStatement
+    : READ ArgumentList {
+        $$ = driver.createNode<ReadStatement>(std::move($2));
+    };
+
 PrintStatement
-    : "PRINT" PrintList
-    ;
+    : PRINT PrintList {
+        $$ = driver.createNode<PrintStatement>(std::move($2));
+    };
 
 PrintList
-    : PrintItem
-    | PrintList "," PrintItem
-    ;
-
-PrintItem
-    : STRING
-    | Expression
-    ;
-
-ReadStatement
-    : "READ" ArgumentList
-    ;
-
-
-DoConstruct
-    : DoStatement DoLoopControl EndDoStatement
-    ;
+    : Expression {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | PrintList COMMA Expression {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($3));
+    };
 
 DoStatement
-    : "DO"
-    ;
-
-DoLoopControl
-    : ID "=" Expression "," Expression
-    | ID "=" Expression "," Expression "," Expression
-    ;
-
-EndDoStatement
-    : Statement "ENDDO"
-    ;
-
-WhileConstruct
-    : WhileStatement EndWhileStatement
-    ;
+    : DO Identifier ASSIGN Expression COMMA Expression StatementList ENDDO {
+        node_ptr unitary = driver.createNode<Literal>(1);
+        $$ = driver.createNode<DoStatement>(std::move($2),
+            std::move($4), std::move($6), std::move(unitary), std::move($7));
+    }
+    | DO Identifier ASSIGN Expression COMMA Expression COMMA Expression StatementList ENDDO {
+        $$ = driver.createNode<DoStatement>(std::move($2),
+            std::move($4), std::move($6), std::move($8), std::move($9));
+    };
 
 WhileStatement
-    : "WHILE" LogicalExpression "DO"
-    ;
-
-EndWhileStatement
-    : Statement "ENDDO"
-    ;
+    : WHILE LP Expression RP DO StatementList ENDDO {
+        $$ = driver.createNode<WhileStatement>(std::move($3), std::move($6));
+    };
 
 CallStatement
-    : "CALL" ID LP ArgumentList RP
-    | "CALL" ID LP RP
-    ;
-
-CycleStatement
-    : "CONTINUE"
-    ;
-
-ExitStatement
-    : "EXIT"
-    ;
-*/
+    : CALL Identifier LP ArgumentList RP {
+        $$ = driver.createNode<CallStatement>(std::move($2), std::move($4));
+    }
+    | CALL Identifier LP RP {
+        $$ = driver.createNode<CallStatement>(std::move($2), std::move(node_ptrs{}));
+    };
 ```
 
 
