@@ -1,20 +1,215 @@
-# Análise Semântica F666
-
-A análise semântica da linguagem F666 verificará se o programa escrito pelo desenvolvedor respeita a definição semântica por nós definida.
-
-Nessa etapa do processo de compilação, o programa fonte não é mais utilizado pela ferramenta, e sim a árvore sintática gerada após passar pelos dois processos de análise anteriores (análise léxica e sintática). No entanto, gostariamos de propor uma abordagem um pouco diferente: a ideia é procurar por incoerências na árvore sintática. Alguns exemplos são:
+# Análise Semântica da Linguagem F666
 
 
-### Tipos
+## Verificações Semânticas
 
- Os seguintes tipos de variáveis são aceitos pela linguagem:
+A análise semântica dirigida pela sintaxe considera que cada símbolo da gramática possui um conjunto de atributos associados a si, que subdividem-se em atributos _sintetizados_ e _herdados_. A análise presupõe a existência de uma _Abstract Syntax Tree_ (AST) representativa da gramática da linguagem. No entanto, a criação e decoração da árvore são feitas comitantemente, devido à estratégia _bottom-up_ inerente ao Bison.
+
+A cada produção da gramática, pode-se associar um conjunto de regras semânticas responsáveis pela verificação semântica da linguagem. As seguintes verificações serão realizadas e são discriminadas a seguir:
+
+    - Compatibilidade de tipos
+    - Utilização de variáveis não declaradas;
+    - Re-declaração de variáveis ou funções;
+    - Chamadas de funções com número incorreto de parâmetros;
+
+### Compatibilidade de tipos
+
+A compatibilidade de tipos de atributos será imposta nos construtores de alguns nós. Cita-se como exemplo a expressão
+
+```Fortran
+X = Y + 5
+```
+
+e a sua redução para o nó `Expression`:
 
 ```c++
-%token<Fortran::integer> INTEGER  "INTEGER value";
-%token<Fortran::real>    REAL     "REAL value";
-%token<Fortran::boolean> BOOLEAN  "BOOLEAN value";
-%token<Fortran::string>  STRING   "STRING value";
+Expression
+    : Expression PLUS Expression {
+        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
+    }
+    | Identifier {
+        $$ = std::move($1);
+    }
+    | Literal {
+        $$ = std::move($1);
+    };
+
+Identifier
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1));
+    };
+
+Literal
+    : INTEGER {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | REAL {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | BOOLEAN {
+        $$ = driver.createNode<Literal>($1);
+    }
+    | STRING {
+        $$ = driver.createNode<Literal>($1);
+    };
 ```
+
+Como o Bison é um parser LR, são feitas as seguintes operações:
+
+1) Leitura de `Y` pelo _scanner_ e a criação de um nó do tipo `Identifier`;
+2) Redução do símbolo `Identifier` pela regra `Expression ::= Identifier`;
+3) Leitura de `+` pelo _scanner_ e identificação do token `PLUS`;
+4) Leitura de `5` pelo _scanner_ e a criação de um nó do tipo `Literal` que possui o tipo `INTEGER`;
+5) Redução do símbolo `Literal` pela regra `Expression ::= Literal`;
+6) Redução dos símbolos `Expression PLUS Expression` para `Expression`.
+
+Na última redução, cria-se um nó do tipo `Expression` cujo construtor será:
+
+```c++
+Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
+        : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
+    assert(m_left.type() == m_right.type());
+}
+```
+
+Aqui, `type()` é um método comum a todos os nós da árvore e que pode ser chamado recursivamente para os nós filhos. Para os nós envolvidos no exemplo acima, tem-se:
+
+```c++
+// Expression
+// O tipo é obtido a partir do nó da esquerda (ou da direita, pois são compatíveis).
+Fortran::type type() { return m_left.type(); }
+
+// Identifier
+// O tipo é obtido através de uma consulta à tabela de símbolos.
+Fortran::type type() { return lookup(m_id); }
+
+// Literal
+// O tipo já é um atributo da classe.
+Fortran::type type() { return m_type; }
+```
+
+
+### Utilização de variáveis não declaradas
+
+A declaração de variáveis antes de sua utilização não é compulsória na linguagem Fortran. Neste caso, as variáveis e argumentos não declarados que começam com letras entre `I` e `N` são consideradas `INTEGER`, enquanto que todas as outras são `REAL`. Para forçar a utilização apenas de variáveis declaradas, inclui-se o _statement_ `IMPLICIT NONE` no início do programa. No entanto, visto que essa é considerada uma má prática, decidiu-se remover a utilização de variáveis implícitas. Para impor essa regra semântica, far-se-á o uso de uma tabela de símbolos. Para o trecho de código abaixo,
+
+```Fortran
+  PROGRAM TESTE
+  REAL B
+  X = B * 2.0
+  STOP
+  END
+```
+
+a seguinte árvore de sintaxe será criada pelo Bison:
+
+```
+  - ExecutableProgram:
+      - MainProgram:
+          - id: TESTE
+          - Body:
+              - SpecificationConstruct:
+                  - DeclarationStatement:
+                      - Type:INTEGER
+                      - IdentifierDeclaration:
+                          - id: B
+                          - Structural type: SCALAR
+              - ExecutableConstruct:
+                  - AssignmentStatement:
+                      - id: X
+                      - Structural type: SCALAR
+                      - Expression:
+                          - MUL:
+                              - id: B
+                              - Literal: REAL [2.0]
+
+```
+
+A criação do nó `AssignmentStatement` tem como um dos parâmetros o nó `Identifier`, representado por `$1` na produção a seguir:
+
+```c++
+    AssignmentStatement
+    : Identifier ASSIGN Expression {
+        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
+    };
+```
+A verificação de variáveis declaradas pode ser feita diretamente no construtor de cada nó do tipo `Identifier` através de uma busca na tabela de símbolos:
+
+```c++
+    Identifier(std::string id) : m_id(id) {
+        assert(lookup(m_id));
+    }
+  
+```
+
+
+
+
+### Re-declaração de variáveis ou funções
+
+Essa regra é semelhante à anterior para o caso das variáveis. Contudo, faz-se a verificação no nó `DeclarationStatement`. Neste caso, espera-se que a pesquisa na tabela de símbolos não retorne nenhum resultado:
+
+```c++
+    DeclarationStatement(node_ptr type, node_ptrs&& ids)
+            : m_type(std::move(type)), m_ids(std::forward<node_ptrs>(ids)) {
+        for (auto id : m_ids) {
+            assert(lookup(id) == 0);
+        }
+    }
+```
+
+Semelhantemente para as funções, a verificação pode ser feita no construtor do nó `Function`:
+
+```c++
+    Function(node_ptr type, node_ptr id, node_ptrs params, node_ptr body)
+            : m_type(std::move(type)),
+              m_id(std::move(id)),
+              m_params(std::forward<node_ptrs>(params)),
+              m_body(std::move(body)) {
+        
+        // Verifica se a função não existe
+        assert(lookup(m_id) == 0);
+    }
+```
+
+
+### Chamadas de funções com número incorreto de parâmetros
+
+
+As regras gramaticais responsáveis por criar nós do tipo `Function` e `FunctionCall` podem ser vistos abaixo. O último é passado como parâmetro na criação de um nó do tipo `Expression`, o qual será, por sua vez, atribuído a um nó do tipo `AssignmentStatement` (vide gramática completa para mais detalhes):
+
+```c++
+    Function
+    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
+    }
+
+    Expression
+    : FunctionCall {
+        $$ = std::move($1);
+    };
+
+    FunctionCall
+    : Identifier LP ArgumentList RP {
+        $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
+    };
+
+```
+
+Aqui, também, uma tabela de símbolos será utilizada para armazenar o identificador de cada função e seus argumentos. A implementação poderia ser feita diretamente no construtor do nó `FunctionCall`:
+
+```c++
+    FunctionCall(node_ptr id, node_ptrs&& args)
+            : m_id(std::move(id)), m_args(std::forward<node_ptrs>(args)) {
+        
+        // Verifica a declaração
+        assert(lookup(m_id));
+
+        // Verifica a igualdade entre número de parâmetros e argumentos
+        assert(lookup(m_id, args.size()));
+    }
+```
+
 
 ## Gramática
 
@@ -336,199 +531,3 @@ CallStatement
     };
 ```
 
-
-## Verificações Semânticas
-
-A análise semântica dirigida pela sintaxe considera que cada símbolo da gramática possui um conjunto de atributos associados a si, que subdividem-se em atributos _sintetizados_ e _herdados_. A análise presupõe a existência de uma _Abstract Syntax Tree_ (AST) representativa da gramática da linguagem descrita no item anterior. Essa árvore será decorada com atributos seguindo a estratégia _bottom-up_ inerente ao Bison.
-
-A cada produção dessa gramática, pode-se associar um conjunto de regras semânticas responsáveis pela verificação semântica da linguagem. As seguintes verificações serão realizadas e são discriminadas a seguir:
-
-    - Compatibilidade de tipos
-    - Utilização de variáveis não declaradas;
-    - Re-declaração de variáveis ou funções;
-    - Chamadas de funções com número incorreto de parâmetros;
-    - Comandos fora de contexto.
-
-### Compatibilidade de tipos
-
-A compatibilidade de tipos de atributos será imposta nos construtores de alguns nós. Cita-se como exemplo a expressão
-
-```Fortran
-X = Y + 5
-```
-
-e a sua redução para o nó `Expression`:
-
-```c++
-Expression
-    : Expression PLUS Expression {
-        $$ = driver.createNode<Expression>(std::move($1), std::move($3), $2);
-    }
-    | Identifier {
-        $$ = std::move($1);
-    }
-    | Literal {
-        $$ = std::move($1);
-    };
-
-Identifier
-    : ID {
-        $$ = driver.createNode<Identifier>(std::move($1));
-    };
-
-Literal
-    : INTEGER {
-        $$ = driver.createNode<Literal>($1);
-    }
-    | REAL {
-        $$ = driver.createNode<Literal>($1);
-    }
-    | BOOLEAN {
-        $$ = driver.createNode<Literal>($1);
-    }
-    | STRING {
-        $$ = driver.createNode<Literal>($1);
-    };
-```
-
-Como o Bison é um parser LR, são feitas as seguintes operações:
-
-1) Leitura de `Y` pelo _scanner_ e a criação de um nó do tipo `Identifier`;
-2) Redução do símbolo `Identifier` pela regra `Expression ::= Identifier`;
-3) Leitura de `+` pelo _scanner_ e identificação do token `PLUS`;
-4) Leitura de `5` pelo _scanner_ e a criação de um nó do tipo `Literal` que possui o tipo `INTEGER`;
-5) Redução do símbolo `Literal` pela regra `Expression ::= Literal`;
-6) Redução dos símbolos `Expression PLUS Expression` para `Expression`.
-
-Na última redução, cria-se um nó do tipo `Expression` cujo construtor será:
-
-```c++
-Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
-        : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
-    assert(m_left.type() == m_right.type());
-}
-```
-
-Aqui, `type()` é um método comum a todos os nós da árvore e que pode ser chamado recursivamente para os nós filhos. Para os nós envolvidos no exemplo acima, tem-se:
-
-```c++
-// Expression
-// O tipo é obtido a partir do nó da esquerda (ou da direita, pois são compatíveis).
-Fortran::type type() { return m_left.type(); }
-
-// Identifier
-// O tipo é obtido através de uma consulta à tabela de símbolos.
-Fortran::type type() { return lookup(m_id); }
-
-// Literal
-// O tipo já é um atributo da classe.
-Fortran::type type() { return m_type; }
-```
-
-
-### Utilização de variáveis não declaradas
-
-A declaração de variáveis antes de sua utilização não é compulsória na linguagem Fortran. Neste caso, as variáveis e argumentos não declarados que começam com letras entre `I` e `N` são consideradas `INTEGER`, enquanto que todas as outras são `REAL`. Para forçar a utilização apenas de variáveis declaradas, inclui-se o _statement_ `IMPLICIT NONE` no início do programa. No entanto, visto que essa é considerada uma má prática, decidiu-se remover a utilização de variáveis implícitas. Para impor essa regra semântica, far-se-á o uso de uma tabela de símbolos. Para o trecho de código abaixo,
-
-```Fortran
-  PROGRAM TESTE
-  REAL B
-  X = B * 2.0
-  STOP
-  END
-```
-
-a seguinte árvore de sintaxe será criada pelo Bison:
-
-```
-  - ExecutableProgram:
-      - MainProgram:
-          - id: TESTE
-          - Body:
-              - SpecificationConstruct:
-                  - DeclarationStatement:
-                      - Type:INTEGER
-                      - IdentifierDeclaration:
-                          - id: B
-                          - Structural type: SCALAR
-              - ExecutableConstruct:
-                  - AssignmentStatement:
-                      - id: X
-                      - Structural type: SCALAR
-                      - Expression:
-                          - MUL:
-                              - id: B
-                              - Literal: REAL [2.0]
-
-```
-
-A criação do nó `AssignmentStatement` tem como um dos parâmetros o nó `Identifier`, representado por `$1` na produção a seguir:
-
-```c++
-    AssignmentStatement
-    : Identifier ASSIGN Expression {
-        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
-    };
-```
-A verificação de variáveis declaradas pode ser feita diretamente no construtor de cada nó do tipo `Identifier` através de uma busca na tabela de símbolos:
-
-```c++
-    Identifier(std::string id) : m_id(id) {
-        assert(lookup(m_id));
-    }
-  
-```
-
-
-
-
-### Re-declaração de variáveis ou funções
-
-Essa regra é semelhante à anterior. Contudo, faz-se a verificação no nó `DeclarationStatement`. Neste caso, espera-se que a pesquisa na tabela de símbolos não retorne nenhum resultado:
-
-```c++
-    DeclarationStatement(node_ptr type, node_ptrs&& ids)
-            : m_type(std::move(type)), m_ids(std::forward<node_ptrs>(ids)) {
-        for (auto id : m_ids) {
-            assert(lookup(id) == 0);
-        }
-    }
-```
-
-
-### Chamadas de funções com número incorreto de parâmetros
-
-
-As regras gramaticais responsáveis por criar nós do tipo `Function` e `FunctionCall` podem ser vistos abaixo. O último é passado como parâmetro na criação de um nó do tipo `Expression`, o qual será, por sua vez, atribuído a um nó do tipo `AssignmentStatement` (vide gramática completa para mais detalhes):
-
-```c++
-    Function
-    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
-    }
-
-    Expression
-    : FunctionCall {
-        $$ = std::move($1);
-    };
-
-    FunctionCall
-    : Identifier LP ArgumentList RP {
-        $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
-    };
-
-```
-
-Aqui, também, uma tabela de símbolos será utilizada para armazenar o identificador de cada função e seus argumentos. A implementação poderia ser feita diretamente no construtor do nó `FunctionCall`:
-
-```c++
-    FunctionCall(node_ptr id, node_ptrs&& args)
-            : m_id(std::move(id)), m_args(std::forward<node_ptrs>(args)) {
-        
-        // Verifica a declaração
-        assert(lookup(m_id));
-
-        // Verifica a igualdade entre número de parâmetros e argumentos
-        assert(lookup(m_id, args.size()));
-    }
-```
