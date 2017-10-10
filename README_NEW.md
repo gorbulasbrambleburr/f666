@@ -496,164 +496,39 @@ Essa regra é semelhante à anterior. Contudo, faz-se a verificação no nó `De
 ```
 
 
+### Chamadas de funções com número incorreto de parâmetros
 
 
+As regras gramaticais responsáveis por criar nós do tipo `Function` e `FunctionCall` podem ser vistos abaixo. O último é passado como parâmetro na criação de um nó do tipo `Expression`, o qual será, por sua vez, atribuído a um nó do tipo `AssignmentStatement` (vide gramática completa para mais detalhes):
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Garantir que a chamada de função respeita o número de argumentos especificado:
-
-#### Exemplo:
-
-```Fortran
-    REAL FUNCTION R(M,T)
-        INTEGER M
-        REAL T
-
-        R = 0.1*T * (M*(M+14) + 46)
-        IF (R .LT. 0) THEN
-           R = 0.0
-        ENDIF
-
-        RETURN
-    END
-
-    R(A,B,C)
-```
-
-#### Grámatica de atributos
-
-```c
-    for_stat:  FOR ID 'IN' INTV 'BY' NUMBER ':' suite 
-               { ID[0].max_val = INTV[0].upperbound }
-               ;
-
-    exp :      ( '(' exp ')' | BIN | HEX | ID | call_stat ) INTV? 
-               { INTV[0].upperbound <= ID[0].size }
-               ;
-
-    INTV :     '<' NUMBEREXP ( ':' NUMBEREXP )? '>' 
-               { 
-                 NUMBEREXP[0 ].max_val < NUMBEREXP[1].max_val & 
-                 INTV.upperbound = NUMB EREXP[1].max_val 
-               }
-               ;
-    SIZE :     '[' NUMBER ']' 
-               { SIZE.size = NUMBER[0].val }
-               ;
-
-    func_stat: FUNC ID '(' ( param ( ',' param )* )? ')' SIZE ':' suite     
-             { ID[0].nparams = count(param) }
-             ;
-    call_stat: ID '(' ( exp ( ',' exp )* )? ')' 
-               {
-                  lookup(ID[0].type) == 'func' & 
-                  count(exp) == lookup(ID[0].nparams) 
-               };
-
-  // our proposition
-
-  Function
-    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7)); <-- we store the argument list
-    }
-    ...
-
-  IdentifierDeclaration
-      Identifier LP INTEGER RP {
-        driver.lookupNumber($1) == 1;
-    }
-    | Identifier LP Identifier RP { <-- list of identifiers...
-        driver.lookupNumber($1) == 1;
-    };
-
-  // original grammar
-
-    IdentifierDeclaration
-    : Identifier {
-        $$ = driver.createNode<IdentifierDeclaration>(std::move($1));
-    }
-    | Identifier LP INTEGER RP {
-        $$ = driver.createNode<IdentifierDeclaration>(std::move($1), $3);
-    }
-    | Identifier LP Identifier RP {
-        $$ = driver.createNode<IdentifierDeclaration>(std::move($1), std::move($3));
-    };
-  ...
-```
-
-### Garantir que não seja possivel chamar função não declarada:
-
-#### Exemplo
-
-```Fortran
-    INTEGER A, B
-    A = 1
-    B = 2
-
-    R(A,B) <-- not declared function
-
-    REAL FUNCTION R(M,T)
-        INTEGER M
-        REAL T
-
-        R = 0.1*T * (M*(M+14) + 46)
-        IF (R .LT. 0) THEN
-           R = 0.0
-        ENDIF
-
-        RETURN
-    END
-```
-
-#### Gramática de atributos
-
-```c
-
-  // example
-
-    call_stat: ID '(' ( exp ( ',' exp )* )? ')' 
-               { lookup(ID) != null } ;
-
-  // our proposition (how we know if this is a function?)
-
-    Identifier
-    : ID {driver.lookup($1) != null};
-
-  // original grammar
-
-  Identifier
-    : ID {
-        $$ = driver.createNode<Identifier>(std::move($1));
-    };
-
-  // another proposition (is posible?)
-
-    Function: Type FUNCTION Identifier LP ArgumentList RP Body RETURN END 
-                { driver.lookup($3) != null; }
-                | Type FUNCTION Identifier LP RP Body RETURN END 
-                  { driver.lookup($3) != null };
-
-  // original grammar
-
+```c++
     Function
-        : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
-            $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
-        }
-        | Type FUNCTION Identifier LP RP Body RETURN END {
-            $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
-        };
+    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
+        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
+    }
 
+    Expression
+    : FunctionCall {
+        $$ = std::move($1);
+    };
+
+    FunctionCall
+    : Identifier LP ArgumentList RP {
+        $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
+    };
+
+```
+
+Aqui, também, uma tabela de símbolos será utilizada para armazenar o identificador de cada função e seus argumentos. A implementação poderia ser feita diretamente no construtor do nó `FunctionCall`:
+
+```c++
+    FunctionCall(node_ptr id, node_ptrs&& args)
+            : m_id(std::move(id)), m_args(std::forward<node_ptrs>(args)) {
+        
+        // Verifica a declaração
+        assert(lookup(m_id));
+
+        // Verifica a igualdade entre número de parâmetros e argumentos
+        assert(lookup(m_id, args.size()));
+    }
 ```
