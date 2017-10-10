@@ -9,7 +9,7 @@ A cada produção da gramática, pode-se associar um conjunto de regras semânti
 
     - Compatibilidade de tipos
     - Utilização de variáveis não declaradas;
-    - Re-declaração de variáveis ou funções;
+    - Redeclaração de variáveis ou funções;
     - Chamadas de funções com número incorreto de parâmetros;
 
 ### Compatibilidade de tipos
@@ -145,7 +145,7 @@ A verificação de variáveis declaradas pode ser feita diretamente no construto
 
 
 
-### Re-declaração de variáveis ou funções
+### Redeclaração de variáveis ou funções
 
 Essa regra é semelhante à anterior para o caso das variáveis. Contudo, faz-se a verificação no nó `DeclarationStatement`. Neste caso, espera-se que a pesquisa na tabela de símbolos não retorne nenhum resultado:
 
