@@ -32,6 +32,7 @@
 #include "ast/ReadStatement.hpp"
 #include "ast/PrintStatement.hpp"
 #include "ast/CallStatement.hpp"
+#include "ast/FunctionCall.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;

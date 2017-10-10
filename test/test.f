@@ -21,7 +21,7 @@ CALL B()
 
 WHILE ((X .GT. 0) .AND. (Y .GT. 0)) DO
     READ X, Y
-    Z = X * Y
+    Z = C(X,Y)
     PRINT 'Z = ', Z
 ENDDO
 
@@ -44,7 +44,7 @@ END
 
 //------------------------------------------
 
-INTEGER FUNCTION C()
+INTEGER FUNCTION C(X, W)
 REAL W, Z, X
 BOOLEAN B
 PARAMETER (Z = W + 2)

@@ -136,6 +136,7 @@
 %type<AST::node_ptr> PrintStatement
 %type<AST::node_ptrs> PrintList
 %type<AST::node_ptr> CallStatement
+%type<AST::node_ptr> FunctionCall
 
 // Order of expressions
 %left COMPARISON
@@ -319,11 +320,19 @@ Expression
     | LP Expression RP {
         $$ = std::move($2);
     }
+    | FunctionCall {
+        $$ = std::move($1);
+    }
     | Identifier {
         $$ = std::move($1);
     }
     | Literal {
         $$ = std::move($1);
+    };
+
+FunctionCall
+    : Identifier LP ArgumentList RP {
+        $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
     };
 
 Literal
