@@ -428,7 +428,7 @@ Fortran::type type() { return m_type; }
 
 ### Utilização de variáveis não declaradas
 
-Embora as versões mais antigas do Fortran permitiam a utilização de variáveis implícitas, decidiu-se que todas as variáveis devem ser declaradas antes de serem utilizadas. Para impor essa regra semântica, far-se-á o uso de uma tabela de símbolos. Para o trecho de código abaixo,
+A declaração de variáveis antes de sua utilização não é compulsória na linguagem Fortran. Neste caso, as variáveis e argumentos não declarados que começam com letras entre `I` e `N` são consideradas `INTEGER`, enquanto que todas as outras são `REAL`. Para forçar a utilização apenas de variáveis declaradas, inclui-se o _statement_ `IMPLICIT NONE` no início do programa. No entanto, visto que essa é considerada uma má prática, decidiu-se remover a utilização de variáveis implícitas. Para impor essa regra semântica, far-se-á o uso de uma tabela de símbolos. Para o trecho de código abaixo,
 
 ```Fortran
   PROGRAM TESTE
@@ -438,7 +438,7 @@ Embora as versões mais antigas do Fortran permitiam a utilização de variávei
   END
 ```
 
-a seguinte árvore de sintaxe será criada:
+a seguinte árvore de sintaxe será criada pelo Bison:
 
 ```
   - ExecutableProgram:
@@ -462,7 +462,7 @@ a seguinte árvore de sintaxe será criada:
 
 ```
 
-A criação do nó `AssignmentExpression` recebe como parâmetro um `Identifier`, como pode ser visto na produção a seguir:
+A criação do nó `AssignmentStatement` tem como um dos parâmetros o nó `Identifier`, representado por `$1` na produção a seguir:
 
 ```c++
     AssignmentStatement
@@ -470,7 +470,7 @@ A criação do nó `AssignmentExpression` recebe como parâmetro um `Identifier`
         $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
     };
 ```
-A verificação de variáveis declaradas pode ser feito no construtor de cada nó do tipo `Identifier` através de uma busca na tabela de símbolos:
+A verificação de variáveis declaradas pode ser feita diretamente no construtor de cada nó do tipo `Identifier` através de uma busca na tabela de símbolos:
 
 ```c++
     Identifier(std::string id) : m_id(id) {
