@@ -1,5 +1,8 @@
 # Análise Semântica da Linguagem F666
 
+Makhles Reuter Lange
+Maurilio Atila Carvalho de Santana
+
 
 ## Verificações Semânticas
 
