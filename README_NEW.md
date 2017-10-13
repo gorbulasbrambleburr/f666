@@ -210,6 +210,7 @@ Aqui, também, uma tabela de símbolos será utilizada para armazenar o identifi
     }
 ```
 
+Assim, na última chamada do método `lookup` da tabela de símbolos, pode-se comparar o número de argumentos que está declarado para o símbolo `m_id` com o número de argumentos passado com `args.size()`. Alternativamente, pode-se pedir o número de argumentos para a tabela de símbolos e fazer a comparação no próprio construtor.
 
 ## Gramática
 
