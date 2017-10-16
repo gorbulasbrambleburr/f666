@@ -10,7 +10,7 @@ Fortran::Driver::Driver() :
     m_scanner(*this),
     m_parser(m_scanner, *this),
     m_location(0),
-    m_line(0) {
+    m_line(1) {
 }
 
 node_ptr Fortran::Driver::createRoot() {
@@ -60,7 +60,7 @@ void Fortran::Driver::print() const {
 }
 
 void Fortran::Driver::printError(const std::string &message) const {
-    std::cout << "Error (" << m_location << "): " << message << std::endl; 
+    std::cout << "Error (" << m_line << "): " << message << std::endl; 
 }
 
 void Fortran::Driver::increaseLocation(unsigned int loc) {
@@ -74,4 +74,8 @@ unsigned int Fortran::Driver::location() const {
 
 void Fortran::Driver::newline() {
     m_line++;
+}
+
+unsigned int Fortran::Driver::line() const {
+    return m_line;
 }

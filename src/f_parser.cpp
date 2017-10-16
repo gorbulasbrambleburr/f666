@@ -1972,6 +1972,7 @@ namespace  Fortran  {
 
 
 void Fortran::Parser::error(const location &loc, const std::string &message) {
-   std::cerr << "Error: " << message << " at " << loc << "\n";
+   //std::cerr << "Error: " << message << " at " << loc << "\n";
    //std::cerr << "Error: " << message << " at " << driver.location() << "\n";
+   driver.printError(message);
 }

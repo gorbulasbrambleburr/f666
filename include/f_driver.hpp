@@ -97,6 +97,8 @@ namespace Fortran {
         // Update line number
         void newline();
 
+        unsigned int line() const;
+
     private:
         node_ptr m_root;
         Scanner m_scanner;
