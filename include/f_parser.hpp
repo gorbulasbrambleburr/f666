@@ -924,9 +924,9 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 348,     ///< Last index in yytable_.
+      yylast_ = 359,     ///< Last index in yytable_.
       yynnts_ = 37,  ///< Number of nonterminal symbols.
-      yyfinal_ = 13, ///< Termination state number.
+      yyfinal_ = 15, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
       yyntokens_ = 43  ///< Number of tokens.

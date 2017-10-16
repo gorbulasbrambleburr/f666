@@ -173,6 +173,9 @@ Subprogram
 MainProgram
     : PROGRAM Identifier Body STOP END {
         $$ = driver.createNode<MainProgram>(std::move($2), std::move($3));
+    }
+    | PROGRAM error STOP END {
+        yyerrok;
     };
 
 Subroutine
@@ -181,6 +184,9 @@ Subroutine
     }
     | SUBROUTINE Identifier LP RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
+    }
+    | SUBROUTINE error RETURN END {
+        yyerrok;
     };
 
 Function
@@ -189,6 +195,9 @@ Function
     }
     | Type FUNCTION Identifier LP RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
+    }
+    | Type FUNCTION error RETURN END {
+        yyerrok;
     };
 
 Identifier
@@ -361,7 +370,7 @@ ExecutableConstruct
     }
     | %empty {
         $$ = driver.createNode<ExecutableConstruct>(node_ptrs{});
-    };;
+    };
 
 ExecutableList
     : Statement {
@@ -498,6 +507,6 @@ ExitStatement
 %%
 
 void Fortran::Parser::error(const location &loc, const std::string &message) {
-   //std::cerr << "Error: " << message << " at " << loc << "\n";
-   std::cerr << "Error: " << message << " at " << driver.location() << "\n";
+   std::cerr << "Error: " << message << " at " << loc << "\n";
+   //std::cerr << "Error: " << message << " at " << driver.location() << "\n";
 }

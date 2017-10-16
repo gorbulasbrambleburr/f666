@@ -75,6 +75,9 @@ namespace Fortran {
         // Print AST
         void print() const;
 
+        // Print error
+        void printError(const std::string &message) const;
+
         /**
          * This is needed so that Scanner and Parser can call some
          * methods that we want to keep hidden from the end user.
@@ -91,11 +94,15 @@ namespace Fortran {
         // Used to get last Scanner location. Used in error messages.
         unsigned int location() const;
 
+        // Update line number
+        void newline();
+
     private:
         node_ptr m_root;
         Scanner m_scanner;
         Parser m_parser;
         unsigned int m_location; // Used by scanner
+        unsigned int m_line;
     };
 }
 #endif /* END __FDRIVER_HPP__ */

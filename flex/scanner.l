@@ -14,9 +14,11 @@
 
     // This will track current scanner location.
     // Action is called when length of the token is known.
-    #define YY_USER_ACTION m_driver.increaseLocation(yyleng);
-
+    //#define YY_USER_ACTION m_driver.increaseLocation(yyleng);
+    # define YY_USER_ACTION  loc.columns (yyleng);
     using token = Fortran::Parser::token;
+
+    static Fortran::location loc;
 
 %}
 
@@ -38,6 +40,11 @@ ws          [ \t]+
 newline     \n
 
 %%
+
+%{
+    // Code run each time yylex is called.
+    loc.step();
+%}
 
 "PROGRAM" {
     return Fortran::Parser::make_PROGRAM(Fortran::location());
@@ -211,10 +218,17 @@ newline     \n
 }
 
 
-
-{ws}      ;
 {comment} ;
-{newline} ;
+
+{ws} {
+    loc.step();
+}
+
+{newline} {
+    loc.lines(yyleng);
+    loc.step();
+    //m_driver.newline();
+}
 
 {sliteral} {
     auto content = std::string(yytext);
