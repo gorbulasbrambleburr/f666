@@ -18,6 +18,5 @@ public:
     virtual void print(int width) const {}
     virtual void addChild(node_ptr child) {}
 };
-    
 
 #endif /* END __AST_HPP__ */

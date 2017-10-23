@@ -21,6 +21,16 @@ namespace Fortran {
         };
     }
 
+    namespace symbol {
+        enum class type {
+            UNDECLARED,
+            VARIABLE,
+            FUNCTION,
+            SUBROUTINE,
+            PROGRAM,
+        };
+    }
+
     using type = vartype::type;
     using integer = int;
     using real = float;
