@@ -33,6 +33,7 @@
 #include "ast/PrintStatement.hpp"
 #include "ast/CallStatement.hpp"
 #include "ast/FunctionCall.hpp"
+#include "ast/ErrorNode.hpp"
 
 using node_ptr = std::shared_ptr<AST>;
 using node_ptrs = std::vector<node_ptr>;
@@ -77,6 +78,7 @@ namespace Fortran {
 
         // Print error
         void printError(const std::string &message) const;
+        void semantic_error(const std::string &message) const;
 
         /**
          * This is needed so that Scanner and Parser can call some
@@ -105,6 +107,7 @@ namespace Fortran {
         Parser m_parser;
         unsigned int m_location; // Used by scanner
         unsigned int m_line;
+        unsigned int m_errors;
     };
 }
 #endif /* END __FDRIVER_HPP__ */

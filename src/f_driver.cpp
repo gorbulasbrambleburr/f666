@@ -10,7 +10,8 @@ Fortran::Driver::Driver() :
     m_scanner(*this),
     m_parser(m_scanner, *this),
     m_location(0),
-    m_line(1) {
+    m_line(1),
+    m_errors(0) {
 }
 
 node_ptr Fortran::Driver::createRoot() {
@@ -60,6 +61,10 @@ void Fortran::Driver::print() const {
 }
 
 void Fortran::Driver::printError(const std::string &message) const {
+    std::cout << "Error (" << m_line << "): " << message << std::endl; 
+}
+
+void Fortran::Driver::semantic_error(const std::string &message) const {
     std::cout << "Error (" << m_line << "): " << message << std::endl; 
 }
 

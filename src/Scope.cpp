@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Scope.hpp"
 
 Scope::Scope() {
@@ -10,7 +11,10 @@ bool Scope::insert_var(std::string &id, Entry entry) {
 }
 
 bool Scope::insert_fun(std::string &id, Entry entry) {
+    std::cout << "Inserting subprogram id " << id << std::endl;
+    std::cout << "Scope size: " << m_funs.size() << std::endl;
     auto ret = m_funs.insert(std::pair<std::string,Entry>(id,entry));
+    std::cout << "Inserted? " << ret.second << std::endl;
     return ret.second;
 }
 

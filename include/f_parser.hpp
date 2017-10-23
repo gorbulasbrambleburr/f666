@@ -54,8 +54,9 @@
         class Driver;
         class Scanner;
     }
+    class Mapper;
 
-#line 59 "include/f_parser.hpp" // lalr1.cc:377
+#line 60 "include/f_parser.hpp" // lalr1.cc:377
 
 # include <cassert>
 # include <cstdlib> // std::abort
@@ -132,7 +133,7 @@
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 namespace  Fortran  {
-#line 136 "include/f_parser.hpp" // lalr1.cc:377
+#line 137 "include/f_parser.hpp" // lalr1.cc:377
 
 
 
@@ -1810,7 +1811,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1814 "include/f_parser.hpp" // lalr1.cc:377
+#line 1815 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

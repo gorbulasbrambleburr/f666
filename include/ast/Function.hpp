@@ -13,8 +13,9 @@ public:
         std::cout << std::setw(width) << "- " << "Function:" << std::endl;
         m_type->print(width + 4);
         m_id->print(width + 4);
+        std::cout << std::setw(width + 4) << "- " << "params:" << std::endl;
         for (auto& param : m_params) {
-            param->print(width + 4);
+            param->print(width + 8);
         }
         m_body->print(width + 4);
     }

@@ -25,6 +25,7 @@
         class Driver;
         class Scanner;
     }
+    class Mapper;
 }
 
 // Code to be placed in the beggining of the parser implementation file
@@ -34,6 +35,7 @@
     #include "f_parser.hpp"
     #include "f_driver.hpp"
     #include "location.hh"
+    #include "../include/Mapper.hpp"
 
     // This function is called only inside Bison, so we make it static to limit
     // symbol visibility for the linker to avoid potential linking conflicts.
@@ -176,6 +178,7 @@ Subprogram
 MainProgram
     : PROGRAM ProgramIdentifier Body STOP END {
         $$ = driver.createNode<MainProgram>(std::move($2), std::move($3));
+        Mapper::instance().reset();
     }
     | PROGRAM error STOP END {
         yyerrok;
@@ -184,9 +187,11 @@ MainProgram
 Subroutine
     : SUBROUTINE SubroutineIdentifier LP ArgumentList RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
+        Mapper::instance().reset();
     }
     | SUBROUTINE SubroutineIdentifier LP RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
+        Mapper::instance().reset();
     }
     | SUBROUTINE error RETURN END {
         yyerrok;
@@ -195,9 +200,11 @@ Subroutine
 Function
     : Type FUNCTION FunctionIdentifier LP ArgumentList RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
+        Mapper::instance().reset();
     }
     | Type FUNCTION FunctionIdentifier LP RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
+        Mapper::instance().reset();
     }
     | Type FUNCTION error RETURN END {
         yyerrok;
@@ -205,17 +212,44 @@ Function
 
 FunctionIdentifier
     : ID {
-        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
+        Entry entry(Fortran::symbol::type::FUNCTION);
+        bool inserted = Mapper::instance().insert_fun($1, entry);
+        Mapper::instance().create_scope();
+        if (!inserted) {
+            std::string error = "redefinition of function id '" + $1 + "'";
+            driver.semantic_error(error);
+            $$ = driver.createNode<ErrorNode>(error);
+        } else {
+            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
+        }
     };
 
 SubroutineIdentifier
     : ID {
-        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
+        Entry entry(Fortran::symbol::type::SUBROUTINE);
+        bool inserted = Mapper::instance().insert_fun($1, entry);
+        Mapper::instance().create_scope();
+        if (!inserted) {
+            std::string error = "redefinition of subroutine id '" + $1 + "'";
+            driver.semantic_error(error);
+            $$ = driver.createNode<ErrorNode>(error);
+        } else {
+            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
+        }
     };
 
 ProgramIdentifier
     : ID {
-        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::PROGRAM);
+        Entry entry(Fortran::symbol::type::PROGRAM);
+        bool inserted = Mapper::instance().insert_fun($1, entry);
+        Mapper::instance().create_scope();
+        if (!inserted) {
+            std::string error = "redefinition of program id '" + $1 + "'";
+            driver.semantic_error(error);
+            $$ = driver.createNode<ErrorNode>(error);
+        } else {
+            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::PROGRAM);
+        }
     };
 
 Identifier
