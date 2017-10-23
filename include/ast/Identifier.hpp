@@ -3,19 +3,33 @@
 
 #include <string>
 #include "AST.hpp"
+#include "../Types.hpp"
 
 class Identifier : public AST {
 public:
-    Identifier(std::string id)
-        : m_id(id) {
+    Identifier(std::string id, Fortran::symbol::type symbol = Fortran::symbol::type::VARIABLE)
+        : m_id(id), m_symbol(symbol) {
     }
     ~Identifier() {}
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "id: " << m_id << std::endl;
+        std::cout << std::setw(width) << "- " << "type: " << str(m_symbol) << std::endl;
+    }
+    std::string str(Fortran::symbol::type type) const {
+        std::string s;
+        switch (type) {
+            case (Fortran::symbol::type::UNDECLARED): s = "UNDECLARED"; break; 
+            case (Fortran::symbol::type::VARIABLE): s = "VARIABLE"; break; 
+            case (Fortran::symbol::type::FUNCTION): s = "FUNCTION"; break; 
+            case (Fortran::symbol::type::SUBROUTINE): s = "SUBROUTINE"; break; 
+            case (Fortran::symbol::type::PROGRAM): s = "PROGRAM"; break; 
+        }
+        return s;
     }
 
 private:
     std::string m_id;
+    Fortran::symbol::type m_symbol;
 };
 
 #endif /* END __AST_IDENTIFIER_HPP__ */

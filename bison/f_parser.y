@@ -107,6 +107,9 @@
 %type<AST::node_ptr> Subroutine
 %type<AST::node_ptr> Function
 %type<AST::node_ptr> Identifier
+%type<AST::node_ptr> ProgramIdentifier
+%type<AST::node_ptr> SubroutineIdentifier
+%type<AST::node_ptr> FunctionIdentifier
 %type<AST::node_ptrs> ArgumentList
 %type<AST::node_ptr> Argument
 %type<AST::node_ptr> Type
@@ -171,7 +174,7 @@ Subprogram
     };
 
 MainProgram
-    : PROGRAM Identifier Body STOP END {
+    : PROGRAM ProgramIdentifier Body STOP END {
         $$ = driver.createNode<MainProgram>(std::move($2), std::move($3));
     }
     | PROGRAM error STOP END {
@@ -179,10 +182,10 @@ MainProgram
     };
 
 Subroutine
-    : SUBROUTINE Identifier LP ArgumentList RP Body RETURN END {
+    : SUBROUTINE SubroutineIdentifier LP ArgumentList RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
     }
-    | SUBROUTINE Identifier LP RP Body RETURN END {
+    | SUBROUTINE SubroutineIdentifier LP RP Body RETURN END {
         $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
     }
     | SUBROUTINE error RETURN END {
@@ -190,14 +193,29 @@ Subroutine
     };
 
 Function
-    : Type FUNCTION Identifier LP ArgumentList RP Body RETURN END {
+    : Type FUNCTION FunctionIdentifier LP ArgumentList RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
     }
-    | Type FUNCTION Identifier LP RP Body RETURN END {
+    | Type FUNCTION FunctionIdentifier LP RP Body RETURN END {
         $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
     }
     | Type FUNCTION error RETURN END {
         yyerrok;
+    };
+
+FunctionIdentifier
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
+    };
+
+SubroutineIdentifier
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
+    };
+
+ProgramIdentifier
+    : ID {
+        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::PROGRAM);
     };
 
 Identifier
