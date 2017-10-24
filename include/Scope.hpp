@@ -16,8 +16,8 @@ public:
     // Inserts an identifier into the table
     // if it doesn't already is in it and
     // returns true, otherwise returns false.
-    bool insert_var(std::string &id, Entry entry);
-    bool insert_fun(std::string &id, Entry entry);
+    bool insert_var(std::string id, Entry entry);
+    bool insert_fun(std::string id, Entry entry);
 
     // Checks if the specified id is in the table
     bool lookup_var(std::string &id) const;

@@ -9,11 +9,11 @@ Mapper& Mapper::instance() {
     return instance;
 }
 
-bool Mapper::insert_var(std::string &id, Entry entry) {
+bool Mapper::insert_var(std::string id, Entry entry) {
     return m_scopes.back()->insert_var(id, entry);
 }
 
-bool Mapper::insert_fun(std::string &id, Entry entry) {
+bool Mapper::insert_fun(std::string id, Entry entry) {
     return m_scopes.back()->insert_fun(id, entry);
 }
 

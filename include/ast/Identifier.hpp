@@ -9,6 +9,7 @@ class Identifier : public AST {
 public:
     Identifier(std::string id, Fortran::symbol::type symbol = Fortran::symbol::type::VARIABLE)
         : m_id(id), m_symbol(symbol) {
+            std::cout << "Creating id: " << m_id << std::endl;
     }
     ~Identifier() {}
     void print(int width) const {
@@ -26,6 +27,11 @@ public:
         }
         return s;
     }
+    std::string id() const { 
+        std::cout << "Returnin id: " << m_id << std::endl;
+        return m_id;
+    }
+    Fortran::symbol::type symbol_type() const { return m_symbol; }
 
 private:
     std::string m_id;

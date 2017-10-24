@@ -23,6 +23,7 @@ public:
         }
         return s;
     }
+    Fortran::vartype::type var_type() const { return m_type; }
 
 private:
     const Fortran::type m_type;

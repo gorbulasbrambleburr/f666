@@ -4,7 +4,7 @@
 #include "AST.hpp"
 #include "../Types.hpp"
 
-using stype = Fortran::structural::type;;
+using stype = Fortran::structural::type;
 
 class IdentifierDeclaration : public AST {
 public:
@@ -38,6 +38,8 @@ public:
             }
         }
     }
+    std::string id() const { return m_id->id(); }
+    Fortran::structural::type struct_type() const { return m_type; }
 
 private:
     node_ptr m_id;

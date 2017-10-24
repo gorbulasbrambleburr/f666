@@ -308,7 +308,22 @@ Specification
 
 DeclarationStatement
     : Type IdentifierDeclarationList {
-        $$ = driver.createNode<DeclarationStatement>(std::move($1), std::move($2));
+        bool any_error = false;
+        for (auto& node : $2) {
+            Entry entry($1->var_type(), node->struct_type(), Fortran::symbol::type::VARIABLE);
+            bool inserted = Mapper::instance().insert_var(node->id(), entry);
+            if (!inserted) {
+                std::string error_msg = "redeclaration of variable id '" + node->id() + "'";
+                driver.semantic_error(error_msg);
+                any_error = true;
+            }
+        }
+        if (any_error) {
+            std::string error_msg = "redeclaration of variable(s)";
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        } else {
+            $$ = driver.createNode<DeclarationStatement>(std::move($1), std::move($2));
+        }
     };
 
 IdentifierDeclarationList
