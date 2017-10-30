@@ -12,6 +12,9 @@ public:
     void print(int width) const {
         std::cout << std::setw(width) << "- " << "id: " << m_message << std::endl;
     }
+    Fortran::vartype::type var_type() const {
+        return Fortran::vartype::type::UNDECLARED;
+    }
 
 private:
     std::string m_message;

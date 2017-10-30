@@ -14,7 +14,7 @@ public:
     }
 
     // Constructor used for Subprograms
-    Entry(Fortran::symbol::type symbol,
+    Entry(Fortran::symbol::type symbol = Fortran::symbol::type::UNDECLARED,
           Fortran::vartype::type type = Fortran::vartype::type::INTEGER,
           Fortran::structural::type dimension = Fortran::structural::type::SCALAR)
             : m_type(type), m_dimension(dimension), m_symbol(symbol) {

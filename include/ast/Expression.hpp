@@ -7,14 +7,15 @@
 class Expression : public AST {
 public:
     Expression(node_ptr left, node_ptr right, Fortran::op::arithmetic op)
-        : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
+            : m_left(std::move(left)), m_right(std::move(right)), m_operator(op) {
+        m_logic = false;
     }
     Expression(node_ptr left, node_ptr right, Fortran::op::logic op)
-        : m_left(std::move(left)), m_right(std::move(right)), m_logicOp(op) {
+            : m_left(std::move(left)), m_right(std::move(right)), m_logicOp(op) {
         m_logic = true;
     }
     Expression(node_ptr right, Fortran::op::logic op)
-        : m_left(nullptr), m_right(std::move(right)), m_logicOp(op) {
+            : m_left(nullptr), m_right(std::move(right)), m_logicOp(op) {
         m_logic = true;
     }
     ~Expression() {}
@@ -45,13 +46,20 @@ public:
             }
         }
     }
+    Fortran::vartype::type var_type() const {
+        if (m_logic) {
+            return Fortran::vartype::type::BOOLEAN;
+        } else {
+            return m_right->var_type();
+        }
+    }
 
 private:
     node_ptr m_left = nullptr;
     node_ptr m_right = nullptr;
     Fortran::op::arithmetic m_operator;
     Fortran::op::logic m_logicOp;
-    bool m_logic = false;
+    bool m_logic;
 };
 
 #endif /* END __AST_EXPRESSION_HPP__ */

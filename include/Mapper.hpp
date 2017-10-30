@@ -8,6 +8,8 @@
 // Mapper is a singleton wrapper around a symbol table implementation.
 class Mapper {
 
+using scope_ptrs = std::list<std::unique_ptr<Scope>>;
+
 public:
     // Returns a single instance of this class.
     static Mapper& instance();
@@ -15,12 +17,15 @@ public:
     // Inserts an identifier into the table.
     // If it isn't already in it, the function
     // returns true, otherwise returns false.
-    bool insert_var(std::string id, Entry entry);
-    bool insert_fun(std::string id, Entry entry);
+    bool insert_var(const std::string& id, Entry entry);
+    bool insert_fun(const std::string& id, Entry entry);
 
     // Checks if the specified id is in the table
-    bool lookup_var(std::string &id) const;
-    bool lookup_fun(std::string &id) const;
+    bool lookup_var(const std::string& id) const;
+    bool lookup_fun(const std::string& id) const;
+
+    const Entry& var_entry(const std::string& id) const; 
+    const Entry& fun_entry(const std::string& id) const; 
 
     // Resets to the last scope used.
     void reset();
@@ -40,7 +45,7 @@ private:
     std::unique_ptr<Scope> scope_factory() const;
 
 private:
-    std::list<std::unique_ptr<Scope>> m_scopes;
+    scope_ptrs m_scopes;
 
 };
     

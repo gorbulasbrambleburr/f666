@@ -20,6 +20,7 @@ public:
             case (Fortran::type::REAL): s = "REAL"; break; 
             case (Fortran::type::BOOLEAN): s = "BOOLEAN"; break; 
             case (Fortran::type::STRING): s = "STRING"; break; 
+            case (Fortran::type::UNDECLARED): s = "UNDECLARED"; break;
         }
         return s;
     }

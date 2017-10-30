@@ -362,7 +362,24 @@ AssignmentStatementList
 
 AssignmentStatement
     : Identifier ASSIGN Expression {
-        $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
+        std::string error_msg = "";
+        bool any_error = false;
+        bool declared = Mapper::instance().lookup_var($1->id());
+        if (!declared) {
+            error_msg += "variable id '" + $1->id() + "' not declared";
+            any_error = true;
+        } else {
+            if (Mapper::instance().var_entry($1->id()).type() == $3->var_type()) {
+                $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
+            } else {
+                error_msg += "type mismatch";
+                any_error = true;
+            }
+        }
+        if (any_error) {
+            driver.semantic_error(error_msg);
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        }
     }
     | Identifier LP Expression RP ASSIGN Expression {
         $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3), std::move($6));
@@ -397,10 +414,23 @@ Expression
         $$ = std::move($2);
     }
     | FunctionCall {
-        $$ = std::move($1);
+        std::cout << "Creating a function call." << std::endl;
+        if (!Mapper::instance().lookup_fun($1->id())) {
+            std::string error_msg = "function id '" + $1->id() + "' not declared";
+            driver.semantic_error(error_msg);
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        } else {
+            $$ = std::move($1);
+        }
     }
     | Identifier {
-        $$ = std::move($1);
+        if (!Mapper::instance().lookup_var($1->id())) {
+            std::string error_msg = "variable id '" + $1->id() + "' not declared";
+            driver.semantic_error(error_msg);
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        } else {
+            $$ = std::move($1);
+        }
     }
     | Literal {
         $$ = std::move($1);

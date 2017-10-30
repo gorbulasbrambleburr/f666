@@ -2,6 +2,7 @@
 #define __AST_FUNCTION_CALL_HPP__
 
 #include "AST.hpp"
+#include "../Mapper.hpp"
 
 class FunctionCall : public AST {
 public:
@@ -16,6 +17,12 @@ public:
         for (auto &child : m_args) {
             child->print(width + 8);
         }
+    }
+    const std::string& id() const {
+        return m_id->id();
+    }
+    Fortran::vartype::type var_type() const {
+        return Mapper::instance().fun_entry(m_id->id()).type();
     }
 
 private:

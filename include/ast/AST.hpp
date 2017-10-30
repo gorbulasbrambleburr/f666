@@ -17,7 +17,7 @@ public:
     virtual ~AST() {}
     virtual void print(int width) const {}
     virtual void addChild(node_ptr child) {}
-    virtual std::string id() const { return "-"; }
+    virtual const std::string& id() const { return "-"; }
     virtual Fortran::vartype::type var_type() const {
         return Fortran::vartype::type::INTEGER;
     }
@@ -25,7 +25,7 @@ public:
         return Fortran::structural::type::SCALAR;
     }
     virtual Fortran::symbol::type symbol_type() const {
-        return Fortran::symbol::type::VARIABLE;
+        return Fortran::symbol::type::UNDECLARED;
     }
 };
 

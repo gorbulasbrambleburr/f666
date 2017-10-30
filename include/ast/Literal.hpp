@@ -26,7 +26,11 @@ public:
             case (Fortran::type::REAL): std::cout << "REAL [" << m_fValue << "]" << std::endl; break;
             case (Fortran::type::BOOLEAN): std::cout << "BOOLEAN [" << m_bValue << "]" << std::endl; break;
             case (Fortran::type::STRING): std::cout << "STRING [" << m_sValue << "]" << std::endl; break;
+            case (Fortran::type::UNDECLARED): std::cout << "UNDECLARED []" << std::endl; break;
         }
+    }
+    Fortran::vartype::type var_type() const {
+        return m_type;
     }
 
 private:

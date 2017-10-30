@@ -11,6 +11,7 @@ namespace Fortran {
             REAL,
             BOOLEAN,
             STRING,
+            UNDECLARED,
         };
     }
 

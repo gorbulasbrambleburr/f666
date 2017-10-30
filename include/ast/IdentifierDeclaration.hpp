@@ -38,7 +38,7 @@ public:
             }
         }
     }
-    std::string id() const { return m_id->id(); }
+    const std::string& id() const { return m_id->id(); }
     Fortran::structural::type struct_type() const { return m_type; }
 
 private:
