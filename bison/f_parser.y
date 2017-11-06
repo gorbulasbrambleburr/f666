@@ -248,11 +248,44 @@ Function
         Mapper::instance().reset();
     }
     | Type FUNCTION FunctionIdentifier LP RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
+        std::string error_msg = "";
+        bool any_error = false;
+
+        // Function id should be declared inside function body as a variable
+        if (Mapper::instance().lookup_var($3->id())) {
+            Entry tmp = Mapper::instance().var_entry($3->id());
+            
+            // Check function return type
+            if (tmp.type() == $1->var_type()) {
+
+                Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), node_ptrs{});
+                bool inserted = Mapper::instance().insert_fun($3->id(), entry);
+                if (inserted) {
+                    $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
+                } else {
+                    error_msg += "redefinition of function id '" + $3->id() + "'";
+                    any_error = true;
+                }
+            } else {
+                error_msg += "type mismatch between var id '" + $3->id() + "' and function return type.";
+                any_error = true;
+            }
+        } else {
+            error_msg += "function id '" + $3->id() + "' was not defined in function body.";
+            any_error = true;
+        }
+
+        // Create fake node
+        if(any_error) {
+            $$ = driver.createNode<ErrorNode>(error_msg);
+            driver.semantic_error(error_msg);
+        }
         Mapper::instance().reset();
     }
     | Type FUNCTION error RETURN END {
         yyerrok;
+        std::string error_msg = "syntax error";
+        $$ = driver.createNode<ErrorNode>(error_msg);
     };
 
 FunctionIdentifier
@@ -493,6 +526,9 @@ Expression
 FunctionCall
     : Identifier LP ParameterList RP {
         $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
+    }
+    | Identifier LP RP {
+        $$ = driver.createNode<FunctionCall>(std::move($1), node_ptrs{});
     };
 
 Literal
