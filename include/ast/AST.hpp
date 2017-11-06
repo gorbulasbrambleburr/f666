@@ -17,7 +17,7 @@ public:
     virtual ~AST() {}
     virtual void print(int width) const {}
     virtual void addChild(node_ptr child) {}
-    virtual const std::string& id() const { return "-"; }
+    virtual const std::string& id() const { return m_bleh; }
     virtual Fortran::vartype::type var_type() const {
         return Fortran::vartype::type::INTEGER;
     }
@@ -27,6 +27,9 @@ public:
     virtual Fortran::symbol::type symbol_type() const {
         return Fortran::symbol::type::UNDECLARED;
     }
+
+private:
+    std::string m_bleh;
 };
 
 #endif /* END __AST_HPP__ */

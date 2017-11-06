@@ -2,10 +2,15 @@
 #define __ENTRY__
 
 #include "Types.hpp"
+#include "ast/AST.hpp"
 
 class Entry {
 
 public:
+
+    using node_ptr = std::shared_ptr<AST>;
+    using node_ptrs = std::vector<node_ptr>;
+
     // Constructor used for variables
     Entry(Fortran::vartype::type type = Fortran::vartype::type::INTEGER,
           Fortran::structural::type dimension = Fortran::structural::type::SCALAR,
@@ -16,19 +21,22 @@ public:
     // Constructor used for Subprograms
     Entry(Fortran::symbol::type symbol = Fortran::symbol::type::UNDECLARED,
           Fortran::vartype::type type = Fortran::vartype::type::INTEGER,
-          Fortran::structural::type dimension = Fortran::structural::type::SCALAR)
-            : m_type(type), m_dimension(dimension), m_symbol(symbol) {
+          Fortran::structural::type dimension = Fortran::structural::type::SCALAR,
+          node_ptrs args = {})
+            : m_type(type), m_dimension(dimension), m_symbol(symbol), m_args(args) {
     }
 
     virtual ~Entry() {}
     Fortran::vartype::type type() const { return m_type; }
     Fortran::structural::type dimension() const { return m_dimension; }
     Fortran::symbol::type symbol() const { return m_symbol; }
+    node_ptrs args() const { return m_args; }
 
 private:
     Fortran::vartype::type m_type;
     Fortran::structural::type m_dimension;
     Fortran::symbol::type m_symbol;
+    node_ptrs m_args;
 };
 
 #endif /* END __ENTRY__ */

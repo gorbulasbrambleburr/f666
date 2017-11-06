@@ -114,6 +114,8 @@
 %type<AST::node_ptr> FunctionIdentifier
 %type<AST::node_ptrs> ArgumentList
 %type<AST::node_ptr> Argument
+%type<AST::node_ptrs> ParameterList
+%type<AST::node_ptr> Parameter
 %type<AST::node_ptr> Type
 %type<AST::node_ptr> Body
 %type<AST::node_ptr> SpecificationConstruct
@@ -199,7 +201,50 @@ Subroutine
 
 Function
     : Type FUNCTION FunctionIdentifier LP ArgumentList RP Body RETURN END {
-        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
+        std::string error_msg = "";
+        bool any_error = false;
+
+        // Function id should be declared inside function body as a variable
+        if (Mapper::instance().lookup_var($3->id())) {
+            Entry tmp = Mapper::instance().var_entry($3->id());
+            
+            // Check function return type
+            if (tmp.type() == $1->var_type()) {
+                
+                // Check arguments declarations
+                std::string args = "";
+                for (auto& arg : $5) {
+                    if (!Mapper::instance().lookup_var(arg->id())) {
+                        args += arg->id() + ", ";
+                        any_error = true;
+                    }
+                }
+                if (any_error) {
+                    error_msg += "argument ids [" + args + "] were not defined in function body";
+                } else {
+                    Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), $5);
+                    bool inserted = Mapper::instance().insert_fun($3->id(), entry);
+                    if (inserted) {
+                        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
+                    } else {
+                        error_msg += "redefinition of function id '" + $3->id() + "'";
+                        any_error = true;
+                    }
+                }
+            } else {
+                error_msg += "type mismatch between var id '" + $3->id() + "' and function return type.";
+                any_error = true;
+            }
+        } else {
+            error_msg += "function id '" + $3->id() + "' was not defined in function body.";
+            any_error = true;
+        }
+
+        // Create fake node
+        if(any_error) {
+            $$ = driver.createNode<ErrorNode>(error_msg);
+            driver.semantic_error(error_msg);
+        }
         Mapper::instance().reset();
     }
     | Type FUNCTION FunctionIdentifier LP RP Body RETURN END {
@@ -212,16 +257,8 @@ Function
 
 FunctionIdentifier
     : ID {
-        Entry entry(Fortran::symbol::type::FUNCTION);
-        bool inserted = Mapper::instance().insert_fun($1, entry);
         Mapper::instance().create_scope();
-        if (!inserted) {
-            std::string error = "redefinition of function id '" + $1 + "'";
-            driver.semantic_error(error);
-            $$ = driver.createNode<ErrorNode>(error);
-        } else {
-            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
-        }
+        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
     };
 
 SubroutineIdentifier
@@ -271,6 +308,23 @@ Argument
         $$ = driver.createNode<Identifier>(std::move($1));
     };
 
+ParameterList
+    : Parameter {
+        $$ = driver.createNodeList(std::move($1));
+    }
+    | ParameterList COMMA Parameter {
+        $$ = std::move($1);
+        $$.emplace_back(std::move($3));
+    };
+
+Parameter
+    : Identifier {
+        $$ = std::move($1);
+    }
+    | Literal {
+        $$ = std::move($1);
+    };
+
 Type
     : TYPE {
         $$ = driver.createNode<Type>($1);
@@ -318,7 +372,7 @@ DeclarationStatement
                 any_error = true;
             }
         }
-        if (any_error) {
+        if(any_error) {
             std::string error_msg = "redeclaration of variable(s)";
             $$ = driver.createNode<ErrorNode>(error_msg);
         } else {
@@ -437,7 +491,7 @@ Expression
     };
 
 FunctionCall
-    : Identifier LP ArgumentList RP {
+    : Identifier LP ParameterList RP {
         $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
     };
 

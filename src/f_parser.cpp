@@ -273,38 +273,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         value.move< AST::node_ptr > (that.value);
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         value.move< AST::node_ptrs > (that.value);
         break;
 
@@ -371,38 +373,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         value.copy< AST::node_ptr > (that.value);
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         value.copy< AST::node_ptrs > (that.value);
         break;
 
@@ -682,38 +686,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         yylhs.value.build< AST::node_ptr > ();
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         yylhs.value.build< AST::node_ptrs > ();
         break;
 
@@ -773,135 +779,170 @@ namespace  Fortran  {
           switch (yyn)
             {
   case 2:
-#line 158 "bison/f_parser.y" // lalr1.cc:859
+#line 160 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[1].value.as< AST::node_ptr > ());
         yylhs.value.as< AST::node_ptr > ()->addChild(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 782 "src/f_parser.cpp" // lalr1.cc:859
+#line 788 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 3:
-#line 162 "bison/f_parser.y" // lalr1.cc:859
+#line 164 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createRoot();
         yylhs.value.as< AST::node_ptr > ()->addChild(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 791 "src/f_parser.cpp" // lalr1.cc:859
+#line 797 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 4:
-#line 168 "bison/f_parser.y" // lalr1.cc:859
+#line 170 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 799 "src/f_parser.cpp" // lalr1.cc:859
+#line 805 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 5:
-#line 171 "bison/f_parser.y" // lalr1.cc:859
+#line 173 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 807 "src/f_parser.cpp" // lalr1.cc:859
+#line 813 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 6:
-#line 174 "bison/f_parser.y" // lalr1.cc:859
+#line 176 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 815 "src/f_parser.cpp" // lalr1.cc:859
+#line 821 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 7:
-#line 179 "bison/f_parser.y" // lalr1.cc:859
+#line 181 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<MainProgram>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
         Mapper::instance().reset();
     }
-#line 824 "src/f_parser.cpp" // lalr1.cc:859
+#line 830 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 8:
-#line 183 "bison/f_parser.y" // lalr1.cc:859
+#line 185 "bison/f_parser.y" // lalr1.cc:859
     {
         yyerrok;
     }
-#line 832 "src/f_parser.cpp" // lalr1.cc:859
+#line 838 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 9:
-#line 188 "bison/f_parser.y" // lalr1.cc:859
+#line 190 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[6].value.as< AST::node_ptr > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
         Mapper::instance().reset();
     }
-#line 841 "src/f_parser.cpp" // lalr1.cc:859
+#line 847 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 10:
-#line 192 "bison/f_parser.y" // lalr1.cc:859
+#line 194 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[5].value.as< AST::node_ptr > ()), node_ptrs{}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
         Mapper::instance().reset();
     }
-#line 850 "src/f_parser.cpp" // lalr1.cc:859
+#line 856 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 11:
-#line 196 "bison/f_parser.y" // lalr1.cc:859
+#line 198 "bison/f_parser.y" // lalr1.cc:859
     {
         yyerrok;
     }
-#line 858 "src/f_parser.cpp" // lalr1.cc:859
+#line 864 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 12:
-#line 201 "bison/f_parser.y" // lalr1.cc:859
+#line 203 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[8].value.as< AST::node_ptr > ()), std::move(yystack_[6].value.as< AST::node_ptr > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
+        std::string error_msg = "";
+        bool any_error = false;
+
+        // Function id should be declared inside function body as a variable
+        if (Mapper::instance().lookup_var(yystack_[6].value.as< AST::node_ptr > ()->id())) {
+            Entry tmp = Mapper::instance().var_entry(yystack_[6].value.as< AST::node_ptr > ()->id());
+            
+            // Check function return type
+            if (tmp.type() == yystack_[8].value.as< AST::node_ptr > ()->var_type()) {
+                
+                // Check arguments declarations
+                std::string args = "";
+                for (auto& arg : yystack_[4].value.as< AST::node_ptrs > ()) {
+                    if (!Mapper::instance().lookup_var(arg->id())) {
+                        args += arg->id() + ", ";
+                        any_error = true;
+                    }
+                }
+                if (any_error) {
+                    error_msg += "argument ids [" + args + "] were not defined in function body";
+                } else {
+                    Entry entry(Fortran::symbol::type::FUNCTION, yystack_[8].value.as< AST::node_ptr > ()->var_type(), tmp.dimension(), yystack_[4].value.as< AST::node_ptrs > ());
+                    bool inserted = Mapper::instance().insert_fun(yystack_[6].value.as< AST::node_ptr > ()->id(), entry);
+                    if (inserted) {
+                        yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[8].value.as< AST::node_ptr > ()), std::move(yystack_[6].value.as< AST::node_ptr > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
+                    } else {
+                        error_msg += "redefinition of function id '" + yystack_[6].value.as< AST::node_ptr > ()->id() + "'";
+                        any_error = true;
+                    }
+                }
+            } else {
+                error_msg += "type mismatch between var id '" + yystack_[6].value.as< AST::node_ptr > ()->id() + "' and function return type.";
+                any_error = true;
+            }
+        } else {
+            error_msg += "function id '" + yystack_[6].value.as< AST::node_ptr > ()->id() + "' was not defined in function body.";
+            any_error = true;
+        }
+
+        // Create fake node
+        if(any_error) {
+            yylhs.value.as< AST::node_ptr > () = driver.createNode<ErrorNode>(error_msg);
+            driver.semantic_error(error_msg);
+        }
         Mapper::instance().reset();
     }
-#line 867 "src/f_parser.cpp" // lalr1.cc:859
+#line 916 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 13:
-#line 205 "bison/f_parser.y" // lalr1.cc:859
+#line 250 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[7].value.as< AST::node_ptr > ()), std::move(yystack_[5].value.as< AST::node_ptr > ()), node_ptrs{}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
         Mapper::instance().reset();
     }
-#line 876 "src/f_parser.cpp" // lalr1.cc:859
+#line 925 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 14:
-#line 209 "bison/f_parser.y" // lalr1.cc:859
+#line 254 "bison/f_parser.y" // lalr1.cc:859
     {
         yyerrok;
     }
-#line 884 "src/f_parser.cpp" // lalr1.cc:859
+#line 933 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 15:
-#line 214 "bison/f_parser.y" // lalr1.cc:859
+#line 259 "bison/f_parser.y" // lalr1.cc:859
     {
-        Entry entry(Fortran::symbol::type::FUNCTION);
-        bool inserted = Mapper::instance().insert_fun(yystack_[0].value.as< Fortran::string > (), entry);
         Mapper::instance().create_scope();
-        if (!inserted) {
-            std::string error = "redefinition of function id '" + yystack_[0].value.as< Fortran::string > () + "'";
-            driver.semantic_error(error);
-            yylhs.value.as< AST::node_ptr > () = driver.createNode<ErrorNode>(error);
-        } else {
-            yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()), Fortran::symbol::type::FUNCTION);
-        }
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()), Fortran::symbol::type::FUNCTION);
     }
-#line 901 "src/f_parser.cpp" // lalr1.cc:859
+#line 942 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 16:
-#line 228 "bison/f_parser.y" // lalr1.cc:859
+#line 265 "bison/f_parser.y" // lalr1.cc:859
     {
         Entry entry(Fortran::symbol::type::SUBROUTINE);
         bool inserted = Mapper::instance().insert_fun(yystack_[0].value.as< Fortran::string > (), entry);
@@ -914,11 +955,11 @@ namespace  Fortran  {
             yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()), Fortran::symbol::type::SUBROUTINE);
         }
     }
-#line 918 "src/f_parser.cpp" // lalr1.cc:859
+#line 959 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 17:
-#line 242 "bison/f_parser.y" // lalr1.cc:859
+#line 279 "bison/f_parser.y" // lalr1.cc:859
     {
         Entry entry(Fortran::symbol::type::PROGRAM);
         bool inserted = Mapper::instance().insert_fun(yystack_[0].value.as< Fortran::string > (), entry);
@@ -931,109 +972,142 @@ namespace  Fortran  {
             yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()), Fortran::symbol::type::PROGRAM);
         }
     }
-#line 935 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 18:
-#line 256 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()));
-    }
-#line 943 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 19:
-#line 261 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 951 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 20:
-#line 264 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
-        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 960 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 21:
-#line 270 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()));
-    }
-#line 968 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 22:
-#line 275 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::type > ());
-    }
 #line 976 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 23:
-#line 280 "bison/f_parser.y" // lalr1.cc:859
+  case 18:
+#line 293 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Body>(std::move(yystack_[1].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()));
     }
 #line 984 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 24:
-#line 285 "bison/f_parser.y" // lalr1.cc:859
+  case 19:
+#line 298 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<SpecificationConstruct>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
 #line 992 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 25:
-#line 288 "bison/f_parser.y" // lalr1.cc:859
+  case 20:
+#line 301 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<SpecificationConstruct>(node_ptrs{});
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1000 "src/f_parser.cpp" // lalr1.cc:859
+#line 1001 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 26:
-#line 293 "bison/f_parser.y" // lalr1.cc:859
+  case 21:
+#line 307 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Identifier>(std::move(yystack_[0].value.as< Fortran::string > ()));
+    }
+#line 1009 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 22:
+#line 312 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1008 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 27:
-#line 296 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
-        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
 #line 1017 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 28:
-#line 302 "bison/f_parser.y" // lalr1.cc:859
+  case 23:
+#line 315 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1026 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 24:
+#line 321 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1025 "src/f_parser.cpp" // lalr1.cc:859
+#line 1034 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 25:
+#line 324 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+    }
+#line 1042 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 26:
+#line 329 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Type>(yystack_[0].value.as< Fortran::type > ());
+    }
+#line 1050 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 27:
+#line 334 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Body>(std::move(yystack_[1].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1058 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 28:
+#line 339 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<SpecificationConstruct>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+    }
+#line 1066 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 29:
-#line 305 "bison/f_parser.y" // lalr1.cc:859
+#line 342 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<SpecificationConstruct>(node_ptrs{});
     }
-#line 1033 "src/f_parser.cpp" // lalr1.cc:859
+#line 1074 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 30:
-#line 310 "bison/f_parser.y" // lalr1.cc:859
+#line 347 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1082 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 31:
+#line 350 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1091 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 32:
+#line 356 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+    }
+#line 1099 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 33:
+#line 359 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+    }
+#line 1107 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 34:
+#line 364 "bison/f_parser.y" // lalr1.cc:859
     {
         bool any_error = false;
         for (auto& node : yystack_[0].value.as< AST::node_ptrs > ()) {
@@ -1045,84 +1119,84 @@ namespace  Fortran  {
                 any_error = true;
             }
         }
-        if (any_error) {
+        if(any_error) {
             std::string error_msg = "redeclaration of variable(s)";
             yylhs.value.as< AST::node_ptr > () = driver.createNode<ErrorNode>(error_msg);
         } else {
             yylhs.value.as< AST::node_ptr > () = driver.createNode<DeclarationStatement>(std::move(yystack_[1].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptrs > ()));
         }
     }
-#line 1056 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 31:
-#line 330 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1064 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 32:
-#line 333 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
-        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1073 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 33:
-#line 339 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<IdentifierDeclaration>(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1081 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 34:
-#line 342 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<IdentifierDeclaration>(std::move(yystack_[3].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::integer > ());
-    }
-#line 1089 "src/f_parser.cpp" // lalr1.cc:859
+#line 1130 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 35:
-#line 345 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<IdentifierDeclaration>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptr > ()));
-    }
-#line 1097 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 36:
-#line 350 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<ParameterStatement>(std::move(yystack_[1].value.as< AST::node_ptrs > ()));
-    }
-#line 1105 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 37:
-#line 355 "bison/f_parser.y" // lalr1.cc:859
+#line 384 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1113 "src/f_parser.cpp" // lalr1.cc:859
+#line 1138 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 38:
-#line 358 "bison/f_parser.y" // lalr1.cc:859
+  case 36:
+#line 387 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
         yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1122 "src/f_parser.cpp" // lalr1.cc:859
+#line 1147 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 37:
+#line 393 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<IdentifierDeclaration>(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1155 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 38:
+#line 396 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<IdentifierDeclaration>(std::move(yystack_[3].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::integer > ());
+    }
+#line 1163 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 39:
-#line 364 "bison/f_parser.y" // lalr1.cc:859
+#line 399 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<IdentifierDeclaration>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptr > ()));
+    }
+#line 1171 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 40:
+#line 404 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<ParameterStatement>(std::move(yystack_[1].value.as< AST::node_ptrs > ()));
+    }
+#line 1179 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 41:
+#line 409 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1187 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 42:
+#line 412 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1196 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 43:
+#line 418 "bison/f_parser.y" // lalr1.cc:859
     {
         std::string error_msg = "";
         bool any_error = false;
@@ -1143,91 +1217,91 @@ namespace  Fortran  {
             yylhs.value.as< AST::node_ptr > () = driver.createNode<ErrorNode>(error_msg);
         }
     }
-#line 1147 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 40:
-#line 384 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<AssignmentStatement>(std::move(yystack_[5].value.as< AST::node_ptr > ()), std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1155 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 41:
-#line 389 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Comparison>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::comp > ());
-    }
-#line 1163 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 42:
-#line 392 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
-    }
-#line 1171 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 43:
-#line 395 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
-    }
-#line 1179 "src/f_parser.cpp" // lalr1.cc:859
+#line 1221 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 44:
-#line 398 "bison/f_parser.y" // lalr1.cc:859
+#line 438 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<AssignmentStatement>(std::move(yystack_[5].value.as< AST::node_ptr > ()), std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1187 "src/f_parser.cpp" // lalr1.cc:859
+#line 1229 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 45:
-#line 401 "bison/f_parser.y" // lalr1.cc:859
+#line 443 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Comparison>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::comp > ());
     }
-#line 1195 "src/f_parser.cpp" // lalr1.cc:859
+#line 1237 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 46:
-#line 404 "bison/f_parser.y" // lalr1.cc:859
+#line 446 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::logic > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
     }
-#line 1203 "src/f_parser.cpp" // lalr1.cc:859
+#line 1245 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 47:
-#line 407 "bison/f_parser.y" // lalr1.cc:859
+#line 449 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::logic > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
     }
-#line 1211 "src/f_parser.cpp" // lalr1.cc:859
+#line 1253 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 48:
-#line 410 "bison/f_parser.y" // lalr1.cc:859
+#line 452 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::logic > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
     }
-#line 1219 "src/f_parser.cpp" // lalr1.cc:859
+#line 1261 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 49:
-#line 413 "bison/f_parser.y" // lalr1.cc:859
+#line 455 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[1].value.as< AST::node_ptr > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::arithmetic > ());
     }
-#line 1227 "src/f_parser.cpp" // lalr1.cc:859
+#line 1269 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 50:
-#line 416 "bison/f_parser.y" // lalr1.cc:859
+#line 458 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::logic > ());
+    }
+#line 1277 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 51:
+#line 461 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::logic > ());
+    }
+#line 1285 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 52:
+#line 464 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Expression>(std::move(yystack_[0].value.as< AST::node_ptr > ()), yystack_[1].value.as< Fortran::op::logic > ());
+    }
+#line 1293 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 53:
+#line 467 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[1].value.as< AST::node_ptr > ());
+    }
+#line 1301 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 54:
+#line 470 "bison/f_parser.y" // lalr1.cc:859
     {
         std::cout << "Creating a function call." << std::endl;
         if (!Mapper::instance().lookup_fun(yystack_[0].value.as< AST::node_ptr > ()->id())) {
@@ -1238,11 +1312,11 @@ namespace  Fortran  {
             yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
         }
     }
-#line 1242 "src/f_parser.cpp" // lalr1.cc:859
+#line 1316 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 51:
-#line 426 "bison/f_parser.y" // lalr1.cc:859
+  case 55:
+#line 480 "bison/f_parser.y" // lalr1.cc:859
     {
         if (!Mapper::instance().lookup_var(yystack_[0].value.as< AST::node_ptr > ()->id())) {
             std::string error_msg = "variable id '" + yystack_[0].value.as< AST::node_ptr > ()->id() + "' not declared";
@@ -1252,298 +1326,298 @@ namespace  Fortran  {
             yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
         }
     }
-#line 1256 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 52:
-#line 435 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
-    }
-#line 1264 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 53:
-#line 440 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<FunctionCall>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
-    }
-#line 1272 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 54:
-#line 445 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::integer > ());
-    }
-#line 1280 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 55:
-#line 448 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::real > ());
-    }
-#line 1288 "src/f_parser.cpp" // lalr1.cc:859
+#line 1330 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 56:
-#line 451 "bison/f_parser.y" // lalr1.cc:859
+#line 489 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::boolean > ());
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1296 "src/f_parser.cpp" // lalr1.cc:859
+#line 1338 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 57:
-#line 454 "bison/f_parser.y" // lalr1.cc:859
+#line 494 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::string > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<FunctionCall>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
     }
-#line 1304 "src/f_parser.cpp" // lalr1.cc:859
+#line 1346 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 58:
-#line 465 "bison/f_parser.y" // lalr1.cc:859
+#line 499 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<ExecutableConstruct>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::integer > ());
     }
-#line 1312 "src/f_parser.cpp" // lalr1.cc:859
+#line 1354 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 59:
-#line 468 "bison/f_parser.y" // lalr1.cc:859
+#line 502 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<ExecutableConstruct>(node_ptrs{});
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::real > ());
     }
-#line 1320 "src/f_parser.cpp" // lalr1.cc:859
+#line 1362 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 60:
-#line 473 "bison/f_parser.y" // lalr1.cc:859
+#line 505 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::boolean > ());
     }
-#line 1328 "src/f_parser.cpp" // lalr1.cc:859
+#line 1370 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 61:
-#line 476 "bison/f_parser.y" // lalr1.cc:859
+#line 508 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
-        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<Literal>(yystack_[0].value.as< Fortran::string > ());
     }
-#line 1337 "src/f_parser.cpp" // lalr1.cc:859
+#line 1378 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 62:
-#line 482 "bison/f_parser.y" // lalr1.cc:859
+#line 519 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<ExecutableConstruct>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
     }
-#line 1345 "src/f_parser.cpp" // lalr1.cc:859
+#line 1386 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 63:
-#line 485 "bison/f_parser.y" // lalr1.cc:859
+#line 522 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<ExecutableConstruct>(node_ptrs{});
     }
-#line 1353 "src/f_parser.cpp" // lalr1.cc:859
+#line 1394 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 64:
-#line 488 "bison/f_parser.y" // lalr1.cc:859
+#line 527 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1361 "src/f_parser.cpp" // lalr1.cc:859
+#line 1402 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 65:
-#line 491 "bison/f_parser.y" // lalr1.cc:859
+#line 530 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1369 "src/f_parser.cpp" // lalr1.cc:859
+#line 1411 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 66:
-#line 494 "bison/f_parser.y" // lalr1.cc:859
+#line 536 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1377 "src/f_parser.cpp" // lalr1.cc:859
+#line 1419 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 67:
-#line 497 "bison/f_parser.y" // lalr1.cc:859
+#line 539 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1385 "src/f_parser.cpp" // lalr1.cc:859
+#line 1427 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 68:
-#line 500 "bison/f_parser.y" // lalr1.cc:859
+#line 542 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1393 "src/f_parser.cpp" // lalr1.cc:859
+#line 1435 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 69:
-#line 514 "bison/f_parser.y" // lalr1.cc:859
+#line 545 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<IfStatement>(std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()), node_ptrs{}, node_ptrs{});
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1401 "src/f_parser.cpp" // lalr1.cc:859
+#line 1443 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 70:
-#line 517 "bison/f_parser.y" // lalr1.cc:859
+#line 548 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<IfStatement>(std::move(yystack_[5].value.as< AST::node_ptr > ()), std::move(yystack_[2].value.as< AST::node_ptrs > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()), std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1409 "src/f_parser.cpp" // lalr1.cc:859
+#line 1451 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 71:
-#line 520 "bison/f_parser.y" // lalr1.cc:859
+#line 551 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<IfStatement>(std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()), node_ptrs{}, std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
-#line 1417 "src/f_parser.cpp" // lalr1.cc:859
+#line 1459 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
   case 72:
-#line 525 "bison/f_parser.y" // lalr1.cc:859
+#line 554 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1425 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 73:
-#line 528 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
-        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1434 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 74:
-#line 534 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<ElseIfStatement>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptrs > ()));
-    }
-#line 1442 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 75:
-#line 539 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
-    }
-#line 1450 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 76:
-#line 544 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
-    }
-#line 1458 "src/f_parser.cpp" // lalr1.cc:859
-    break;
-
-  case 77:
-#line 547 "bison/f_parser.y" // lalr1.cc:859
-    {
-        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
-        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = std::move(yystack_[0].value.as< AST::node_ptr > ());
     }
 #line 1467 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 78:
-#line 553 "bison/f_parser.y" // lalr1.cc:859
+  case 73:
+#line 568 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<ReadStatement>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<IfStatement>(std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()), node_ptrs{}, node_ptrs{});
     }
 #line 1475 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 79:
-#line 558 "bison/f_parser.y" // lalr1.cc:859
+  case 74:
+#line 571 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptr > () = driver.createNode<PrintStatement>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<IfStatement>(std::move(yystack_[5].value.as< AST::node_ptr > ()), std::move(yystack_[2].value.as< AST::node_ptrs > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()), std::move(yystack_[0].value.as< AST::node_ptrs > ()));
     }
 #line 1483 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 80:
-#line 563 "bison/f_parser.y" // lalr1.cc:859
+  case 75:
+#line 574 "bison/f_parser.y" // lalr1.cc:859
     {
-        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<IfStatement>(std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()), node_ptrs{}, std::move(yystack_[0].value.as< AST::node_ptrs > ()));
     }
 #line 1491 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
+  case 76:
+#line 579 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1499 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 77:
+#line 582 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1508 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 78:
+#line 588 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<ElseIfStatement>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+    }
+#line 1516 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 79:
+#line 593 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
+    }
+#line 1524 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 80:
+#line 598 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1532 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
   case 81:
-#line 566 "bison/f_parser.y" // lalr1.cc:859
+#line 601 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[1].value.as< AST::node_ptrs > ());
+        yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1541 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 82:
+#line 607 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<ReadStatement>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+    }
+#line 1549 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 83:
+#line 612 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptr > () = driver.createNode<PrintStatement>(std::move(yystack_[0].value.as< AST::node_ptrs > ()));
+    }
+#line 1557 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 84:
+#line 617 "bison/f_parser.y" // lalr1.cc:859
+    {
+        yylhs.value.as< AST::node_ptrs > () = driver.createNodeList(std::move(yystack_[0].value.as< AST::node_ptr > ()));
+    }
+#line 1565 "src/f_parser.cpp" // lalr1.cc:859
+    break;
+
+  case 85:
+#line 620 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptrs > () = std::move(yystack_[2].value.as< AST::node_ptrs > ());
         yylhs.value.as< AST::node_ptrs > ().emplace_back(std::move(yystack_[0].value.as< AST::node_ptr > ()));
     }
-#line 1500 "src/f_parser.cpp" // lalr1.cc:859
+#line 1574 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 82:
-#line 572 "bison/f_parser.y" // lalr1.cc:859
+  case 86:
+#line 626 "bison/f_parser.y" // lalr1.cc:859
     {
         node_ptr unitary = driver.createNode<Literal>(1);
         yylhs.value.as< AST::node_ptr > () = driver.createNode<DoStatement>(std::move(yystack_[6].value.as< AST::node_ptr > ()),
             std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(unitary), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
     }
-#line 1510 "src/f_parser.cpp" // lalr1.cc:859
+#line 1584 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 83:
-#line 577 "bison/f_parser.y" // lalr1.cc:859
+  case 87:
+#line 631 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<DoStatement>(std::move(yystack_[8].value.as< AST::node_ptr > ()),
             std::move(yystack_[6].value.as< AST::node_ptr > ()), std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
     }
-#line 1519 "src/f_parser.cpp" // lalr1.cc:859
+#line 1593 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 84:
-#line 583 "bison/f_parser.y" // lalr1.cc:859
+  case 88:
+#line 637 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<WhileStatement>(std::move(yystack_[4].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
     }
-#line 1527 "src/f_parser.cpp" // lalr1.cc:859
+#line 1601 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 85:
-#line 588 "bison/f_parser.y" // lalr1.cc:859
+  case 89:
+#line 642 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<CallStatement>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
     }
-#line 1535 "src/f_parser.cpp" // lalr1.cc:859
+#line 1609 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
-  case 86:
-#line 591 "bison/f_parser.y" // lalr1.cc:859
+  case 90:
+#line 645 "bison/f_parser.y" // lalr1.cc:859
     {
         yylhs.value.as< AST::node_ptr > () = driver.createNode<CallStatement>(std::move(yystack_[2].value.as< AST::node_ptr > ()), std::move(node_ptrs{}));
     }
-#line 1543 "src/f_parser.cpp" // lalr1.cc:859
+#line 1617 "src/f_parser.cpp" // lalr1.cc:859
     break;
 
 
-#line 1547 "src/f_parser.cpp" // lalr1.cc:859
+#line 1621 "src/f_parser.cpp" // lalr1.cc:859
             default:
               break;
             }
@@ -1798,178 +1872,178 @@ namespace  Fortran  {
   }
 
 
-  const signed char  Parser ::yypact_ninf_ = -80;
+  const signed char  Parser ::yypact_ninf_ = -101;
 
   const signed char  Parser ::yytable_ninf_ = -1;
 
   const short int
    Parser ::yypact_[] =
   {
-       3,     4,     8,   -80,    27,   -80,   -80,   -80,   -80,     7,
-      45,   -80,     5,    36,   -80,    34,   -80,   -80,     9,    64,
-      57,    35,    85,   208,     5,   -80,   -80,   -80,    86,   -16,
-      91,   -80,    74,   -80,    35,   -80,    79,    90,   -80,   108,
-     100,   101,    35,   289,    87,    35,    16,   -80,   -80,   208,
-     -80,   -80,   -80,   -80,   -80,   -80,   -80,   -80,   -80,     5,
-     -80,    10,   -80,   121,   -12,    50,   -80,   -19,    35,   -80,
-     289,   289,   104,   289,   289,   -80,   -80,   -80,   -80,   107,
-     302,   -80,   -80,   113,   126,   124,   289,   289,   -80,   145,
-      87,     5,   -80,     5,    55,    35,   -80,   129,   131,   -80,
-     224,   238,   289,   252,   302,    87,   289,   289,   289,   289,
-     289,   289,   289,   289,    -1,   266,   302,   151,   -80,   155,
-     161,     5,   -80,   -80,   -80,   162,   147,   210,   -80,    65,
-      37,    37,    70,    70,   302,   302,   158,   302,   -80,    72,
-     143,   -80,   168,   170,   172,   208,   208,   289,   -80,   -80,
-     289,   -80,   -80,   188,   -80,   183,    67,   152,   302,   -80,
-     208,   154,   -80,   -80,    98,   -80,   -80,   -80,   289,   125,
-     190,   289,   -80,   -80,    89,   -80,   -80,   280,   197,   200,
-     -80,   208,   208
+       3,     9,    24,  -101,     8,  -101,  -101,  -101,  -101,    32,
+      43,  -101,     5,    57,  -101,    49,  -101,  -101,    26,    70,
+      72,    63,   114,   229,     5,  -101,  -101,  -101,   117,   -12,
+     122,  -101,    98,  -101,    63,  -101,   129,   131,  -101,   155,
+     138,   141,    63,   296,   127,    63,    35,  -101,  -101,   229,
+    -101,  -101,  -101,  -101,  -101,  -101,  -101,  -101,  -101,     5,
+    -101,    74,  -101,   164,    -1,    78,  -101,   -19,    63,  -101,
+     296,   296,   146,   296,   296,  -101,  -101,  -101,  -101,   151,
+      84,  -101,  -101,   156,   157,   159,   296,   296,  -101,   177,
+     127,     5,  -101,     5,    96,    63,  -101,   166,   167,  -101,
+     231,   245,   296,   259,    84,    54,   296,   296,   296,   296,
+     296,   296,   296,   296,     4,   273,    84,   187,  -101,   179,
+     190,     5,  -101,  -101,  -101,   185,   201,   178,  -101,  -101,
+     116,  -101,  -101,    37,    37,    55,    55,    84,    84,   103,
+      84,  -101,   132,   193,  -101,   214,   216,   227,   229,   229,
+     296,    54,  -101,  -101,   296,  -101,  -101,   234,  -101,    65,
+      90,   158,  -101,    84,  -101,   229,   217,  -101,  -101,    28,
+    -101,  -101,  -101,   296,   130,   211,   296,  -101,  -101,   184,
+    -101,  -101,   287,   218,   232,  -101,   229,   229
   };
 
   const unsigned char
    Parser ::yydefact_[] =
   {
-       0,     0,     0,    22,     0,     3,     4,     5,     6,     0,
-       0,    17,    25,     0,    16,     0,     1,     2,     0,     0,
-       0,     0,     0,    59,    24,    26,    28,    29,     0,     0,
-       0,    15,     0,     8,     0,    18,    33,    30,    31,     0,
-       0,     0,     0,     0,     0,     0,     0,    62,    23,    58,
-      60,    63,    66,    67,    64,    65,    68,    27,    11,    25,
-      21,     0,    19,     0,     0,     0,    37,     0,     0,     7,
-       0,     0,     0,     0,     0,    54,    55,    56,    57,    51,
-      80,    50,    52,    79,    78,     0,     0,     0,    61,     0,
-       0,    25,    14,    25,     0,     0,    36,     0,     0,    32,
-       0,     0,     0,     0,    48,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,    39,     0,    20,     0,
-       0,    25,    38,    34,    35,     0,     0,     0,    49,     0,
-      42,    43,    44,    45,    46,    47,    41,    81,    86,     0,
-       0,    10,     0,     0,     0,     0,     0,     0,    53,    85,
-       0,     9,    13,     0,    76,     0,     0,     0,    40,    12,
-       0,     0,    69,    77,     0,    72,    71,    84,     0,     0,
-       0,     0,    73,    70,     0,    82,    75,     0,     0,     0,
-      83,     0,    74
+       0,     0,     0,    26,     0,     3,     4,     5,     6,     0,
+       0,    17,    29,     0,    16,     0,     1,     2,     0,     0,
+       0,     0,     0,    63,    28,    30,    32,    33,     0,     0,
+       0,    15,     0,     8,     0,    18,    37,    34,    35,     0,
+       0,     0,     0,     0,     0,     0,     0,    66,    27,    62,
+      64,    67,    70,    71,    68,    69,    72,    31,    11,    29,
+      21,     0,    19,     0,     0,     0,    41,     0,     0,     7,
+       0,     0,     0,     0,     0,    58,    59,    60,    61,    55,
+      84,    54,    56,    83,    82,     0,     0,     0,    65,     0,
+       0,    29,    14,    29,     0,     0,    40,     0,     0,    36,
+       0,     0,     0,     0,    52,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,    43,     0,    20,     0,
+       0,    29,    42,    38,    39,     0,     0,     0,    53,    24,
+       0,    22,    25,    46,    47,    48,    49,    50,    51,    45,
+      85,    90,     0,     0,    10,     0,     0,     0,     0,     0,
+       0,     0,    57,    89,     0,     9,    13,     0,    80,     0,
+       0,     0,    23,    44,    12,     0,     0,    73,    81,     0,
+      76,    75,    88,     0,     0,     0,     0,    77,    74,     0,
+      86,    79,     0,     0,     0,    87,     0,    78
   };
 
   const short int
    Parser ::yypgoto_[] =
   {
-     -80,   -80,   217,   -80,   -80,   -80,   -80,   -80,   -80,   -21,
-     -41,   132,    61,   -55,   -80,   -80,   199,   -80,   -80,   159,
-     -80,   -80,   -33,   -54,   -80,   -80,   -80,   -80,   -15,   -80,
-     -80,    68,    69,   -79,   -80,   -80,   -80,   -80,   -80,   -80
+    -101,  -101,   240,  -101,  -101,  -101,  -101,  -101,  -101,   -21,
+     -41,   163,  -101,    97,    30,   -55,  -101,  -101,   230,  -101,
+    -101,   188,  -101,  -101,   -33,   -54,  -101,  -100,  -101,  -101,
+     -14,  -101,  -101,    86,    88,   -89,  -101,  -101,  -101,  -101,
+    -101,  -101
   };
 
   const short int
    Parser ::yydefgoto_[] =
   {
       -1,     4,     5,     6,     7,     8,    32,    15,    12,    79,
-      61,    62,    21,    22,    23,    24,    25,    26,    37,    38,
-      27,    65,    47,    80,    81,    82,    48,    49,   154,    51,
-     164,   165,   166,   155,    52,    53,    83,    54,    55,    56
+      61,    62,   130,   131,    21,    22,    23,    24,    25,    26,
+      37,    38,    27,    65,    47,    80,    81,    82,    48,    49,
+     158,    51,   169,   170,   171,   159,    52,    53,    83,    54,
+      55,    56
   };
 
   const unsigned char
    Parser ::yytable_[] =
   {
-      36,    66,    46,    84,    89,    10,     1,     2,    50,    13,
-      30,    59,    18,    46,    20,    93,   100,   101,    97,   103,
-     104,    72,    35,    94,    85,    60,   138,    16,    46,    60,
-       1,     2,   115,   116,    88,    90,   119,    91,   120,     3,
-      60,     3,    86,    28,    87,    11,    98,    36,   127,    14,
-      31,    19,   130,   131,   132,   133,   134,   135,   136,   137,
-      29,     9,   122,     3,   129,     9,   144,   156,   108,   109,
-     110,   111,    33,   139,    46,    95,    35,    96,   169,    40,
-      90,   170,   121,    34,    41,    42,   167,    43,    44,    45,
-      90,    39,   148,   157,    58,   178,   158,    90,    63,   149,
-      64,    40,   182,   110,   111,    67,    41,    42,    35,    43,
-      44,    45,   160,   161,   174,    68,    69,   177,   106,   107,
-     108,   109,   110,   111,    46,    46,    70,    71,    60,    92,
-      35,   112,   102,   105,    46,    46,    46,    40,   113,    46,
-     163,   163,    41,    42,   175,    43,    44,    45,    46,    46,
-     114,    90,   117,    46,   163,   163,   123,    46,   124,   141,
-      46,    46,   142,   163,    40,   146,    35,   163,   143,    41,
-      42,   150,    43,    44,    45,   145,   151,   168,   152,   153,
-     171,   106,   107,   108,   109,   110,   111,   106,   107,   108,
-     109,   110,   111,    35,   112,    40,   159,   160,   161,   162,
-      41,    42,    40,    43,    44,    45,   176,    41,    42,    40,
-      43,    44,    45,   181,    41,    42,   180,    43,    44,    45,
-      40,    17,   118,    57,    35,    41,    42,    99,    43,    44,
-      45,    35,   172,   173,     0,   147,     0,     0,    35,   106,
-     107,   108,   109,   110,   111,     0,     0,     0,     0,    35,
-       0,   125,   112,   106,   107,   108,   109,   110,   111,     0,
-       0,     0,     0,     0,     0,   126,   112,   106,   107,   108,
-     109,   110,   111,     0,     0,     0,     0,     0,     0,   128,
-     112,   106,   107,   108,   109,   110,   111,     0,     0,     0,
-       0,     0,     0,   140,   112,   106,   107,   108,   109,   110,
-     111,     0,     0,     0,     0,     0,     0,   179,   112,   106,
-     107,   108,   109,   110,   111,    73,     0,     0,     0,     0,
-       0,     0,   112,     0,    74,     0,    75,    76,    77,    78,
-      35,   106,   107,   108,   109,   110,   111,     0,     0,     0,
-       0,     0,     0,     0,   112
+      36,    66,    46,    84,    89,   132,     1,     2,    16,    50,
+      10,     1,     2,    46,    20,    59,   100,   101,    97,   103,
+     104,    72,    35,    94,    85,    13,    93,    30,    46,    60,
+       9,   141,   115,   116,     9,    88,   119,    18,   120,     3,
+      60,     3,   165,   166,     3,    60,    98,    36,   127,    19,
+      11,   132,   133,   134,   135,   136,   137,   138,   139,   140,
+     160,    86,   122,    87,    28,    14,   147,    31,   108,   109,
+     110,   111,   174,   142,    46,    29,   175,    40,    33,   165,
+     166,   167,    41,    42,   129,    43,    44,    45,   110,   111,
+     183,    75,    76,    77,    78,    35,   161,   187,    34,    90,
+     163,    91,    40,    95,    35,    96,    35,    41,    42,   172,
+      43,    44,    45,   106,   107,   108,   109,   110,   111,   179,
+      39,    90,   182,   121,    64,    58,   112,    46,    46,    63,
+     129,    35,   106,   107,   108,   109,   110,   111,    46,    46,
+      46,   151,    40,   152,    46,   168,   168,    41,    42,   180,
+      43,    44,    45,    46,    46,    67,    68,    90,    46,   153,
+     168,   168,    46,    69,    70,    46,    46,    71,    60,   168,
+      40,    35,    92,   168,   102,    41,    42,   105,    43,    44,
+      45,   113,    90,   173,   117,   114,   145,   106,   107,   108,
+     109,   110,   111,   123,   124,   144,    40,   146,   148,    35,
+     112,    41,    42,   150,    43,    44,    45,   106,   107,   108,
+     109,   110,   111,   106,   107,   108,   109,   110,   111,   149,
+     112,   154,   155,    40,   156,    35,   112,   181,    41,    42,
+      40,    43,    44,    45,   157,    41,    42,   185,    43,    44,
+      45,    40,   164,   176,    17,   186,    41,    42,   162,    43,
+      44,    45,    35,   118,    57,   177,    99,   178,   125,    35,
+     106,   107,   108,   109,   110,   111,     0,     0,     0,     0,
+      35,     0,   126,   112,   106,   107,   108,   109,   110,   111,
+       0,     0,     0,     0,     0,     0,   128,   112,   106,   107,
+     108,   109,   110,   111,     0,     0,     0,     0,     0,     0,
+     143,   112,   106,   107,   108,   109,   110,   111,     0,     0,
+       0,     0,     0,     0,   184,   112,   106,   107,   108,   109,
+     110,   111,    73,     0,     0,     0,     0,     0,     0,   112,
+       0,    74,     0,    75,    76,    77,    78,    35
   };
 
   const short int
    Parser ::yycheck_[] =
   {
-      21,    34,    23,    44,    59,     1,     3,     4,    23,     1,
-       1,    27,     5,    34,     9,    27,    70,    71,    37,    73,
-      74,    42,    41,    64,    45,    41,    27,     0,    49,    41,
-       3,     4,    86,    87,    49,    25,    91,    27,    93,    36,
-      41,    36,    26,     7,    28,    41,    67,    68,   102,    41,
-      41,     6,   106,   107,   108,   109,   110,   111,   112,   113,
-      26,     0,    95,    36,   105,     4,   121,   146,    31,    32,
-      33,    34,     8,   114,    95,    25,    41,    27,   157,    12,
-      25,   160,    27,    26,    17,    18,    19,    20,    21,    22,
-      25,     6,    27,   147,     8,   174,   150,    25,     7,    27,
-      26,    12,   181,    33,    34,    26,    17,    18,    41,    20,
-      21,    22,    14,    15,   168,    25,     8,   171,    29,    30,
-      31,    32,    33,    34,   145,   146,    26,    26,    41,     8,
-      41,    42,    28,    26,   155,   156,   157,    12,    25,   160,
-     155,   156,    17,    18,    19,    20,    21,    22,   169,   170,
-      26,    25,     7,   174,   169,   170,    27,   178,    27,     8,
-     181,   182,     7,   178,    12,    18,    41,   182,     7,    17,
-      18,    28,    20,    21,    22,    13,     8,    25,     8,     7,
-      26,    29,    30,    31,    32,    33,    34,    29,    30,    31,
-      32,    33,    34,    41,    42,    12,     8,    14,    15,    16,
-      17,    18,    12,    20,    21,    22,    16,    17,    18,    12,
-      20,    21,    22,    13,    17,    18,    19,    20,    21,    22,
-      12,     4,    90,    24,    41,    17,    18,    68,    20,    21,
-      22,    41,   164,   164,    -1,    25,    -1,    -1,    41,    29,
-      30,    31,    32,    33,    34,    -1,    -1,    -1,    -1,    41,
-      -1,    27,    42,    29,    30,    31,    32,    33,    34,    -1,
-      -1,    -1,    -1,    -1,    -1,    27,    42,    29,    30,    31,
-      32,    33,    34,    -1,    -1,    -1,    -1,    -1,    -1,    27,
-      42,    29,    30,    31,    32,    33,    34,    -1,    -1,    -1,
-      -1,    -1,    -1,    27,    42,    29,    30,    31,    32,    33,
-      34,    -1,    -1,    -1,    -1,    -1,    -1,    27,    42,    29,
-      30,    31,    32,    33,    34,    26,    -1,    -1,    -1,    -1,
-      -1,    -1,    42,    -1,    35,    -1,    37,    38,    39,    40,
-      41,    29,    30,    31,    32,    33,    34,    -1,    -1,    -1,
-      -1,    -1,    -1,    -1,    42
+      21,    34,    23,    44,    59,   105,     3,     4,     0,    23,
+       1,     3,     4,    34,     9,    27,    70,    71,    37,    73,
+      74,    42,    41,    64,    45,     1,    27,     1,    49,    41,
+       0,    27,    86,    87,     4,    49,    91,     5,    93,    36,
+      41,    36,    14,    15,    36,    41,    67,    68,   102,     6,
+      41,   151,   106,   107,   108,   109,   110,   111,   112,   113,
+     149,    26,    95,    28,     7,    41,   121,    41,    31,    32,
+      33,    34,   161,   114,    95,    26,   165,    12,     8,    14,
+      15,    16,    17,    18,   105,    20,    21,    22,    33,    34,
+     179,    37,    38,    39,    40,    41,   150,   186,    26,    25,
+     154,    27,    12,    25,    41,    27,    41,    17,    18,    19,
+      20,    21,    22,    29,    30,    31,    32,    33,    34,   173,
+       6,    25,   176,    27,    26,     8,    42,   148,   149,     7,
+     151,    41,    29,    30,    31,    32,    33,    34,   159,   160,
+     161,    25,    12,    27,   165,   159,   160,    17,    18,    19,
+      20,    21,    22,   174,   175,    26,    25,    25,   179,    27,
+     174,   175,   183,     8,    26,   186,   187,    26,    41,   183,
+      12,    41,     8,   187,    28,    17,    18,    26,    20,    21,
+      22,    25,    25,    25,     7,    26,     7,    29,    30,    31,
+      32,    33,    34,    27,    27,     8,    12,     7,    13,    41,
+      42,    17,    18,    25,    20,    21,    22,    29,    30,    31,
+      32,    33,    34,    29,    30,    31,    32,    33,    34,    18,
+      42,    28,     8,    12,     8,    41,    42,    16,    17,    18,
+      12,    20,    21,    22,     7,    17,    18,    19,    20,    21,
+      22,    12,     8,    26,     4,    13,    17,    18,   151,    20,
+      21,    22,    41,    90,    24,   169,    68,   169,    27,    41,
+      29,    30,    31,    32,    33,    34,    -1,    -1,    -1,    -1,
+      41,    -1,    27,    42,    29,    30,    31,    32,    33,    34,
+      -1,    -1,    -1,    -1,    -1,    -1,    27,    42,    29,    30,
+      31,    32,    33,    34,    -1,    -1,    -1,    -1,    -1,    -1,
+      27,    42,    29,    30,    31,    32,    33,    34,    -1,    -1,
+      -1,    -1,    -1,    -1,    27,    42,    29,    30,    31,    32,
+      33,    34,    26,    -1,    -1,    -1,    -1,    -1,    -1,    42,
+      -1,    35,    -1,    37,    38,    39,    40,    41
   };
 
   const unsigned char
    Parser ::yystos_[] =
   {
-       0,     3,     4,    36,    44,    45,    46,    47,    48,    55,
+       0,     3,     4,    36,    44,    45,    46,    47,    48,    57,
        1,    41,    51,     1,    41,    50,     0,    45,     5,     6,
-       9,    55,    56,    57,    58,    59,    60,    63,     7,    26,
-       1,    41,    49,     8,    26,    41,    52,    61,    62,     6,
-      12,    17,    18,    20,    21,    22,    52,    65,    69,    70,
-      71,    72,    77,    78,    80,    81,    82,    59,     8,    27,
-      41,    53,    54,     7,    26,    64,    65,    26,    25,     8,
+       9,    57,    58,    59,    60,    61,    62,    65,     7,    26,
+       1,    41,    49,     8,    26,    41,    52,    63,    64,     6,
+      12,    17,    18,    20,    21,    22,    52,    67,    71,    72,
+      73,    74,    79,    80,    82,    83,    84,    61,     8,    27,
+      41,    53,    54,     7,    26,    66,    67,    26,    25,     8,
       26,    26,    52,    26,    35,    37,    38,    39,    40,    52,
-      66,    67,    68,    79,    53,    52,    26,    28,    71,    56,
-      25,    27,     8,    27,    53,    25,    27,    37,    52,    62,
-      66,    66,    28,    66,    66,    26,    29,    30,    31,    32,
-      33,    34,    42,    25,    26,    66,    66,     7,    54,    56,
-      56,    27,    65,    27,    27,    27,    27,    66,    27,    53,
-      66,    66,    66,    66,    66,    66,    66,    66,    27,    53,
-      27,     8,     7,     7,    56,    13,    18,    25,    27,    27,
-      28,     8,     8,     7,    71,    76,    76,    66,    66,     8,
-      14,    15,    16,    71,    73,    74,    75,    19,    25,    76,
-      76,    26,    74,    75,    66,    19,    16,    66,    76,    27,
-      19,    13,    76
+      68,    69,    70,    81,    53,    52,    26,    28,    73,    58,
+      25,    27,     8,    27,    53,    25,    27,    37,    52,    64,
+      68,    68,    28,    68,    68,    26,    29,    30,    31,    32,
+      33,    34,    42,    25,    26,    68,    68,     7,    54,    58,
+      58,    27,    67,    27,    27,    27,    27,    68,    27,    52,
+      55,    56,    70,    68,    68,    68,    68,    68,    68,    68,
+      68,    27,    53,    27,     8,     7,     7,    58,    13,    18,
+      25,    25,    27,    27,    28,     8,     8,     7,    73,    78,
+      78,    68,    56,    68,     8,    14,    15,    16,    73,    75,
+      76,    77,    19,    25,    78,    78,    26,    76,    77,    68,
+      19,    16,    68,    78,    27,    19,    13,    78
   };
 
   const unsigned char
@@ -1977,13 +2051,14 @@ namespace  Fortran  {
   {
        0,    43,    44,    44,    45,    45,    45,    46,    46,    47,
       47,    47,    48,    48,    48,    49,    50,    51,    52,    53,
-      53,    54,    55,    56,    57,    57,    58,    58,    59,    59,
-      60,    61,    61,    62,    62,    62,    63,    64,    64,    65,
-      65,    66,    66,    66,    66,    66,    66,    66,    66,    66,
-      66,    66,    66,    67,    68,    68,    68,    68,    69,    69,
-      70,    70,    71,    71,    71,    71,    71,    71,    71,    72,
-      72,    72,    73,    73,    74,    75,    76,    76,    77,    78,
-      79,    79,    80,    80,    81,    82,    82
+      53,    54,    55,    55,    56,    56,    57,    58,    59,    59,
+      60,    60,    61,    61,    62,    63,    63,    64,    64,    64,
+      65,    66,    66,    67,    67,    68,    68,    68,    68,    68,
+      68,    68,    68,    68,    68,    68,    68,    69,    70,    70,
+      70,    70,    71,    71,    72,    72,    73,    73,    73,    73,
+      73,    73,    73,    74,    74,    74,    75,    75,    76,    77,
+      78,    78,    79,    80,    81,    81,    82,    82,    83,    84,
+      84
   };
 
   const unsigned char
@@ -1991,13 +2066,14 @@ namespace  Fortran  {
   {
        0,     2,     2,     1,     1,     1,     1,     5,     4,     8,
        7,     4,     9,     8,     5,     1,     1,     1,     1,     1,
-       3,     1,     1,     2,     1,     0,     1,     2,     1,     1,
-       2,     1,     3,     1,     4,     4,     4,     1,     3,     3,
-       6,     3,     3,     3,     3,     3,     3,     3,     2,     3,
-       1,     1,     1,     4,     1,     1,     1,     1,     1,     0,
-       1,     2,     1,     1,     1,     1,     1,     1,     1,     7,
-       8,     7,     1,     2,     6,     3,     1,     2,     2,     2,
-       1,     3,     8,    10,     7,     5,     4
+       3,     1,     1,     3,     1,     1,     1,     2,     1,     0,
+       1,     2,     1,     1,     2,     1,     3,     1,     4,     4,
+       4,     1,     3,     3,     6,     3,     3,     3,     3,     3,
+       3,     3,     2,     3,     1,     1,     1,     4,     1,     1,
+       1,     1,     1,     0,     1,     2,     1,     1,     1,     1,
+       1,     1,     1,     7,     8,     7,     1,     2,     6,     3,
+       1,     2,     2,     2,     1,     3,     8,    10,     7,     5,
+       4
   };
 
 
@@ -2022,30 +2098,31 @@ namespace  Fortran  {
   "\"COMPARISON operator\"", "$accept", "ExecutableProgram", "Subprogram",
   "MainProgram", "Subroutine", "Function", "FunctionIdentifier",
   "SubroutineIdentifier", "ProgramIdentifier", "Identifier",
-  "ArgumentList", "Argument", "Type", "Body", "SpecificationConstruct",
-  "SpecificationList", "Specification", "DeclarationStatement",
-  "IdentifierDeclarationList", "IdentifierDeclaration",
-  "ParameterStatement", "AssignmentStatementList", "AssignmentStatement",
-  "Expression", "FunctionCall", "Literal", "ExecutableConstruct",
-  "ExecutableList", "Statement", "IfStatement", "ElseIfStatementList",
-  "ElseIfStatement", "ElseStatement", "StatementList", "ReadStatement",
-  "PrintStatement", "PrintList", "DoStatement", "WhileStatement",
-  "CallStatement", YY_NULLPTR
+  "ArgumentList", "Argument", "ParameterList", "Parameter", "Type", "Body",
+  "SpecificationConstruct", "SpecificationList", "Specification",
+  "DeclarationStatement", "IdentifierDeclarationList",
+  "IdentifierDeclaration", "ParameterStatement", "AssignmentStatementList",
+  "AssignmentStatement", "Expression", "FunctionCall", "Literal",
+  "ExecutableConstruct", "ExecutableList", "Statement", "IfStatement",
+  "ElseIfStatementList", "ElseIfStatement", "ElseStatement",
+  "StatementList", "ReadStatement", "PrintStatement", "PrintList",
+  "DoStatement", "WhileStatement", "CallStatement", YY_NULLPTR
   };
 
 #if YYDEBUG
   const unsigned short int
    Parser ::yyrline_[] =
   {
-       0,   158,   158,   162,   168,   171,   174,   179,   183,   188,
-     192,   196,   201,   205,   209,   214,   228,   242,   256,   261,
-     264,   270,   275,   280,   285,   288,   293,   296,   302,   305,
-     310,   330,   333,   339,   342,   345,   350,   355,   358,   364,
-     384,   389,   392,   395,   398,   401,   404,   407,   410,   413,
-     416,   426,   435,   440,   445,   448,   451,   454,   465,   468,
-     473,   476,   482,   485,   488,   491,   494,   497,   500,   514,
-     517,   520,   525,   528,   534,   539,   544,   547,   553,   558,
-     563,   566,   572,   577,   583,   588,   591
+       0,   160,   160,   164,   170,   173,   176,   181,   185,   190,
+     194,   198,   203,   250,   254,   259,   265,   279,   293,   298,
+     301,   307,   312,   315,   321,   324,   329,   334,   339,   342,
+     347,   350,   356,   359,   364,   384,   387,   393,   396,   399,
+     404,   409,   412,   418,   438,   443,   446,   449,   452,   455,
+     458,   461,   464,   467,   470,   480,   489,   494,   499,   502,
+     505,   508,   519,   522,   527,   530,   536,   539,   542,   545,
+     548,   551,   554,   568,   571,   574,   579,   582,   588,   593,
+     598,   601,   607,   612,   617,   620,   626,   631,   637,   642,
+     645
   };
 
   // Print the state stack on the debug stream.
@@ -2080,8 +2157,8 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:1167
 } //  Fortran 
-#line 2084 "src/f_parser.cpp" // lalr1.cc:1167
-#line 604 "bison/f_parser.y" // lalr1.cc:1168
+#line 2161 "src/f_parser.cpp" // lalr1.cc:1167
+#line 658 "bison/f_parser.y" // lalr1.cc:1168
 
 
 void Fortran::Parser::error(const location &loc, const std::string &message) {

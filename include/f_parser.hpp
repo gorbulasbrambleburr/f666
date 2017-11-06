@@ -310,6 +310,7 @@ namespace  Fortran  {
       // ProgramIdentifier
       // Identifier
       // Argument
+      // Parameter
       // Type
       // Body
       // SpecificationConstruct
@@ -333,6 +334,7 @@ namespace  Fortran  {
       char dummy1[sizeof(AST::node_ptr)];
 
       // ArgumentList
+      // ParameterList
       // SpecificationList
       // IdentifierDeclarationList
       // AssignmentStatementList
@@ -928,8 +930,8 @@ namespace  Fortran  {
     enum
     {
       yyeof_ = 0,
-      yylast_ = 344,     ///< Last index in yytable_.
-      yynnts_ = 40,  ///< Number of nonterminal symbols.
+      yylast_ = 337,     ///< Last index in yytable_.
+      yynnts_ = 42,  ///< Number of nonterminal symbols.
       yyfinal_ = 16, ///< Termination state number.
       yyterror_ = 1,
       yyerrcode_ = 256,
@@ -1025,38 +1027,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         value.copy< AST::node_ptr > (other.value);
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         value.copy< AST::node_ptrs > (other.value);
         break;
 
@@ -1125,38 +1129,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         value.copy< AST::node_ptr > (v);
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         value.copy< AST::node_ptrs > (v);
         break;
 
@@ -1319,38 +1325,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         value.template destroy< AST::node_ptr > ();
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         value.template destroy< AST::node_ptrs > ();
         break;
 
@@ -1425,38 +1433,40 @@ namespace  Fortran  {
       case 51: // ProgramIdentifier
       case 52: // Identifier
       case 54: // Argument
-      case 55: // Type
-      case 56: // Body
-      case 57: // SpecificationConstruct
-      case 59: // Specification
-      case 60: // DeclarationStatement
-      case 62: // IdentifierDeclaration
-      case 63: // ParameterStatement
-      case 65: // AssignmentStatement
-      case 66: // Expression
-      case 67: // FunctionCall
-      case 68: // Literal
-      case 69: // ExecutableConstruct
-      case 71: // Statement
-      case 72: // IfStatement
-      case 74: // ElseIfStatement
-      case 77: // ReadStatement
-      case 78: // PrintStatement
-      case 80: // DoStatement
-      case 81: // WhileStatement
-      case 82: // CallStatement
+      case 56: // Parameter
+      case 57: // Type
+      case 58: // Body
+      case 59: // SpecificationConstruct
+      case 61: // Specification
+      case 62: // DeclarationStatement
+      case 64: // IdentifierDeclaration
+      case 65: // ParameterStatement
+      case 67: // AssignmentStatement
+      case 68: // Expression
+      case 69: // FunctionCall
+      case 70: // Literal
+      case 71: // ExecutableConstruct
+      case 73: // Statement
+      case 74: // IfStatement
+      case 76: // ElseIfStatement
+      case 79: // ReadStatement
+      case 80: // PrintStatement
+      case 82: // DoStatement
+      case 83: // WhileStatement
+      case 84: // CallStatement
         value.move< AST::node_ptr > (s.value);
         break;
 
       case 53: // ArgumentList
-      case 58: // SpecificationList
-      case 61: // IdentifierDeclarationList
-      case 64: // AssignmentStatementList
-      case 70: // ExecutableList
-      case 73: // ElseIfStatementList
-      case 75: // ElseStatement
-      case 76: // StatementList
-      case 79: // PrintList
+      case 55: // ParameterList
+      case 60: // SpecificationList
+      case 63: // IdentifierDeclarationList
+      case 66: // AssignmentStatementList
+      case 72: // ExecutableList
+      case 75: // ElseIfStatementList
+      case 77: // ElseStatement
+      case 78: // StatementList
+      case 81: // PrintList
         value.move< AST::node_ptrs > (s.value);
         break;
 
@@ -1811,7 +1821,7 @@ namespace  Fortran  {
 
 #line 8 "bison/f_parser.y" // lalr1.cc:377
 } //  Fortran 
-#line 1815 "include/f_parser.hpp" // lalr1.cc:377
+#line 1825 "include/f_parser.hpp" // lalr1.cc:377
 
 
 

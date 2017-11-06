@@ -2,15 +2,16 @@
 #define __MAPPER__
 
 #include <list>
+#include <map>
 #include <memory>
-#include "Scope.hpp"
+#include "Entry.hpp"
 
-// Mapper is a singleton wrapper around a symbol table implementation.
+// Mapper is a singleton symbol table implementation.
 class Mapper {
 
-using scope_ptrs = std::list<std::unique_ptr<Scope>>;
+  public:
+    using scope = std::map<std::string,Entry>;
 
-public:
     // Returns a single instance of this class.
     static Mapper& instance();
 
@@ -38,14 +39,12 @@ public:
     Mapper(Mapper const&) = delete;
     void operator=(Mapper const&) = delete;
 
-private:
+  private:
     Mapper();
 
-    // Creates scopes.
-    std::unique_ptr<Scope> scope_factory() const;
-
-private:
-    scope_ptrs m_scopes;
+  private:
+    std::list<scope> m_vars;  // For variables
+    scope m_funs;             // For subprograms
 
 };
     
