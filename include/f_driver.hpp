@@ -77,8 +77,8 @@ namespace Fortran {
         void print() const;
 
         // Print error
-        void printError(const std::string &message) const;
-        void semantic_error(const std::string &message) const;
+        void printError(const std::string &message);
+        void semantic_error(const std::string &message);
 
         /**
          * This is needed so that Scanner and Parser can call some

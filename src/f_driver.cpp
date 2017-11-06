@@ -42,7 +42,8 @@ int Fortran::Driver::parse(const char * const filename) {
     }
     m_location = 0;
     switchInputStream(&in_file);
-    return m_parser.parse();
+    int res = m_parser.parse();
+    return res || m_errors;
 }
 
 void Fortran::Driver::switchInputStream(std::istream *is) {
@@ -56,21 +57,22 @@ void Fortran::Driver::clear() {
 }
 
 void Fortran::Driver::print() const {
-    std::cout << "Results:" << std::endl;
+    std::cout << "AST:" << std::endl;
     m_root->print(4);
 }
 
-void Fortran::Driver::printError(const std::string &message) const {
-    std::cout << "Error (" << m_line << "): " << message << std::endl; 
+void Fortran::Driver::printError(const std::string &message) {
+    std::cout << "Error (" << m_line << "): " << message << std::endl;
+    m_errors++;
 }
 
-void Fortran::Driver::semantic_error(const std::string &message) const {
+void Fortran::Driver::semantic_error(const std::string &message) {
     std::cout << "Error (" << m_line << "): " << message << std::endl; 
+    m_errors++;
 }
 
 void Fortran::Driver::increaseLocation(unsigned int loc) {
     m_location += loc;
-    //std::cout << "increaseLocation(): " << loc << ", total = " << m_location << std::endl;
 }
 
 unsigned int Fortran::Driver::location() const {
