@@ -518,7 +518,6 @@ Expression
 
 FunctionCall
     : Identifier LP ParameterList RP {
-        std::cout << "Creating a function call." << std::endl;
         std::string error_msg = "";
         bool any_error = false;
         if (Mapper::instance().lookup_fun($1->id())) {
@@ -553,7 +552,6 @@ FunctionCall
         }
     }
     | Identifier LP RP {
-        std::cout << "Creating a function call." << std::endl;
         std::string error_msg = "";
         bool any_error = false;
         if (Mapper::instance().lookup_fun($1->id())) {
