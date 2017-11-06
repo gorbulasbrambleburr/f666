@@ -501,14 +501,7 @@ Expression
         $$ = std::move($2);
     }
     | FunctionCall {
-        std::cout << "Creating a function call." << std::endl;
-        if (!Mapper::instance().lookup_fun($1->id())) {
-            std::string error_msg = "function id '" + $1->id() + "' not declared";
-            driver.semantic_error(error_msg);
-            $$ = driver.createNode<ErrorNode>(error_msg);
-        } else {
-            $$ = std::move($1);
-        }
+        $$ = std::move($1);
     }
     | Identifier {
         if (!Mapper::instance().lookup_var($1->id())) {
@@ -525,10 +518,63 @@ Expression
 
 FunctionCall
     : Identifier LP ParameterList RP {
-        $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
+        std::cout << "Creating a function call." << std::endl;
+        std::string error_msg = "";
+        bool any_error = false;
+        if (Mapper::instance().lookup_fun($1->id())) {
+            Entry entry = Mapper::instance().fun_entry($1->id());
+
+            if (entry.args().size() == $3.size()) {
+
+                // Check parameter types
+                std::string params = "";
+                for (unsigned int i = 0; i < $3.size(); i++) {
+                    if ($3[i]->var_type() != entry.args()[i]->var_type()) {
+                        params += $3[i]->id() + ", ";
+                        any_error = true;
+                    }
+                }
+                if (any_error) {
+                    error_msg += "type mismatch in function call with paramater ids [" + params + "]";
+                } else {
+                    $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
+                }
+            } else {
+                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(entry.args().size()) + " parameters.";
+                any_error = true;
+            }
+        } else {
+            error_msg += "function id '" + $1->id() + "' not declared";
+            any_error = true;
+        }
+        if (any_error) {
+            driver.semantic_error(error_msg);
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        }
     }
     | Identifier LP RP {
-        $$ = driver.createNode<FunctionCall>(std::move($1), node_ptrs{});
+        std::cout << "Creating a function call." << std::endl;
+        std::string error_msg = "";
+        bool any_error = false;
+        if (Mapper::instance().lookup_fun($1->id())) {
+            Entry entry = Mapper::instance().fun_entry($1->id());
+
+            // Check arguments
+            if (entry.args().size() == 0) {
+                $$ = driver.createNode<FunctionCall>(std::move($1), node_ptrs{});
+            } else {
+                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(entry.args().size()) + " parameters.";
+                any_error = true;
+            }
+        } else {
+            error_msg += "function id '" + $1->id() + "' not declared";
+            any_error = true;
+        }
+        if (any_error) {
+            driver.semantic_error(error_msg);
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        }
+
     };
 
 Literal
