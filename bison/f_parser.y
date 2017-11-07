@@ -528,12 +528,21 @@ FunctionCall
                 // Check parameter types
                 std::string params = "";
                 for (unsigned int i = 0; i < $3.size(); i++) {
-                    if ($3[i]->var_type() != entry.args()[i]->var_type()) {
-                        params += $3[i]->id() + ", ";
+                    
+                    if (Mapper::instance().lookup_var($3[i]->id())) {
+                        Entry param_entry = Mapper::instance().var_entry($3[i]->id());
+
+                        if (param_entry.type() != entry.args()[i]->var_type()) {
+                            params += $3[i]->id() + ", ";
+                            any_error = true;
+                        }
+                    } else {
+                        error_msg += "var id '" + $3[i]->id() + "' not declared";
                         any_error = true;
+                        break;    
                     }
                 }
-                if (any_error) {
+                if (any_error && params != "") {
                     error_msg += "type mismatch in function call with paramater ids [" + params + "]";
                 } else {
                     $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
