@@ -62,12 +62,12 @@ void Fortran::Driver::print() const {
 }
 
 void Fortran::Driver::printError(const std::string &message) {
-    std::cout << "Error (" << m_line << "): " << message << std::endl;
+    std::cout << "Error (" << m_red << m_line << m_green << "): " << message << std::endl;
     m_errors++;
 }
 
 void Fortran::Driver::semantic_error(const std::string &message) {
-    std::cout << "Error (" << m_line << "): " << message << std::endl; 
+    std::cout << "Error (" << m_red << m_line << m_green << "): " << message << std::endl; 
     m_errors++;
 }
 

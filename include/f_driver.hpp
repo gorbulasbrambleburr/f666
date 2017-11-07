@@ -108,6 +108,8 @@ namespace Fortran {
         unsigned int m_location; // Used by scanner
         unsigned int m_line;
         unsigned int m_errors;
+        const std::string m_red = "\033[1;31m";
+        const std::string m_green = "\033[0m";
     };
 }
 #endif /* END __FDRIVER_HPP__ */

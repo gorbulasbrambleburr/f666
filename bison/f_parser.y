@@ -703,14 +703,40 @@ PrintList
     };
 
 DoStatement
-    : DO Identifier ASSIGN Expression COMMA Expression StatementList ENDDO {
-        node_ptr unitary = driver.createNode<Literal>(1);
-        $$ = driver.createNode<DoStatement>(std::move($2),
-            std::move($4), std::move($6), std::move(unitary), std::move($7));
-    }
-    | DO Identifier ASSIGN Expression COMMA Expression COMMA Expression StatementList ENDDO {
-        $$ = driver.createNode<DoStatement>(std::move($2),
-            std::move($4), std::move($6), std::move($8), std::move($9));
+    : DO Identifier ASSIGN Expression COMMA Expression COMMA Expression StatementList ENDDO {
+        std::string error_msg = "";
+        bool any_error = false;
+
+        // Check loop var type
+        if (Mapper::instance().lookup_var($2->id())) {
+            Entry entry = Mapper::instance().var_entry($2->id());
+            
+            if (entry.type() == Fortran::type::INTEGER || entry.type() == Fortran::type::REAL) {
+
+                // Check type matching
+                if ($2->var_type() == $4->var_type() &&
+                    $2->var_type() == $6->var_type() &&
+                    $2->var_type() == $8->var_type()) {
+
+                    $$ = driver.createNode<DoStatement>(std::move($2),
+                        std::move($4), std::move($6), std::move($8), std::move($9));
+
+                } else {
+                    error_msg += "type mismatch in do loop declaration";
+                    any_error = true;
+                }
+            } else {
+                error_msg += "do loop variable must be of type INTEGER or REAL";
+                any_error = true;
+            }
+        } else {
+            error_msg += "variable id '" + $2->id() + "' not declared";
+            any_error = true;
+        }
+        if (any_error) {
+            driver.semantic_error(error_msg);
+            $$ = driver.createNode<ErrorNode>(error_msg);
+        }
     };
 
 WhileStatement
