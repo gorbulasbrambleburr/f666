@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <iomanip>  // For std::setw(int n)
+#include <llvm/IR/Value.h>
 #include "../Types.hpp"
 
 class AST {
@@ -27,6 +28,7 @@ public:
     virtual Fortran::symbol::type symbol_type() const {
         return Fortran::symbol::type::UNDECLARED;
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context) {}
 
 private:
     std::string m_bleh;

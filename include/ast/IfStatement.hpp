@@ -30,6 +30,7 @@ public:
             child->print(width + 8);
         }
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 
 private:
     node_ptr m_condition;

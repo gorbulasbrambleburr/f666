@@ -24,6 +24,7 @@ public:
     Fortran::vartype::type var_type() const {
         return Mapper::instance().fun_entry(m_id->id()).type();
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 
 private:
     node_ptr m_id;

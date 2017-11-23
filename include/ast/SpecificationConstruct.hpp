@@ -24,6 +24,8 @@ public:
         m_specifications.emplace_back(std::move(child));
     }
 
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+
 private:
     node_ptrs m_specifications;
 };

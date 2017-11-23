@@ -56,8 +56,12 @@ namespace Fortran {
         float createReal(const std::string &);
 
         int parse(const char * const filename);
+        void generateCode();
 
         node_ptr createRoot();
+        node_ptr root() const {
+            return m_root;
+        }
 
         // Used by the Parser to create AST nodes
         template<typename NodeType, typename... Args>

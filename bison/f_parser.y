@@ -213,16 +213,19 @@ Function
                 
                 // Check arguments declarations
                 std::string args = "";
+                std::map<std::string, Fortran::vartype::type> argTypes;
                 for (auto& arg : $5) {
                     if (!Mapper::instance().lookup_var(arg->id())) {
                         args += arg->id() + ", ";
                         any_error = true;
+                    } else {
+                        argTypes.insert(std::pair<std::string, Fortran::vartype::type>(arg->id(), Mapper::instance().var_entry(arg->id()).type()));
                     }
                 }
                 if (any_error) {
                     error_msg += "argument ids [" + args + "] were not defined in function body";
                 } else {
-                    Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), $5);
+                    Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), argTypes, $5);
                     bool inserted = Mapper::instance().insert_fun($3->id(), entry);
                     if (inserted) {
                         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
@@ -258,7 +261,7 @@ Function
             // Check function return type
             if (tmp.type() == $1->var_type()) {
 
-                Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), node_ptrs{});
+                Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), std::map<std::string,Fortran::vartype::type>{}, node_ptrs{});
                 bool inserted = Mapper::instance().insert_fun($3->id(), entry);
                 if (inserted) {
                     $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
@@ -598,12 +601,6 @@ Literal
         $$ = driver.createNode<Literal>($1);
     };
 
-/*
-ExpressionList
-    : Expression
-    | ExpressionList "," Expression
-    ;
-*/
 ExecutableConstruct
     : ExecutableList {
         $$ = driver.createNode<ExecutableConstruct>(std::move($1));

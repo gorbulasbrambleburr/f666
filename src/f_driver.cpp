@@ -4,6 +4,9 @@
 #include <istream>
 
 #include "../include/f_driver.hpp"
+#include "../include/codegen.h"
+
+void createCoreFunctions(CodeGenContext& context);
 
 Fortran::Driver::Driver() :
     m_root(nullptr),
@@ -32,6 +35,16 @@ int Fortran::Driver::createInteger(const std::string &text) {
 
 float Fortran::Driver::createReal(const std::string &text) {
     return std::atof(text.c_str());
+}
+
+void Fortran::Driver::generateCode() {
+    InitializeNativeTarget();
+    InitializeNativeTargetAsmPrinter();
+    InitializeNativeTargetAsmParser();
+    CodeGenContext context;
+    createCoreFunctions(context);
+    context.generateCode(m_root);
+    // context.runCode();
 }
 
 int Fortran::Driver::parse(const char * const filename) {

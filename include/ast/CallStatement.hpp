@@ -22,6 +22,8 @@ public:
             }
         }
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+
 private:
     node_ptr m_id;
     node_ptrs m_params;

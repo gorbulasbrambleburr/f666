@@ -8,6 +8,9 @@ int main (const int argc, const char **argv) {
 
     Fortran::Driver driver;
     int res = driver.parse(argv[1]);
-    if (res == 0) driver.print();
+    if (res == 0) {
+        driver.print();
+        driver.generateCode();
+    }
     return res;
 }

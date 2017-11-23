@@ -20,6 +20,8 @@ public:
         }
     }
 
+    virtual llvm::Value* codeGen(CodeGenContext& context);
+
 private:
     node_ptrs m_statements;
 };

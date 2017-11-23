@@ -14,6 +14,7 @@ public:
         m_id->print(width + 4);
         m_body->print(width + 4);
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 
 private:
     node_ptr m_id;

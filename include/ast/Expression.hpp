@@ -53,6 +53,7 @@ public:
             return m_right->var_type();
         }
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 
 private:
     node_ptr m_left = nullptr;

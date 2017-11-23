@@ -27,6 +27,7 @@ public:
             case (Fortran::op::comp::GE): std::cout << ".GE." << std::endl; break;
         }
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 
 private:
     node_ptr m_left = nullptr;

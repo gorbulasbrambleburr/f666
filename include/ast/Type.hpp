@@ -11,11 +11,11 @@ public:
     }
     ~Type() {}
     void print(int width) const {
-        std::cout << std::setw(width) << "- " << "Type:" << str(m_type) << std::endl;
+        std::cout << std::setw(width) << "- " << "Type:" << str() << std::endl;
     }
-    std::string str(Fortran::type type) const {
+    std::string str() const {
         std::string s;
-        switch (type) {
+        switch (m_type) {
             case (Fortran::type::INTEGER): s = "INTEGER"; break; 
             case (Fortran::type::REAL): s = "REAL"; break; 
             case (Fortran::type::BOOLEAN): s = "BOOLEAN"; break; 

@@ -16,6 +16,7 @@ public:
             child->print(width + 8);
         }
     }
+    virtual llvm::Value* codeGen(CodeGenContext& context);
 
 private:
     node_ptrs m_arguments;
