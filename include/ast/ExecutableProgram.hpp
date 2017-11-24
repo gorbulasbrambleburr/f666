@@ -9,9 +9,7 @@ public:
     ~ExecutableProgram();
     void print(int width) const;
     void addChild(node_ptr child);
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     node_ptrs m_subprograms;

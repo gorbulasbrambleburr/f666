@@ -1,0 +1,6 @@
+define i32 @B(i32, double) #0 {
+}
+
+define @A() #1 {
+}
+

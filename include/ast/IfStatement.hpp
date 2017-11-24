@@ -30,9 +30,7 @@ public:
             child->print(width + 8);
         }
     }
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_condition;

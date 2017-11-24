@@ -31,9 +31,7 @@ public:
     }
     Fortran::symbol::type symbol_type() const { return m_symbol; }
     
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     std::string m_id;

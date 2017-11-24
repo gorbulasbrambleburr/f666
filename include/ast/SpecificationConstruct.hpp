@@ -24,9 +24,7 @@ public:
         m_specifications.emplace_back(std::move(child));
     }
 
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     node_ptrs m_specifications;

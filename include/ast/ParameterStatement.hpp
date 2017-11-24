@@ -19,9 +19,7 @@ public:
             }
         }
     }
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     node_ptrs m_assignments;

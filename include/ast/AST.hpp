@@ -1,12 +1,13 @@
 #ifndef __AST_HPP__
 #define __AST_HPP__
 
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <vector>
 #include <iomanip>  // For std::setw(int n)
 #include "../Types.hpp"
-#include "../CodeGenerator.hpp"
+
 
 class AST {
 
@@ -28,9 +29,7 @@ public:
     virtual Fortran::symbol::type symbol_type() const {
         return Fortran::symbol::type::UNDECLARED;
     }
-
-    // Visitor that implements intermediate code generation
-    virtual void acceptCodeGenerator(CodeGenerator &generator) = 0;
+    virtual void generateCode(std::ofstream &ofs) = 0;
 
 private:
     std::string m_bleh;

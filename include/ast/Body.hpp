@@ -15,9 +15,7 @@ public:
         m_specificationConstruct->print(width + 4);
         m_executionConstruct->print(width + 4);
     }
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_specificationConstruct;

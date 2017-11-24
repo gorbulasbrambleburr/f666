@@ -37,7 +37,7 @@ float Fortran::Driver::createReal(const std::string &text) {
 
 void Fortran::Driver::generateCode() {
     LLVM_AssemblyGenerator generator;
-    m_root->acceptCodeGenerator(generator);
+    generator.generateCode(m_root);
 }
 
 int Fortran::Driver::parse(const char * const filename) {

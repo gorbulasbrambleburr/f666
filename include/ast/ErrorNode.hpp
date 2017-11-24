@@ -15,9 +15,7 @@ public:
     Fortran::vartype::type var_type() const {
         return Fortran::vartype::type::UNDECLARED;
     }
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     std::string m_message;

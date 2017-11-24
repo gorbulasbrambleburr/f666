@@ -24,9 +24,7 @@ public:
     Fortran::vartype::type var_type() const {
         return Mapper::instance().fun_entry(m_id->id()).type();
     }
-    void acceptCodeGenerator(CodeGenerator &generator) override {
-        generator.generateCode(*this);
-    }
+    virtual void generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_id;
