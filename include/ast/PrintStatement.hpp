@@ -16,7 +16,9 @@ public:
             child->print(width + 8);
         }
     }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptrs m_arguments;

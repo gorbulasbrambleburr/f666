@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 #include <iomanip>  // For std::setw(int n)
-#include <llvm/IR/Value.h>
 #include "../Types.hpp"
+#include "../CodeGenerator.hpp"
 
 class AST {
 
@@ -28,7 +28,9 @@ public:
     virtual Fortran::symbol::type symbol_type() const {
         return Fortran::symbol::type::UNDECLARED;
     }
-    virtual llvm::Value* codeGen(CodeGenContext& context) {}
+
+    // Visitor that implements intermediate code generation
+    virtual void acceptCodeGenerator(CodeGenerator &generator) = 0;
 
 private:
     std::string m_bleh;

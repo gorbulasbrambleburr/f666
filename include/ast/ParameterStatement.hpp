@@ -19,7 +19,9 @@ public:
             }
         }
     }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptrs m_assignments;

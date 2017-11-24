@@ -40,7 +40,9 @@ public:
     }
     const std::string& id() const { return m_id->id(); }
     Fortran::structural::type struct_type() const { return m_type; }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptr m_id;

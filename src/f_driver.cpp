@@ -4,9 +4,7 @@
 #include <istream>
 
 #include "../include/f_driver.hpp"
-#include "../include/codegen.h"
-
-void createCoreFunctions(CodeGenContext& context);
+#include "LLVM_AssemblyGenerator.hpp"
 
 Fortran::Driver::Driver() :
     m_root(nullptr),
@@ -38,13 +36,8 @@ float Fortran::Driver::createReal(const std::string &text) {
 }
 
 void Fortran::Driver::generateCode() {
-    InitializeNativeTarget();
-    InitializeNativeTargetAsmPrinter();
-    InitializeNativeTargetAsmParser();
-    CodeGenContext context;
-    createCoreFunctions(context);
-    context.generateCode(m_root);
-    // context.runCode();
+    LLVM_AssemblyGenerator generator;
+    m_root->acceptCodeGenerator(generator);
 }
 
 int Fortran::Driver::parse(const char * const filename) {

@@ -15,7 +15,9 @@ public:
         m_specificationConstruct->print(width + 4);
         m_executionConstruct->print(width + 4);
     }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptr m_specificationConstruct;

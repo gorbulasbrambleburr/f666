@@ -30,7 +30,10 @@ public:
         return m_id;
     }
     Fortran::symbol::type symbol_type() const { return m_symbol; }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     std::string m_id;

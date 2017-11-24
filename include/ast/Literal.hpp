@@ -32,7 +32,9 @@ public:
     Fortran::vartype::type var_type() const {
         return m_type;
     }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     int m_iValue;

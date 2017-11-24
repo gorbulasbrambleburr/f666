@@ -16,7 +16,6 @@
 #include "ast/Type.hpp"
 #include "ast/Body.hpp"
 #include "ast/SpecificationConstruct.hpp"
-#include "ast/DeclarationConstruct.hpp"
 #include "ast/ExecutableConstruct.hpp"
 #include "ast/DeclarationStatement.hpp"
 #include "ast/ParameterStatement.hpp"

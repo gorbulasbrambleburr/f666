@@ -22,6 +22,9 @@ public:
             }
         }
     }
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptr m_condition;

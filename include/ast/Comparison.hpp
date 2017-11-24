@@ -27,7 +27,9 @@ public:
             case (Fortran::op::comp::GE): std::cout << ".GE." << std::endl; break;
         }
     }
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptr m_left = nullptr;

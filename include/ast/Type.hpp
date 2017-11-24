@@ -25,6 +25,9 @@ public:
         return s;
     }
     Fortran::vartype::type var_type() const { return m_type; }
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     const Fortran::type m_type;

@@ -24,7 +24,9 @@ public:
         m_specifications.emplace_back(std::move(child));
     }
 
-    virtual llvm::Value* codeGen(CodeGenContext& context);
+    void acceptCodeGenerator(CodeGenerator &generator) override {
+        generator.generateCode(*this);
+    }
 
 private:
     node_ptrs m_specifications;
