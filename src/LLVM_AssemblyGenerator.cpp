@@ -50,6 +50,9 @@ void LLVM_AssemblyGenerator::generateCode(node_ptr &root) {
 }
 
 void ExecutableProgram::generateCode(std::ofstream &ofs) {
+    ofs << "target datalayout = \"e-m:e-i64:64-f80:128-n8:16:32:64-S128\"" << std::endl;
+    ofs << "target triple = \"x86_64-samsung-linux\"" << std::endl;
+    ofs << std::endl;
     for (node_ptr subprogram : m_subprograms) {
         subprogram->generateCode(ofs);
         ofs << std::endl;
