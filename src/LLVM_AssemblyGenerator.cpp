@@ -87,7 +87,20 @@ void Function::generateCode(std::ofstream &ofs) {
 }
 
 void Subroutine::generateCode(std::ofstream &ofs) {
-
+    ofs << "define void @";
+    m_id->generateCode(ofs);
+    ofs << "(";
+    
+    Entry entry = Mapper::instance().fun_entry(m_id->id());
+    for (unsigned int i = 0; i < m_args.size(); i++) {
+        ofs << typeOf(entry.arg_types().find(m_args[i]->id())->second);
+        if (i != m_args.size()-1) {
+            ofs << ", ";
+        }
+    }
+    ofs << ") #0 {" << std::endl;
+    m_body->generateCode(ofs);
+    ofs << "}" << std::endl;
 }
 
 void Body::generateCode(std::ofstream &ofs) {

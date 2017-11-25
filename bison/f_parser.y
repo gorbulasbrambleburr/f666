@@ -188,15 +188,65 @@ MainProgram
 
 Subroutine
     : SUBROUTINE SubroutineIdentifier LP ArgumentList RP Body RETURN END {
-        $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
+        std::string error_msg = "";
+        bool any_error = false;
+
+        // Check arguments declarations
+        std::string args = "";
+        std::map<std::string, Fortran::vartype::type> argTypes;
+        for (auto& arg : $4) {
+            if (!Mapper::instance().lookup_var(arg->id())) {
+                args += arg->id() + ", ";
+                any_error = true;
+            } else {
+                argTypes.insert(std::pair<std::string, Fortran::vartype::type>(arg->id(), Mapper::instance().var_entry(arg->id()).type()));
+            }
+        }
+        if (any_error) {
+            error_msg += "argument ids [" + args + "] were not defined in subroutine body";
+        } else {
+            Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, argTypes, $4);
+            bool inserted = Mapper::instance().insert_fun($2->id(), entry);
+            if (inserted) {
+                $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
+            } else {
+                error_msg += "redefinition of subroutine id '" + $2->id() + "'";
+                any_error = true;
+            }
+        }
+
+        // Create fake node
+        if(any_error) {
+            $$ = driver.createNode<ErrorNode>(error_msg);
+            driver.semantic_error(error_msg);
+        }
         Mapper::instance().reset();
     }
     | SUBROUTINE SubroutineIdentifier LP RP Body RETURN END {
-        $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
+        std::string error_msg = "";
+        bool any_error = false;
+
+        std::map<std::string, Fortran::vartype::type> argTypes;
+        Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, argTypes, node_ptrs{});
+        bool inserted = Mapper::instance().insert_fun($2->id(), entry);
+        if (inserted) {
+            $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
+        } else {
+            error_msg += "redefinition of subroutine id '" + $2->id() + "'";
+            any_error = true;
+        }
+
+        // Create fake node
+        if(any_error) {
+            $$ = driver.createNode<ErrorNode>(error_msg);
+            driver.semantic_error(error_msg);
+        }
         Mapper::instance().reset();
     }
     | SUBROUTINE error RETURN END {
         yyerrok;
+        std::string error_msg = "syntax error";
+        $$ = driver.createNode<ErrorNode>(error_msg);
     };
 
 Function
@@ -299,16 +349,8 @@ FunctionIdentifier
 
 SubroutineIdentifier
     : ID {
-        Entry entry(Fortran::symbol::type::SUBROUTINE);
-        bool inserted = Mapper::instance().insert_fun($1, entry);
         Mapper::instance().create_scope();
-        if (!inserted) {
-            std::string error = "redefinition of subroutine id '" + $1 + "'";
-            driver.semantic_error(error);
-            $$ = driver.createNode<ErrorNode>(error);
-        } else {
-            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
-        }
+        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
     };
 
 ProgramIdentifier

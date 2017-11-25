@@ -4,6 +4,9 @@ target triple = "x86_64-samsung-linux"
 define i32 @B(i32, double) #0 {
 }
 
+define void @C(i32) #0 {
+}
+
 define @A() #1 {
 }
 
