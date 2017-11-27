@@ -1,3 +1,5 @@
+#include <string>   // For std::to_string()
+#include <iomanip>  // For std::setw(int n)
 #include "LLVM_AssemblyGenerator.hpp"
 #include "ast/ExecutableProgram.hpp"
 #include "ast/MainProgram.hpp"
@@ -27,8 +29,18 @@
 #include "Entry.hpp"
 #include "Mapper.hpp"
 
-LLVM_AssemblyGenerator::LLVM_AssemblyGenerator() {
+static unsigned int addr;
+static std::map<std::string, std::string> var_addr;
 
+// Utilities ------------------------------------------------------------------
+
+std::string next_addr() {
+    return "%" + std::to_string(addr++);
+}
+
+void reset_addr() {
+    addr = 0;
+    var_addr.clear();
 }
 
 std::string typeOf(Fortran::type type) {
@@ -43,7 +55,24 @@ std::string typeOf(Fortran::type type) {
     return str;
 }
 
+// Returns the alignment
+// Doesn't work for strings and undeclared types
+std::string align(Fortran::type type) {
+    unsigned int align;
+    switch (type) {
+        case (Fortran::type::INTEGER): align = 4; break; 
+        case (Fortran::type::REAL): align = 8; break; 
+        case (Fortran::type::BOOLEAN): align = 1; break; 
+        default: align = 1; break;
+    }
+    return std::to_string(align);
+}
 
+// Class methods --------------------------------------------------------------
+
+LLVM_AssemblyGenerator::LLVM_AssemblyGenerator() {
+    addr = 0;
+}
 
 void LLVM_AssemblyGenerator::generateCode(node_ptr &root) {
     std::ofstream ofs("./ir/code.txt", std::ofstream::out);
@@ -51,13 +80,17 @@ void LLVM_AssemblyGenerator::generateCode(node_ptr &root) {
     ofs.close();
 }
 
+// Node implementations -------------------------------------------------------
+
 void ExecutableProgram::generateCode(std::ofstream &ofs) {
-    ofs << "target datalayout = \"e-m:e-i64:64-f80:128-n8:16:32:64-S128\"" << std::endl;
+    ofs << "target datalayout = \"e-m:e-i64:64-f80:128-n8:16:32:64-S128\""
+        << std::endl;
     ofs << "target triple = \"x86_64-samsung-linux\"" << std::endl;
     ofs << std::endl;
-    for (node_ptr subprogram : m_subprograms) {
+    for (auto& subprogram : m_subprograms) {
         subprogram->generateCode(ofs);
         ofs << std::endl;
+        reset_addr();
     }
 }
 
@@ -80,6 +113,7 @@ void Function::generateCode(std::ofstream &ofs) {
     std::vector<Parameter> params = entry.params();
     for (unsigned int i = 0; i < params.size(); i++) {
         ofs << typeOf(params[i].type());
+        next_addr();
         if (i != params.size()-1) {
             ofs << ", ";
         }
@@ -98,6 +132,7 @@ void Subroutine::generateCode(std::ofstream &ofs) {
     std::vector<Parameter> params = entry.params();
     for (unsigned int i = 0; i < params.size(); i++) {
         ofs << typeOf(params[i].type());
+        next_addr();
         if (i != params.size()-1) {
             ofs << ", ";
         }
@@ -108,19 +143,31 @@ void Subroutine::generateCode(std::ofstream &ofs) {
 }
 
 void Body::generateCode(std::ofstream &ofs) {
-
+    m_specificationConstruct->generateCode(ofs);
+    m_executionConstruct->generateCode(ofs);
 }
 
+// Contains a list of DeclarationStatement and/or ParameterStatement
 void SpecificationConstruct::generateCode(std::ofstream &ofs) {
-
+    for (auto& spec : m_specifications) {
+        spec->generateCode(ofs);
+    }
 }
 
 void ExecutableConstruct::generateCode(std::ofstream &ofs) {
 
 }
 
+// Contains a Type and a list of IdentifierDeclaration
+// Only works for scalar variables
 void DeclarationStatement::generateCode(std::ofstream &ofs) {
-
+    for (auto& var : m_ids) {
+        std::string addr = next_addr();
+        var_addr.insert(std::pair<std::string, std::string>(var->id(), addr));
+        ofs << std::setw(4) << addr << " = alloca " << typeOf(m_type->var_type())
+            << ", align " << align(m_type->var_type())
+            << " ; for var " << var->id() << std::endl;
+    }
 }
 
 void ParameterStatement::generateCode(std::ofstream &ofs) {
