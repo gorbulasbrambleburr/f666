@@ -3,6 +3,7 @@
 
 #include "Types.hpp"
 #include "ast/AST.hpp"
+#include "Parameter.hpp"
 
 class Entry {
 
@@ -22,25 +23,21 @@ public:
     Entry(Fortran::symbol::type symbol = Fortran::symbol::type::UNDECLARED,
           Fortran::vartype::type type = Fortran::vartype::type::INTEGER,
           Fortran::structural::type dimension = Fortran::structural::type::SCALAR,
-          std::map<std::string, Fortran::vartype::type> argTypes = {},
-          node_ptrs args = {})
-            : m_type(type), m_dimension(dimension), m_symbol(symbol),
-              m_argTypes(argTypes), m_args(args) {
+          std::vector<Parameter> params = {})
+        : m_type(type), m_dimension(dimension), m_symbol(symbol), m_params(params) {
     }
 
     virtual ~Entry() {}
     Fortran::vartype::type type() const { return m_type; }
     Fortran::structural::type dimension() const { return m_dimension; }
     Fortran::symbol::type symbol() const { return m_symbol; }
-    std::map<std::string, Fortran::vartype::type> arg_types() const { return m_argTypes; }
-    node_ptrs args() const { return m_args; }
+    std::vector<Parameter> params() const { return m_params; }
 
 private:
     Fortran::vartype::type m_type;
     Fortran::structural::type m_dimension;
     Fortran::symbol::type m_symbol;
-    std::map<std::string, Fortran::vartype::type> m_argTypes;
-    node_ptrs m_args;
+    std::vector<Parameter> m_params;
 };
 
 #endif /* END __ENTRY__ */

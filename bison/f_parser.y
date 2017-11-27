@@ -193,19 +193,19 @@ Subroutine
 
         // Check arguments declarations
         std::string args = "";
-        std::map<std::string, Fortran::vartype::type> argTypes;
+        std::vector<Parameter> params;
         for (auto& arg : $4) {
             if (!Mapper::instance().lookup_var(arg->id())) {
                 args += arg->id() + ", ";
                 any_error = true;
             } else {
-                argTypes.insert(std::pair<std::string, Fortran::vartype::type>(arg->id(), Mapper::instance().var_entry(arg->id()).type()));
+                params.emplace_back(arg->id(), Mapper::instance().var_entry(arg->id()).type());
             }
         }
         if (any_error) {
             error_msg += "argument ids [" + args + "] were not defined in subroutine body";
         } else {
-            Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, argTypes, $4);
+            Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, std::vector<Parameter>{});
             bool inserted = Mapper::instance().insert_fun($2->id(), entry);
             if (inserted) {
                 $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
@@ -227,7 +227,7 @@ Subroutine
         bool any_error = false;
 
         std::map<std::string, Fortran::vartype::type> argTypes;
-        Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, argTypes, node_ptrs{});
+        Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, std::vector<Parameter>{});
         bool inserted = Mapper::instance().insert_fun($2->id(), entry);
         if (inserted) {
             $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
@@ -263,19 +263,19 @@ Function
                 
                 // Check arguments declarations
                 std::string args = "";
-                std::map<std::string, Fortran::vartype::type> argTypes;
+                std::vector<Parameter> params;
                 for (auto& arg : $5) {
                     if (!Mapper::instance().lookup_var(arg->id())) {
                         args += arg->id() + ", ";
                         any_error = true;
                     } else {
-                        argTypes.insert(std::pair<std::string, Fortran::vartype::type>(arg->id(), Mapper::instance().var_entry(arg->id()).type()));
+                        params.emplace_back(arg->id(), Mapper::instance().var_entry(arg->id()).type());
                     }
                 }
                 if (any_error) {
                     error_msg += "argument ids [" + args + "] were not defined in function body";
                 } else {
-                    Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), argTypes, $5);
+                    Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), params);
                     bool inserted = Mapper::instance().insert_fun($3->id(), entry);
                     if (inserted) {
                         $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
@@ -311,7 +311,7 @@ Function
             // Check function return type
             if (tmp.type() == $1->var_type()) {
 
-                Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), std::map<std::string,Fortran::vartype::type>{}, node_ptrs{});
+                Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), std::vector<Parameter>{});
                 bool inserted = Mapper::instance().insert_fun($3->id(), entry);
                 if (inserted) {
                     $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
@@ -566,9 +566,9 @@ FunctionCall
         std::string error_msg = "";
         bool any_error = false;
         if (Mapper::instance().lookup_fun($1->id())) {
-            Entry entry = Mapper::instance().fun_entry($1->id());
+            Entry fun_entry = Mapper::instance().fun_entry($1->id());
 
-            if (entry.args().size() == $3.size()) {
+            if (fun_entry.params().size() == $3.size()) {
 
                 // Check parameter types
                 std::string params = "";
@@ -577,7 +577,7 @@ FunctionCall
                     if (Mapper::instance().lookup_var($3[i]->id())) {
                         Entry param_entry = Mapper::instance().var_entry($3[i]->id());
 
-                        if (param_entry.type() != entry.args()[i]->var_type()) {
+                        if (param_entry.type() != fun_entry.params()[i].type()) {
                             params += $3[i]->id() + ", ";
                             any_error = true;
                         }
@@ -593,7 +593,7 @@ FunctionCall
                     $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
                 }
             } else {
-                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(entry.args().size()) + " parameters.";
+                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(fun_entry.params().size()) + " parameters.";
                 any_error = true;
             }
         } else {
@@ -609,13 +609,13 @@ FunctionCall
         std::string error_msg = "";
         bool any_error = false;
         if (Mapper::instance().lookup_fun($1->id())) {
-            Entry entry = Mapper::instance().fun_entry($1->id());
+            Entry fun_entry = Mapper::instance().fun_entry($1->id());
 
             // Check arguments
-            if (entry.args().size() == 0) {
+            if (fun_entry.params().size() == 0) {
                 $$ = driver.createNode<FunctionCall>(std::move($1), node_ptrs{});
             } else {
-                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(entry.args().size()) + " parameters.";
+                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(fun_entry.params().size()) + " parameters.";
                 any_error = true;
             }
         } else {

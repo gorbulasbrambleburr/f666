@@ -43,6 +43,8 @@ std::string typeOf(Fortran::type type) {
     return str;
 }
 
+
+
 void LLVM_AssemblyGenerator::generateCode(node_ptr &root) {
     std::ofstream ofs("./ir/code.txt", std::ofstream::out);
     root->generateCode(ofs);
@@ -75,9 +77,10 @@ void Function::generateCode(std::ofstream &ofs) {
     ofs << "(";
     
     Entry entry = Mapper::instance().fun_entry(m_id->id());
-    for (unsigned int i = 0; i < m_args.size(); i++) {
-        ofs << typeOf(entry.arg_types().find(m_args[i]->id())->second);
-        if (i != m_args.size()-1) {
+    std::vector<Parameter> params = entry.params();
+    for (unsigned int i = 0; i < params.size(); i++) {
+        ofs << typeOf(params[i].type());
+        if (i != params.size()-1) {
             ofs << ", ";
         }
     }
@@ -92,9 +95,10 @@ void Subroutine::generateCode(std::ofstream &ofs) {
     ofs << "(";
     
     Entry entry = Mapper::instance().fun_entry(m_id->id());
-    for (unsigned int i = 0; i < m_args.size(); i++) {
-        ofs << typeOf(entry.arg_types().find(m_args[i]->id())->second);
-        if (i != m_args.size()-1) {
+    std::vector<Parameter> params = entry.params();
+    for (unsigned int i = 0; i < params.size(); i++) {
+        ofs << typeOf(params[i].type());
+        if (i != params.size()-1) {
             ofs << ", ";
         }
     }

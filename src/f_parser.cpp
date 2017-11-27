@@ -845,19 +845,19 @@ namespace  Fortran  {
 
         // Check arguments declarations
         std::string args = "";
-        std::map<std::string, Fortran::vartype::type> argTypes;
+        std::vector<Parameter> params;
         for (auto& arg : yystack_[4].value.as< AST::node_ptrs > ()) {
             if (!Mapper::instance().lookup_var(arg->id())) {
                 args += arg->id() + ", ";
                 any_error = true;
             } else {
-                argTypes.insert(std::pair<std::string, Fortran::vartype::type>(arg->id(), Mapper::instance().var_entry(arg->id()).type()));
+                params.emplace_back(arg->id(), Mapper::instance().var_entry(arg->id()).type());
             }
         }
         if (any_error) {
             error_msg += "argument ids [" + args + "] were not defined in subroutine body";
         } else {
-            Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, argTypes, yystack_[4].value.as< AST::node_ptrs > ());
+            Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, std::vector<Parameter>{});
             bool inserted = Mapper::instance().insert_fun(yystack_[6].value.as< AST::node_ptr > ()->id(), entry);
             if (inserted) {
                 yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[6].value.as< AST::node_ptr > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
@@ -884,7 +884,7 @@ namespace  Fortran  {
         bool any_error = false;
 
         std::map<std::string, Fortran::vartype::type> argTypes;
-        Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, argTypes, node_ptrs{});
+        Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, std::vector<Parameter>{});
         bool inserted = Mapper::instance().insert_fun(yystack_[5].value.as< AST::node_ptr > ()->id(), entry);
         if (inserted) {
             yylhs.value.as< AST::node_ptr > () = driver.createNode<Subroutine>(std::move(yystack_[5].value.as< AST::node_ptr > ()), node_ptrs{}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
@@ -928,19 +928,19 @@ namespace  Fortran  {
                 
                 // Check arguments declarations
                 std::string args = "";
-                std::map<std::string, Fortran::vartype::type> argTypes;
+                std::vector<Parameter> params;
                 for (auto& arg : yystack_[4].value.as< AST::node_ptrs > ()) {
                     if (!Mapper::instance().lookup_var(arg->id())) {
                         args += arg->id() + ", ";
                         any_error = true;
                     } else {
-                        argTypes.insert(std::pair<std::string, Fortran::vartype::type>(arg->id(), Mapper::instance().var_entry(arg->id()).type()));
+                        params.emplace_back(arg->id(), Mapper::instance().var_entry(arg->id()).type());
                     }
                 }
                 if (any_error) {
                     error_msg += "argument ids [" + args + "] were not defined in function body";
                 } else {
-                    Entry entry(Fortran::symbol::type::FUNCTION, yystack_[8].value.as< AST::node_ptr > ()->var_type(), tmp.dimension(), argTypes, yystack_[4].value.as< AST::node_ptrs > ());
+                    Entry entry(Fortran::symbol::type::FUNCTION, yystack_[8].value.as< AST::node_ptr > ()->var_type(), tmp.dimension(), params);
                     bool inserted = Mapper::instance().insert_fun(yystack_[6].value.as< AST::node_ptr > ()->id(), entry);
                     if (inserted) {
                         yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[8].value.as< AST::node_ptr > ()), std::move(yystack_[6].value.as< AST::node_ptr > ()), std::move(yystack_[4].value.as< AST::node_ptrs > ()), std::move(yystack_[2].value.as< AST::node_ptr > ()));
@@ -981,7 +981,7 @@ namespace  Fortran  {
             // Check function return type
             if (tmp.type() == yystack_[7].value.as< AST::node_ptr > ()->var_type()) {
 
-                Entry entry(Fortran::symbol::type::FUNCTION, yystack_[7].value.as< AST::node_ptr > ()->var_type(), tmp.dimension(), std::map<std::string,Fortran::vartype::type>{}, node_ptrs{});
+                Entry entry(Fortran::symbol::type::FUNCTION, yystack_[7].value.as< AST::node_ptr > ()->var_type(), tmp.dimension(), std::vector<Parameter>{});
                 bool inserted = Mapper::instance().insert_fun(yystack_[5].value.as< AST::node_ptr > ()->id(), entry);
                 if (inserted) {
                     yylhs.value.as< AST::node_ptr > () = driver.createNode<Function>(std::move(yystack_[7].value.as< AST::node_ptr > ()), std::move(yystack_[5].value.as< AST::node_ptr > ()), node_ptrs{}, std::move(yystack_[2].value.as< AST::node_ptr > ()));
@@ -1414,9 +1414,9 @@ namespace  Fortran  {
         std::string error_msg = "";
         bool any_error = false;
         if (Mapper::instance().lookup_fun(yystack_[3].value.as< AST::node_ptr > ()->id())) {
-            Entry entry = Mapper::instance().fun_entry(yystack_[3].value.as< AST::node_ptr > ()->id());
+            Entry fun_entry = Mapper::instance().fun_entry(yystack_[3].value.as< AST::node_ptr > ()->id());
 
-            if (entry.args().size() == yystack_[1].value.as< AST::node_ptrs > ().size()) {
+            if (fun_entry.params().size() == yystack_[1].value.as< AST::node_ptrs > ().size()) {
 
                 // Check parameter types
                 std::string params = "";
@@ -1425,7 +1425,7 @@ namespace  Fortran  {
                     if (Mapper::instance().lookup_var(yystack_[1].value.as< AST::node_ptrs > ()[i]->id())) {
                         Entry param_entry = Mapper::instance().var_entry(yystack_[1].value.as< AST::node_ptrs > ()[i]->id());
 
-                        if (param_entry.type() != entry.args()[i]->var_type()) {
+                        if (param_entry.type() != fun_entry.params()[i].type()) {
                             params += yystack_[1].value.as< AST::node_ptrs > ()[i]->id() + ", ";
                             any_error = true;
                         }
@@ -1441,7 +1441,7 @@ namespace  Fortran  {
                     yylhs.value.as< AST::node_ptr > () = driver.createNode<FunctionCall>(std::move(yystack_[3].value.as< AST::node_ptr > ()), std::move(yystack_[1].value.as< AST::node_ptrs > ()));
                 }
             } else {
-                error_msg += "function id '" + yystack_[3].value.as< AST::node_ptr > ()->id() + "' expects " + std::to_string(entry.args().size()) + " parameters.";
+                error_msg += "function id '" + yystack_[3].value.as< AST::node_ptr > ()->id() + "' expects " + std::to_string(fun_entry.params().size()) + " parameters.";
                 any_error = true;
             }
         } else {
@@ -1462,13 +1462,13 @@ namespace  Fortran  {
         std::string error_msg = "";
         bool any_error = false;
         if (Mapper::instance().lookup_fun(yystack_[2].value.as< AST::node_ptr > ()->id())) {
-            Entry entry = Mapper::instance().fun_entry(yystack_[2].value.as< AST::node_ptr > ()->id());
+            Entry fun_entry = Mapper::instance().fun_entry(yystack_[2].value.as< AST::node_ptr > ()->id());
 
             // Check arguments
-            if (entry.args().size() == 0) {
+            if (fun_entry.params().size() == 0) {
                 yylhs.value.as< AST::node_ptr > () = driver.createNode<FunctionCall>(std::move(yystack_[2].value.as< AST::node_ptr > ()), node_ptrs{});
             } else {
-                error_msg += "function id '" + yystack_[2].value.as< AST::node_ptr > ()->id() + "' expects " + std::to_string(entry.args().size()) + " parameters.";
+                error_msg += "function id '" + yystack_[2].value.as< AST::node_ptr > ()->id() + "' expects " + std::to_string(fun_entry.params().size()) + " parameters.";
                 any_error = true;
             }
         } else {
