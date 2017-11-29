@@ -1,43 +1,41 @@
-#ifndef __ENTRY__
-#define __ENTRY__
+#ifndef __ENTRY_HPP__
+#define __ENTRY_HPP__
 
 #include "Types.hpp"
-#include "ast/AST.hpp"
-#include "Parameter.hpp"
 
 class Entry {
+  
+  using Dimension = Fortran::structural::type;
+  using Type = Fortran::vartype::type;
 
-public:
-
-    using node_ptr = std::shared_ptr<AST>;
-    using node_ptrs = std::vector<node_ptr>;
-
-    // Constructor used for variables
-    Entry(Fortran::vartype::type type = Fortran::vartype::type::INTEGER,
-          Fortran::structural::type dimension = Fortran::structural::type::SCALAR,
-          Fortran::symbol::type symbol = Fortran::symbol::type::VARIABLE)
-            : m_type(type), m_dimension(dimension), m_symbol(symbol) {
-    }
-
-    // Constructor used for Subprograms
-    Entry(Fortran::symbol::type symbol = Fortran::symbol::type::UNDECLARED,
-          Fortran::vartype::type type = Fortran::vartype::type::INTEGER,
-          Fortran::structural::type dimension = Fortran::structural::type::SCALAR,
-          std::vector<Parameter> params = {})
-        : m_type(type), m_dimension(dimension), m_symbol(symbol), m_params(params) {
-    }
-
+  public:
+    Entry(const std::string &id, Type type = Type::INTEGER,
+        Dimension dimension = Dimension::SCALAR)
+      : m_id(id), m_type(type), m_dimension(dimension) {}
     virtual ~Entry() {}
-    Fortran::vartype::type type() const { return m_type; }
-    Fortran::structural::type dimension() const { return m_dimension; }
-    Fortran::symbol::type symbol() const { return m_symbol; }
-    std::vector<Parameter> params() const { return m_params; }
+    Type type() const { return m_type; }
+    Dimension dimension() const {return m_dimension; }
+    void set_addr(unsigned int addr) { m_addr = addr; }
+    unsigned int addr() const { return m_addr; }
 
-private:
-    Fortran::vartype::type m_type;
-    Fortran::structural::type m_dimension;
-    Fortran::symbol::type m_symbol;
-    std::vector<Parameter> m_params;
+    // static Entry empty() {
+    //     return new Entry("$"); 
+    // }
+
+    // bool operator==(const Entry &rhs) {
+    //     return m_id == rhs.m_id;
+    // }
+
+    // bool operator!=(const Entry &rhs) {
+    //     return m_id != rhs.m_id;
+    // }
+
+  private:
+    std::string m_id;
+    Type m_type;
+    Dimension m_dimension;
+    unsigned int m_addr;
+    //static Entry m_emptyEntry = Entry("$");
 };
 
-#endif /* END __ENTRY__ */
+#endif /* END __ENTRY_HPP__ */

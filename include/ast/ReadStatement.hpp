@@ -16,7 +16,7 @@ public:
             child->print(width + 8);
         }
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptrs m_arguments;

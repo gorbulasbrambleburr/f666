@@ -32,7 +32,7 @@ public:
         }
         m_expression->print(width + 4);
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_id;

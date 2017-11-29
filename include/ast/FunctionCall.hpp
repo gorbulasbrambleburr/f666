@@ -22,9 +22,9 @@ public:
         return m_id->id();
     }
     Fortran::vartype::type var_type() const {
-        return Mapper::instance().fun_entry(m_id->id()).type();
+        return Mapper::get().return_type(m_id->id());
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_id;

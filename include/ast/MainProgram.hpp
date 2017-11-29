@@ -14,7 +14,7 @@ public:
         m_id->print(width + 4);
         m_body->print(width + 4);
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_id;

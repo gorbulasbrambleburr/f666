@@ -1,15 +1,17 @@
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-samsung-linux"
 
-define i32 @B(i32, double) #0 {
+define i32 @B(i32, i32) #0 {
   %2 = alloca i32, align 4 ; for var A
   %3 = alloca i32, align 4 ; for var B
-  %4 = alloca double, align 8 ; for var C
+  %4 = alloca i32, align 4 ; for var C
+store i32 , i32* %0, align 4
 }
 
-define void @C() #0 {
-  %0 = alloca i32, align 4 ; for var X
-  %1 = alloca i32, align 4 ; for var C
+define void @C(i32) #0 {
+  %1 = alloca i32, align 4 ; for var X
+  %2 = alloca i32, align 4 ; for var C
+  ret void
 }
 
 define @A() #1 {

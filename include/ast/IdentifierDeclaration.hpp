@@ -40,7 +40,7 @@ public:
     }
     const std::string& id() const { return m_id->id(); }
     Fortran::structural::type struct_type() const { return m_type; }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_id;

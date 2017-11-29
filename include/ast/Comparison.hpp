@@ -27,7 +27,7 @@ public:
             case (Fortran::op::comp::GE): std::cout << ".GE." << std::endl; break;
         }
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptr m_left = nullptr;

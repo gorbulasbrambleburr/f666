@@ -15,7 +15,7 @@ public:
     Fortran::vartype::type var_type() const {
         return Fortran::vartype::type::UNDECLARED;
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     std::string m_message;

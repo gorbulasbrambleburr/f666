@@ -180,7 +180,7 @@ Subprogram
 MainProgram
     : PROGRAM ProgramIdentifier Body STOP END {
         $$ = driver.createNode<MainProgram>(std::move($2), std::move($3));
-        Mapper::instance().reset();
+        Mapper::get().reset_scope();
     }
     | PROGRAM error STOP END {
         yyerrok;
@@ -192,27 +192,22 @@ Subroutine
         bool any_error = false;
 
         // Check arguments declarations
-        std::string args = "";
-        std::vector<Parameter> params;
+        std::string ids = "";
+        std::vector<std::string> args;
         for (auto& arg : $4) {
-            if (!Mapper::instance().lookup_var(arg->id())) {
-                args += arg->id() + ", ";
-                any_error = true;
+            auto arg_entry = Mapper::get().lookup_var(arg->id());
+            if (arg_entry) {
+                args.emplace_back(arg->id());
             } else {
-                params.emplace_back(arg->id(), Mapper::instance().var_entry(arg->id()).type());
+                ids += arg->id() + ", ";
+                any_error = true;
             }
         }
         if (any_error) {
-            error_msg += "argument ids [" + args + "] were not defined in subroutine body";
+            error_msg += "argument [" + ids + "] were not defined in subroutine body";
         } else {
-            Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, std::vector<Parameter>{});
-            bool inserted = Mapper::instance().insert_fun($2->id(), entry);
-            if (inserted) {
-                $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
-            } else {
-                error_msg += "redefinition of subroutine id '" + $2->id() + "'";
-                any_error = true;
-            }
+            Mapper::get().set_args(args);
+            $$ = driver.createNode<Subroutine>(std::move($2), std::move($4), std::move($6));
         }
 
         // Create fake node
@@ -220,28 +215,11 @@ Subroutine
             $$ = driver.createNode<ErrorNode>(error_msg);
             driver.semantic_error(error_msg);
         }
-        Mapper::instance().reset();
+        Mapper::get().reset_scope();
     }
     | SUBROUTINE SubroutineIdentifier LP RP Body RETURN END {
-        std::string error_msg = "";
-        bool any_error = false;
-
-        std::map<std::string, Fortran::vartype::type> argTypes;
-        Entry entry(Fortran::symbol::type::SUBROUTINE, Fortran::type::UNDECLARED, Fortran::structural::type::SCALAR, std::vector<Parameter>{});
-        bool inserted = Mapper::instance().insert_fun($2->id(), entry);
-        if (inserted) {
-            $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
-        } else {
-            error_msg += "redefinition of subroutine id '" + $2->id() + "'";
-            any_error = true;
-        }
-
-        // Create fake node
-        if(any_error) {
-            $$ = driver.createNode<ErrorNode>(error_msg);
-            driver.semantic_error(error_msg);
-        }
-        Mapper::instance().reset();
+        $$ = driver.createNode<Subroutine>(std::move($2), node_ptrs{}, std::move($5));
+        Mapper::get().reset_scope();
     }
     | SUBROUTINE error RETURN END {
         yyerrok;
@@ -255,41 +233,37 @@ Function
         bool any_error = false;
 
         // Function id should be declared inside function body as a variable
-        if (Mapper::instance().lookup_var($3->id())) {
-            Entry tmp = Mapper::instance().var_entry($3->id());
+        auto var_entry = Mapper::get().lookup_var($3->id());
+        if (var_entry) {
             
             // Check function return type
-            if (tmp.type() == $1->var_type()) {
+            if (var_entry->type() == $1->var_type()) {
                 
                 // Check arguments declarations
-                std::string args = "";
-                std::vector<Parameter> params;
+                std::string ids = "";
+                std::vector<std::string> args;
                 for (auto& arg : $5) {
-                    if (!Mapper::instance().lookup_var(arg->id())) {
-                        args += arg->id() + ", ";
-                        any_error = true;
+                    auto arg_entry = Mapper::get().lookup_var(arg->id());
+                    if (arg_entry) {
+                        args.emplace_back(arg->id());
                     } else {
-                        params.emplace_back(arg->id(), Mapper::instance().var_entry(arg->id()).type());
+                        ids += arg->id() + ", ";
+                        any_error = true;
                     }
                 }
                 if (any_error) {
-                    error_msg += "argument ids [" + args + "] were not defined in function body";
+                    error_msg += "arguments [" + ids + "] were not defined in function body";
                 } else {
-                    Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), params);
-                    bool inserted = Mapper::instance().insert_fun($3->id(), entry);
-                    if (inserted) {
-                        $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
-                    } else {
-                        error_msg += "redefinition of function id '" + $3->id() + "'";
-                        any_error = true;
-                    }
+                    Mapper::get().set_args(args);
+                    Mapper::get().set_return_type($1->var_type());
+                    $$ = driver.createNode<Function>(std::move($1), std::move($3), std::move($5), std::move($7));
                 }
             } else {
                 error_msg += "type mismatch between var id '" + $3->id() + "' and function return type.";
                 any_error = true;
             }
         } else {
-            error_msg += "function id '" + $3->id() + "' was not defined in function body.";
+            error_msg += "function '" + $3->id() + "' was not defined in function body.";
             any_error = true;
         }
 
@@ -298,27 +272,22 @@ Function
             $$ = driver.createNode<ErrorNode>(error_msg);
             driver.semantic_error(error_msg);
         }
-        Mapper::instance().reset();
+        std::cout << "Resetting the scope" << std::endl;
+        Mapper::get().reset_scope();
     }
     | Type FUNCTION FunctionIdentifier LP RP Body RETURN END {
         std::string error_msg = "";
         bool any_error = false;
 
         // Function id should be declared inside function body as a variable
-        if (Mapper::instance().lookup_var($3->id())) {
-            Entry tmp = Mapper::instance().var_entry($3->id());
-            
-            // Check function return type
-            if (tmp.type() == $1->var_type()) {
+        auto var_entry = Mapper::get().lookup_var($3->id());
+        if (var_entry) {
 
-                Entry entry(Fortran::symbol::type::FUNCTION, $1->var_type(), tmp.dimension(), std::vector<Parameter>{});
-                bool inserted = Mapper::instance().insert_fun($3->id(), entry);
-                if (inserted) {
-                    $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
-                } else {
-                    error_msg += "redefinition of function id '" + $3->id() + "'";
-                    any_error = true;
-                }
+            // Check function return type
+            if (var_entry->type() == $1->var_type()) {
+
+                Mapper::get().set_return_type($1->var_type());
+                $$ = driver.createNode<Function>(std::move($1), std::move($3), node_ptrs{}, std::move($6));
             } else {
                 error_msg += "type mismatch between var id '" + $3->id() + "' and function return type.";
                 any_error = true;
@@ -333,7 +302,7 @@ Function
             $$ = driver.createNode<ErrorNode>(error_msg);
             driver.semantic_error(error_msg);
         }
-        Mapper::instance().reset();
+        Mapper::get().reset_scope();
     }
     | Type FUNCTION error RETURN END {
         yyerrok;
@@ -343,23 +312,33 @@ Function
 
 FunctionIdentifier
     : ID {
-        Mapper::instance().create_scope();
-        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
+        bool inserted = Mapper::get().create_scope($1);
+        if (!inserted) {
+            std::string error = "redefinition of function '" + $1 + "'";
+            driver.semantic_error(error);
+            $$ = driver.createNode<ErrorNode>(error);
+        } else {
+            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::FUNCTION);
+        }
     };
 
 SubroutineIdentifier
     : ID {
-        Mapper::instance().create_scope();
-        $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
+        bool inserted = Mapper::get().create_scope($1);
+        if (!inserted) {
+            std::string error = "redefinition of subroutine '" + $1 + "'";
+            driver.semantic_error(error);
+            $$ = driver.createNode<ErrorNode>(error);
+        } else {
+            $$ = driver.createNode<Identifier>(std::move($1), Fortran::symbol::type::SUBROUTINE);
+        }
     };
 
 ProgramIdentifier
     : ID {
-        Entry entry(Fortran::symbol::type::PROGRAM);
-        bool inserted = Mapper::instance().insert_fun($1, entry);
-        Mapper::instance().create_scope();
+        bool inserted = Mapper::get().create_scope($1);
         if (!inserted) {
-            std::string error = "redefinition of program id '" + $1 + "'";
+            std::string error = "redefinition of program '" + $1 + "'";
             driver.semantic_error(error);
             $$ = driver.createNode<ErrorNode>(error);
         } else {
@@ -442,10 +421,10 @@ DeclarationStatement
     : Type IdentifierDeclarationList {
         bool any_error = false;
         for (auto& node : $2) {
-            Entry entry($1->var_type(), node->struct_type(), Fortran::symbol::type::VARIABLE);
-            bool inserted = Mapper::instance().insert_var(node->id(), entry);
+            Entry entry(node->id(), $1->var_type(), node->struct_type());
+            bool inserted = Mapper::get().insert(node->id(), entry);
             if (!inserted) {
-                std::string error_msg = "redeclaration of variable id '" + node->id() + "'";
+                std::string error_msg = "redeclaration of variable '" + node->id() + "'";
                 driver.semantic_error(error_msg);
                 any_error = true;
             }
@@ -496,17 +475,17 @@ AssignmentStatement
     : Identifier ASSIGN Expression {
         std::string error_msg = "";
         bool any_error = false;
-        bool declared = Mapper::instance().lookup_var($1->id());
-        if (!declared) {
-            error_msg += "variable id '" + $1->id() + "' not declared";
-            any_error = true;
-        } else {
-            if (Mapper::instance().var_entry($1->id()).type() == $3->var_type()) {
+        auto var_entry = Mapper::get().lookup_var($1->id());
+        if (var_entry) {
+            if (var_entry->type() == $3->var_type()) {
                 $$ = driver.createNode<AssignmentStatement>(std::move($1), std::move($3));
             } else {
                 error_msg += "type mismatch";
                 any_error = true;
             }
+        } else {
+            error_msg += "variable '" + $1->id() + "' not declared";
+            any_error = true;
         }
         if (any_error) {
             driver.semantic_error(error_msg);
@@ -549,12 +528,13 @@ Expression
         $$ = std::move($1);
     }
     | Identifier {
-        if (!Mapper::instance().lookup_var($1->id())) {
-            std::string error_msg = "variable id '" + $1->id() + "' not declared";
+        auto var_entry = Mapper::get().lookup_var($1->id());
+        if (var_entry) {
+            $$ = std::move($1);
+        } else {
+            std::string error_msg = "variable '" + $1->id() + "' not declared";
             driver.semantic_error(error_msg);
             $$ = driver.createNode<ErrorNode>(error_msg);
-        } else {
-            $$ = std::move($1);
         }
     }
     | Literal {
@@ -565,39 +545,45 @@ FunctionCall
     : Identifier LP ParameterList RP {
         std::string error_msg = "";
         bool any_error = false;
-        if (Mapper::instance().lookup_fun($1->id())) {
-            Entry fun_entry = Mapper::instance().fun_entry($1->id());
+        
+        // Check if function is declared
+        if (Mapper::get().lookup_fun($1->id())) {
 
-            if (fun_entry.params().size() == $3.size()) {
+            auto args = Mapper::get().args($1->id());
+
+            // Check number of arguments equals the number of parameters
+            if (args.size() == $3.size()) {
 
                 // Check parameter types
                 std::string params = "";
                 for (unsigned int i = 0; i < $3.size(); i++) {
                     
-                    if (Mapper::instance().lookup_var($3[i]->id())) {
-                        Entry param_entry = Mapper::instance().var_entry($3[i]->id());
-
-                        if (param_entry.type() != fun_entry.params()[i].type()) {
-                            params += $3[i]->id() + ", ";
+                    // Check if parameter was declared in the current scope
+                    auto param_entry = Mapper::get().lookup_var($3[i]->id());
+                    if (param_entry) {
+                        // Get the entry in the function scope
+                        auto arg = Mapper::get().lookup_var(args[i], $1->id());
+                        if (param_entry->type() != arg->type()) {
+                            params += $3[i]->id() + " ";
                             any_error = true;
                         }
                     } else {
-                        error_msg += "var id '" + $3[i]->id() + "' not declared";
+                        error_msg += "param '" + $3[i]->id() + "' not declared";
                         any_error = true;
                         break;    
                     }
                 }
                 if (any_error && params != "") {
-                    error_msg += "type mismatch in function call with paramater ids [" + params + "]";
+                    error_msg += "type mismatch in function call with paramaters [" + params + "]";
                 } else {
                     $$ = driver.createNode<FunctionCall>(std::move($1), std::move($3));
                 }
             } else {
-                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(fun_entry.params().size()) + " parameters.";
+                error_msg += "function '" + $1->id() + "' expects " + std::to_string(args.size()) + " parameters.";
                 any_error = true;
             }
         } else {
-            error_msg += "function id '" + $1->id() + "' not declared";
+            error_msg += "function '" + $1->id() + "' not declared";
             any_error = true;
         }
         if (any_error) {
@@ -608,18 +594,21 @@ FunctionCall
     | Identifier LP RP {
         std::string error_msg = "";
         bool any_error = false;
-        if (Mapper::instance().lookup_fun($1->id())) {
-            Entry fun_entry = Mapper::instance().fun_entry($1->id());
+        
+        // Check if function is declared
+        if (Mapper::get().lookup_fun($1->id())) {
+
+            auto args = Mapper::get().args();
 
             // Check arguments
-            if (fun_entry.params().size() == 0) {
+            if (args.size() == 0) {
                 $$ = driver.createNode<FunctionCall>(std::move($1), node_ptrs{});
             } else {
-                error_msg += "function id '" + $1->id() + "' expects " + std::to_string(fun_entry.params().size()) + " parameters.";
+                error_msg += "function '" + $1->id() + "' expects 0 parameters.";
                 any_error = true;
             }
         } else {
-            error_msg += "function id '" + $1->id() + "' not declared";
+            error_msg += "function '" + $1->id() + "' not declared";
             any_error = true;
         }
         if (any_error) {
@@ -756,10 +745,11 @@ DoStatement
         bool any_error = false;
 
         // Check loop var type
-        if (Mapper::instance().lookup_var($2->id())) {
-            Entry entry = Mapper::instance().var_entry($2->id());
+        auto var_entry = Mapper::get().lookup_var($2->id());
+        if (var_entry) {
             
-            if (entry.type() == Fortran::type::INTEGER || entry.type() == Fortran::type::REAL) {
+            // The loop variable must be an integer number
+            if (var_entry->type() == Fortran::type::INTEGER) {
 
                 // Check type matching
                 if ($2->var_type() == $4->var_type() &&
@@ -774,11 +764,11 @@ DoStatement
                     any_error = true;
                 }
             } else {
-                error_msg += "do loop variable must be of type INTEGER or REAL";
+                error_msg += "do loop variable must be of type INTEGER";
                 any_error = true;
             }
         } else {
-            error_msg += "variable id '" + $2->id() + "' not declared";
+            error_msg += "variable '" + $2->id() + "' not declared";
             any_error = true;
         }
         if (any_error) {
@@ -812,7 +802,5 @@ ExitStatement
 %%
 
 void Fortran::Parser::error(const location &loc, const std::string &message) {
-   //std::cerr << "Error: " << message << " at " << loc << "\n";
-   //std::cerr << "Error: " << message << " at " << driver.location() << "\n";
    driver.printError(message);
 }

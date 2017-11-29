@@ -32,7 +32,7 @@ public:
     Fortran::vartype::type var_type() const {
         return m_type;
     }
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     int m_iValue;

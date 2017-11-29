@@ -29,7 +29,7 @@ public:
     virtual Fortran::symbol::type symbol_type() const {
         return Fortran::symbol::type::UNDECLARED;
     }
-    virtual void generateCode(std::ofstream &ofs) = 0;
+    virtual std::string generateCode(std::ofstream &ofs) = 0;
 
 private:
     std::string m_bleh;

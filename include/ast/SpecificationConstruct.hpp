@@ -24,7 +24,7 @@ public:
         m_specifications.emplace_back(std::move(child));
     }
 
-    virtual void generateCode(std::ofstream &ofs);
+    virtual std::string generateCode(std::ofstream &ofs);
 
 private:
     node_ptrs m_specifications;

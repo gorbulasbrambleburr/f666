@@ -82,7 +82,7 @@ void LLVM_AssemblyGenerator::generateCode(node_ptr &root) {
 
 // Node implementations -------------------------------------------------------
 
-void ExecutableProgram::generateCode(std::ofstream &ofs) {
+std::string ExecutableProgram::generateCode(std::ofstream &ofs) {
     ofs << "target datalayout = \"e-m:e-i64:64-f80:128-n8:16:32:64-S128\""
         << std::endl;
     ofs << "target triple = \"x86_64-samsung-linux\"" << std::endl;
@@ -92,148 +92,170 @@ void ExecutableProgram::generateCode(std::ofstream &ofs) {
         ofs << std::endl;
         reset_addr();
     }
+    return "";
 }
 
-void MainProgram::generateCode(std::ofstream &ofs) {
-    ofs << "define @";
-    m_id->generateCode(ofs);
-    ofs << "() #1 {" << std::endl;
+std::string MainProgram::generateCode(std::ofstream &ofs) {
+    Mapper::get().set_scope(m_id->id());
+    ofs << "define @" << m_id->generateCode(ofs) << "() #1 {" << std::endl;
     m_body->generateCode(ofs);
     ofs << "}" << std::endl;
+    Mapper::get().reset_scope();
+    return "";
 }
 
-void Function::generateCode(std::ofstream &ofs) {
-    ofs << "define ";
-    m_type->generateCode(ofs);
-    ofs << " @";
-    m_id->generateCode(ofs);
-    ofs << "(";
-    
-    Entry entry = Mapper::instance().fun_entry(m_id->id());
-    std::vector<Parameter> params = entry.params();
-    for (unsigned int i = 0; i < params.size(); i++) {
-        ofs << typeOf(params[i].type());
+std::string Function::generateCode(std::ofstream &ofs) {
+    Mapper::get().set_scope(m_id->id());
+    ofs << "define " << m_type->generateCode(ofs)
+        << " @" << m_id->generateCode(ofs) << "(";
+    auto args = Mapper::get().args(m_id->id());
+    for (unsigned int i = 0; i < args.size(); i++) {
+        ofs << typeOf(Mapper::get().lookup_var(args[i])->type());
         next_addr();
-        if (i != params.size()-1) {
+        if (i != args.size()-1) {
             ofs << ", ";
         }
     }
     ofs << ") #0 {" << std::endl;
     m_body->generateCode(ofs);
     ofs << "}" << std::endl;
+    Mapper::get().reset_scope();
+    return "";
 }
 
-void Subroutine::generateCode(std::ofstream &ofs) {
-    ofs << "define void @";
-    m_id->generateCode(ofs);
-    ofs << "(";
-    
-    Entry entry = Mapper::instance().fun_entry(m_id->id());
-    std::vector<Parameter> params = entry.params();
-    for (unsigned int i = 0; i < params.size(); i++) {
-        ofs << typeOf(params[i].type());
+std::string Subroutine::generateCode(std::ofstream &ofs) {
+    Mapper::get().set_scope(m_id->id());
+    ofs << "define void @" << m_id->generateCode(ofs) << "(";
+    auto args = Mapper::get().args(m_id->id());
+    for (unsigned int i = 0; i < args.size(); i++) {
+        ofs << typeOf(Mapper::get().lookup_var(args[i])->type());
         next_addr();
-        if (i != params.size()-1) {
+        if (i != args.size()-1) {
             ofs << ", ";
         }
     }
     ofs << ") #0 {" << std::endl;
     m_body->generateCode(ofs);
+    ofs << std::setw(10) << "ret void" << std::endl;
     ofs << "}" << std::endl;
+    Mapper::get().reset_scope();
+    return "";
 }
 
-void Body::generateCode(std::ofstream &ofs) {
+std::string Body::generateCode(std::ofstream &ofs) {
     m_specificationConstruct->generateCode(ofs);
     m_executionConstruct->generateCode(ofs);
+    return "";
 }
 
 // Contains a list of DeclarationStatement and/or ParameterStatement
-void SpecificationConstruct::generateCode(std::ofstream &ofs) {
+std::string SpecificationConstruct::generateCode(std::ofstream &ofs) {
     for (auto& spec : m_specifications) {
         spec->generateCode(ofs);
     }
+    return "";
 }
 
-void ExecutableConstruct::generateCode(std::ofstream &ofs) {
-
+std::string ExecutableConstruct::generateCode(std::ofstream &ofs) {
+    for (auto& statement : m_statements) {
+        statement->generateCode(ofs);
+    }
+    return "";
 }
 
 // Contains a Type and a list of IdentifierDeclaration
 // Only works for scalar variables
-void DeclarationStatement::generateCode(std::ofstream &ofs) {
+std::string DeclarationStatement::generateCode(std::ofstream &ofs) {
     for (auto& var : m_ids) {
         std::string addr = next_addr();
-        var_addr.insert(std::pair<std::string, std::string>(var->id(), addr));
-        ofs << std::setw(4) << addr << " = alloca " << typeOf(m_type->var_type())
+        // std::pair<std::string, std::string> pair(var->id(), addr);
+        // var_addr.insert(pair);
+        ofs << std::setw(4) << addr << " = alloca " << m_type->generateCode(ofs)
             << ", align " << align(m_type->var_type())
             << " ; for var " << var->id() << std::endl;
     }
+    return "";
 }
 
-void ParameterStatement::generateCode(std::ofstream &ofs) {
-
+// Will no be implemented
+std::string ParameterStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void IdentifierDeclaration::generateCode(std::ofstream &ofs) {
-
+// Only works for scalar variables
+std::string IdentifierDeclaration::generateCode(std::ofstream &ofs) {
+    return m_id->generateCode(ofs);
 }
 
-void Type::generateCode(std::ofstream &ofs) {
-    ofs << typeOf(m_type);
+std::string Type::generateCode(std::ofstream &ofs) {
+    return typeOf(m_type);
 }
 
-void Expression::generateCode(std::ofstream &ofs) {
-
+std::string Expression::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void Comparison::generateCode(std::ofstream &ofs) {
-
+std::string Comparison::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void FunctionCall::generateCode(std::ofstream &ofs) {
-
+std::string FunctionCall::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void Literal::generateCode(std::ofstream &ofs) {
-
+std::string Literal::generateCode(std::ofstream &ofs) {
+    switch (m_type) {
+        case (Fortran::type::INTEGER): return std::to_string(m_iValue); break;
+        case (Fortran::type::REAL): return std::to_string(m_fValue); break;
+        case (Fortran::type::BOOLEAN): return std::to_string(m_bValue); break;
+        case (Fortran::type::STRING): return m_sValue; break;
+        default: return ""; break;
+    }
 }
 
-void Identifier::generateCode(std::ofstream &ofs) {
-    ofs << m_id;
+std::string Identifier::generateCode(std::ofstream &ofs) {
+    return m_id;
 }
 
-void AssignmentStatement::generateCode(std::ofstream &ofs) {
-
+// Only works for scalar variables
+std::string AssignmentStatement::generateCode(std::ofstream &ofs) {
+    std::string res = m_expression->generateCode(ofs);
+    auto entry = Mapper::get().lookup_var(m_id->id());
+    ofs << "store " << typeOf(entry->type()) << " "
+        << res << ", " << typeOf(entry->type()) << "* %"
+        << std::to_string(entry->addr())
+        << ", align " << align(entry->type()) << std::endl;
+    return "";
 }
 
-void IfStatement::generateCode(std::ofstream &ofs) {
-
+std::string IfStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void ElseIfStatement::generateCode(std::ofstream &ofs) {
-
+std::string ElseIfStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void DoStatement::generateCode(std::ofstream &ofs) {
-
+std::string DoStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void WhileStatement::generateCode(std::ofstream &ofs) {
-
+std::string WhileStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void PrintStatement::generateCode(std::ofstream &ofs) {
-
+std::string PrintStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void ReadStatement::generateCode(std::ofstream &ofs) {
-
+std::string ReadStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void CallStatement::generateCode(std::ofstream &ofs) {
-
+std::string CallStatement::generateCode(std::ofstream &ofs) {
+    return "";
 }
 
-void ErrorNode::generateCode(std::ofstream &ofs) {
-
+std::string ErrorNode::generateCode(std::ofstream &ofs) {
+    return "";
 }

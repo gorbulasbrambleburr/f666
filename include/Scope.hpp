@@ -2,34 +2,36 @@
 #define __SCOPE__
 
 #include <map>
+#include <vector>
+#include <memory>
 #include "Entry.hpp"
 
 class Scope {
 
-public:
-    using var = std::map<std::string,Entry>;
-    using fun = std::map<std::string,Entry>;
-
-    Scope();
+  public:
+    Scope() {}
     virtual ~Scope() {}
 
-    // Inserts an identifier into the table
-    // if it doesn't already is in it and
-    // returns true, otherwise returns false.
-    bool insert_var(const std::string& id, Entry entry);
-    bool insert_fun(const std::string& id, Entry entry);
+    // Inserts a variable in this scope. 
+    // Returns true if it isn't already in it, otherwise returns false.
+    bool insert(const std::string& id, Entry entry);
 
-    // Checks if the specified id is in the table
-    bool lookup_var(const std::string& id) const;
-    bool lookup_fun(const std::string& id) const;
+    std::shared_ptr<Entry> lookup(const std::string& id) const;
 
-    const Entry& var_entry(const std::string& id) const;
-    const Entry& fun_entry(const std::string& id) const;
+    Fortran::type return_type() const;
 
-private:
-    std::map<std::string,Entry> m_vars;  // For variables
-    std::map<std::string,Entry> m_funs;  // For subprograms
+    void set_return_type(Fortran::type returnType);
 
+    // Returns the function arguments
+    const std::vector<std::string> args() const;
+
+    // Set the function arguments
+    void set_args(std::vector<std::string> args);
+
+  private:
+    Fortran::type m_returnType;
+    std::map<std::string, Entry> m_vars;
+    std::vector<std::string> m_args;
 };
 
 #endif /* END __SCOPE__ */
