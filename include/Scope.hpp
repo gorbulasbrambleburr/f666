@@ -6,6 +6,8 @@
 #include <memory>
 #include "Entry.hpp"
 
+using entry_ptr = std::shared_ptr<Entry>;
+
 class Scope {
 
   public:
@@ -14,9 +16,9 @@ class Scope {
 
     // Inserts a variable in this scope. 
     // Returns true if it isn't already in it, otherwise returns false.
-    bool insert(const std::string& id, Entry entry);
+    bool insert(const std::string& id, entry_ptr entry);
 
-    std::shared_ptr<Entry> lookup(const std::string& id) const;
+    entry_ptr lookup(const std::string& id) const;
 
     Fortran::type return_type() const;
 
@@ -30,7 +32,7 @@ class Scope {
 
   private:
     Fortran::type m_returnType;
-    std::map<std::string, Entry> m_vars;
+    std::map<std::string, entry_ptr> m_vars;
     std::vector<std::string> m_args;
 };
 

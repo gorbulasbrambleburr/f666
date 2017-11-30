@@ -1168,7 +1168,7 @@ namespace  Fortran  {
     {
         bool any_error = false;
         for (auto& node : yystack_[0].value.as< AST::node_ptrs > ()) {
-            Entry entry(node->id(), yystack_[1].value.as< AST::node_ptr > ()->var_type(), node->struct_type());
+            auto entry = std::make_shared<Entry>(node->id(), yystack_[1].value.as< AST::node_ptr > ()->var_type(), node->struct_type());
             bool inserted = Mapper::get().insert(node->id(), entry);
             if (!inserted) {
                 std::string error_msg = "redeclaration of variable '" + node->id() + "'";

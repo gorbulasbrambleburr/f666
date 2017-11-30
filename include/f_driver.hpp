@@ -52,7 +52,7 @@ namespace Fortran {
 
         bool createBoolean(const std::string &);
         int createInteger(const std::string &);
-        float createReal(const std::string &);
+        double createReal(const std::string &);
 
         int parse(const char * const filename);
         void generateCode();

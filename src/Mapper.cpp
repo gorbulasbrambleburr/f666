@@ -12,10 +12,10 @@ Mapper& Mapper::get() {
 }
 
 bool Mapper::create_scope(const std::string &id) {
-    std::cout << "Creating scope '" << id << "'" << std::endl;
+    // std::cout << "Creating scope '" << id << "'" << std::endl;
     auto pair = std::pair<std::string, scope_ptr>(id, std::make_shared<Scope>());
     auto ret = m_scopes.insert(pair);
-    std::cout << "Created? " << ret.second << std::endl;
+    // std::cout << "Created? " << ret.second << std::endl;
     if (ret.second) {
         m_currentScope = id;
     }
@@ -35,7 +35,7 @@ void Mapper::set_args(std::vector<std::string> args) {
 }
 
 void Mapper::set_args(std::vector<std::string> args, const std::string &fid) {
-    std::cout << "Setting args into Scope " << fid << std::endl;
+    // std::cout << "Setting args into Scope " << fid << std::endl;
     auto search = m_scopes.find(fid);
     if (search != m_scopes.end()) {
         auto scope = search->second;
@@ -64,7 +64,7 @@ void Mapper::set_return_type(Fortran::type returnType) {
 }
 
 void Mapper::set_return_type(Fortran::type returnType, const std::string &fid) {
-    std::cout << "Setting return type into Scope " << fid << std::endl;
+    // std::cout << "Setting return type into Scope " << fid << std::endl;
     auto search = m_scopes.find(fid);
     if (search != m_scopes.end()) {
         auto scope = search->second;
@@ -88,8 +88,8 @@ Fortran::type Mapper::return_type(const std::string &fid) const {
     }
 }
 
-bool Mapper::insert(const std::string& id, Entry entry) {
-    std::cout << "Inserting var '" << id << "' into Scope " << m_currentScope << std::endl;
+bool Mapper::insert(const std::string& id, entry_ptr entry) {
+    // std::cout << "Inserting var '" << id << "' into Scope " << m_currentScope << std::endl;
     auto search = m_scopes.find(m_currentScope);
     if (search != m_scopes.end()) {
         auto scope = search->second;
@@ -105,7 +105,7 @@ entry_ptr Mapper::lookup_var(const std::string& id) const {
 
 entry_ptr Mapper::lookup_var(const std::string& id,
         const std::string &fid) const {
-    std::cout << "Looking up var '" << id << "' in Scope " << fid << std::endl;
+    // std::cout << "Looking up var '" << id << "' in Scope " << fid << std::endl;
     auto search = m_scopes.find(fid);
     if (search != m_scopes.end()) {
         auto scope = search->second;

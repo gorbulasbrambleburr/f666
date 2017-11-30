@@ -8,7 +8,6 @@
 #include "Scope.hpp"
 
 using scope_ptr = std::shared_ptr<Scope>;
-using entry_ptr = std::shared_ptr<Entry>;
 
 // Mapper is a singleton symbol table implementation.
 class Mapper {
@@ -44,7 +43,7 @@ class Mapper {
     Fortran::type return_type(const std::string &fid) const;
 
     // Inserts a variable into the current function scope
-    bool insert(const std::string& id, Entry entry);
+    bool insert(const std::string& id, entry_ptr entry);
 
     // Get a pointer to the variable entry in the function id scope
     entry_ptr lookup_var(const std::string& id) const;

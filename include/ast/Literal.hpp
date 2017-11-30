@@ -9,8 +9,8 @@ public:
     Literal(int value, Fortran::type type = Fortran::type::INTEGER)
         : m_iValue(value), m_type(type) {
     }
-    Literal(float value, Fortran::type type = Fortran::type::REAL)
-        : m_fValue(value), m_type(type) {
+    Literal(double value, Fortran::type type = Fortran::type::REAL)
+        : m_dValue(value), m_type(type) {
     }
     Literal(bool value, Fortran::type type = Fortran::type::BOOLEAN)
         : m_bValue(value), m_type(type) {
@@ -23,7 +23,7 @@ public:
         std::cout << std::setw(width) << "- " << "Literal: ";
         switch (m_type) {
             case (Fortran::type::INTEGER): std::cout << "INTEGER [" << m_iValue << "]" << std::endl; break;
-            case (Fortran::type::REAL): std::cout << "REAL [" << m_fValue << "]" << std::endl; break;
+            case (Fortran::type::REAL): std::cout << "REAL [" << m_dValue << "]" << std::endl; break;
             case (Fortran::type::BOOLEAN): std::cout << "BOOLEAN [" << m_bValue << "]" << std::endl; break;
             case (Fortran::type::STRING): std::cout << "STRING [" << m_sValue << "]" << std::endl; break;
             case (Fortran::type::UNDECLARED): std::cout << "UNDECLARED []" << std::endl; break;
@@ -36,7 +36,7 @@ public:
 
 private:
     int m_iValue;
-    float m_fValue;
+    double m_dValue;
     bool m_bValue;
     std::string m_sValue;
     Fortran::type m_type;

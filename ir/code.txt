@@ -2,18 +2,34 @@ target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-samsung-linux"
 
 define i32 @B(i32, i32) #0 {
-  %2 = alloca i32, align 4 ; for var A
-  %3 = alloca i32, align 4 ; for var B
-  %4 = alloca i32, align 4 ; for var C
-store i32 , i32* %0, align 4
+  %2 = alloca i32, align 4				;  var A
+  store i32 %0, i32* %2, align 4
+  %3 = alloca i32, align 4				;  var B
+  %4 = alloca i32, align 4				;  var C
+  store i32 %1, i32* %4, align 4
+  %5 = load i32, i32* %2, align 4		;  var A
+  %6 = load i32, i32* %4, align 4		;  var C
+  %7 = mul i32 %6, 2
+  %8 = add i32 %5, %7
+  store i32 %8, i32* %3, align 4
+  ret i32 %3
 }
 
 define void @C(i32) #0 {
-  %1 = alloca i32, align 4 ; for var X
-  %2 = alloca i32, align 4 ; for var C
+  %1 = alloca i32, align 4				;  var X
+  store i32 %0, i32* %1, align 4
+  %2 = alloca i32, align 4				;  var C
   ret void
 }
 
 define @A() #1 {
+  %0 = alloca double, align 8				;  var X
+  %1 = alloca double, align 8				;  var Y
+  store double 10.000000, double* %0, align 8
+  %2 = load double, double* %0, align 8		;  var X
+  %3 = load double, double* %0, align 8		;  var X
+  %4 = mul i32 %2, %3
+  %5 = fsub double %4, 3.000000
+  store double %5, double* %1, align 8
 }
 

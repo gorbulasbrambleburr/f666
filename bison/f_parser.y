@@ -421,7 +421,7 @@ DeclarationStatement
     : Type IdentifierDeclarationList {
         bool any_error = false;
         for (auto& node : $2) {
-            Entry entry(node->id(), $1->var_type(), node->struct_type());
+            auto entry = std::make_shared<Entry>(node->id(), $1->var_type(), node->struct_type());
             bool inserted = Mapper::get().insert(node->id(), entry);
             if (!inserted) {
                 std::string error_msg = "redeclaration of variable '" + node->id() + "'";

@@ -10,5 +10,8 @@ RETURN
 END
 
 PROGRAM A
+REAL X, Y
+X = 10.0
+Y = (X * X) - 3.0
 STOP
 END

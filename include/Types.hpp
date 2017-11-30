@@ -34,7 +34,7 @@ namespace Fortran {
 
     using type = vartype::type;
     using integer = int;
-    using real = float;
+    using real = double;
     using boolean = bool;
     using string = std::string;
 }

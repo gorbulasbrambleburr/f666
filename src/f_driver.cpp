@@ -21,18 +21,15 @@ node_ptr Fortran::Driver::createRoot() {
 }
 
 bool Fortran::Driver::createBoolean(const std::string &text) {
-    if (text == "TRUE") {
-        return true;
-    }
-    return false;
+    return text == "TRUE";
 }
 
 int Fortran::Driver::createInteger(const std::string &text) {
-    return std::atoi(text.c_str());
+    return std::stoi(text);
 }
 
-float Fortran::Driver::createReal(const std::string &text) {
-    return std::atof(text.c_str());
+double Fortran::Driver::createReal(const std::string &text) {
+    return std::stod(text);
 }
 
 void Fortran::Driver::generateCode() {
