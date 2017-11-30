@@ -48,7 +48,7 @@ std::string typeOf(Fortran::type type) {
     switch (type) {
         case (Fortran::type::INTEGER): str = "i32"; break; 
         case (Fortran::type::REAL): str = "double"; break; 
-        case (Fortran::type::BOOLEAN): str = "i1"; break; 
+        case (Fortran::type::BOOLEAN): str = "i8"; break; 
         case (Fortran::type::STRING): str = ""; break; 
         case (Fortran::type::UNDECLARED): str = ""; break;
     }
@@ -66,6 +66,31 @@ std::string align(Fortran::type type) {
         default: align = 1; break;
     }
     return std::to_string(align);
+}
+
+
+// Returns the comparison type for signed integer comparison
+std::string icmp_type(Fortran::op::comp op) {
+    switch (op) {
+        case (Fortran::op::comp::EQ): return "icmp eq"; break;
+        case (Fortran::op::comp::NE): return "icmp ne"; break;
+        case (Fortran::op::comp::LT): return "icmp slt"; break;
+        case (Fortran::op::comp::LE): return "icmp sle"; break;
+        case (Fortran::op::comp::GT): return "icmp sgt"; break;
+        case (Fortran::op::comp::GE): return "icmp sge"; break;
+    }
+}
+
+// Returns the comparison type for ordered float comparison
+std::string fcmp_type(Fortran::op::comp op) {
+    switch (op) {
+        case (Fortran::op::comp::EQ): return "fcmp oeq"; break;
+        case (Fortran::op::comp::NE): return "fcmp one"; break;
+        case (Fortran::op::comp::LT): return "fcmp olt"; break;
+        case (Fortran::op::comp::LE): return "fcmp ole"; break;
+        case (Fortran::op::comp::GT): return "fcmp ogt"; break;
+        case (Fortran::op::comp::GE): return "fcmp oge"; break;
+    }
 }
 
 // Generates a ALLOCA operation
@@ -97,6 +122,30 @@ void op_load(std::ofstream &ofs, Fortran::type type,
         << ", " << typeOf(type) << "* " << from
         << ", align " << align(type) 
         << "\t\t;  var " << what << std::endl;
+}
+
+// Generates a  TRUNC operation from 8 bits to 1 bit
+void op_trunc_boolean(std::ofstream &ofs, const std::string &from,
+        const std::string &to) {
+
+    ofs << std::setw(to.size() + 2)
+        << to << " = trunc i8 "
+        << from << " to i1"
+        << std::endl;
+}
+
+// Generates a CONDITIONAL BRANCH
+void op_cond_branch(std::ofstream &ofs, const std::string &cond,
+        const std::string &label_true, const std::string &label_false) {
+
+    ofs << std::setw(8) << "br i1 " << cond
+        << ", label " << label_true
+        << ", label " << label_false
+        << std::endl << std::endl;
+}
+
+void op_branch(std::ofstream &ofs, const std::string &label) {
+    ofs << "br label " << label << std::endl << std::endl;
 }
 
 // Class methods --------------------------------------------------------------
@@ -225,11 +274,6 @@ std::string DeclarationStatement::generateCode(std::ofstream &ofs) {
         std::string where = "%" + std::to_string(addr);
         op_alloca(ofs, entry->type(), what, where);
 
-        // ofs << std::setw(3) << "%" << std::to_string(addr)
-        //     << " = alloca " << m_type->generateCode(ofs)
-        //     << ", align " << align(m_type->var_type())
-        //     << " ; for var " << var->id() << std::endl;
-
         // If the variable is in the function arguments, 
         // store its value in its address
         auto args = Mapper::get().args();
@@ -271,7 +315,7 @@ std::string Expression::generateCode(std::ofstream &ofs) {
     // Print this node code    
     unsigned int addr = next_addr();
     std::string ret = "%" + std::to_string(addr);
-    ofs << std::setw(4) << ret << " = ";
+    ofs << std::setw(ret.size() + 2) << ret << " = ";
 
     if (m_logic) {
         switch (m_logicOp) {
@@ -321,7 +365,28 @@ std::string Expression::generateCode(std::ofstream &ofs) {
 }
 
 std::string Comparison::generateCode(std::ofstream &ofs) {
-    return "";
+    
+    // First compute the expressions in the subtrees
+    std::string res_left = m_left->generateCode(ofs);
+    std::string res_right = m_right->generateCode(ofs);
+
+    std::string result = "%" + std::to_string(next_addr());
+    ofs << std::setw(result.size() + 2) << result << " = ";
+    
+    switch (m_left->var_type()) {
+        case (Fortran::type::INTEGER):
+            ofs << icmp_type(m_operator) << " ";
+            break;
+        case (Fortran::type::REAL):
+            ofs << fcmp_type(m_operator) << " ";
+            break;
+        default: break;
+    }
+
+    ofs << typeOf(m_left->var_type()) << " "
+        << res_left << ", "
+        << res_right << std::endl;
+    return result;
 }
 
 std::string FunctionCall::generateCode(std::ofstream &ofs) {
@@ -345,6 +410,12 @@ std::string Identifier::generateCode(std::ofstream &ofs) {
 
     // Loads the variable into a new temporary
     op_load(ofs, entry->type(), m_id, from, to);
+
+    if (entry->type() == Fortran::type::BOOLEAN) {
+        std::string from_addr = to;
+        std::string to_addr = "%" + std::to_string(next_addr());
+        op_trunc_boolean(ofs, from_addr, to_addr);
+    }
     return to;
 }
 
@@ -354,15 +425,43 @@ std::string AssignmentStatement::generateCode(std::ofstream &ofs) {
     auto entry = Mapper::get().lookup_var(m_id->id());
     std::string to = "%" + std::to_string(entry->addr());
     op_store(ofs, entry->type(), res, to);
-
-    // ofs << std::setw(8) << "store " << typeOf(entry->type()) << " "
-    //     << res << ", " << typeOf(entry->type()) << "* %"
-    //     << std::to_string(entry->addr())
-    //     << ", align " << align(entry->type()) << std::endl;
     return "";
 }
 
+// Not working for ELSE IF
 std::string IfStatement::generateCode(std::ofstream &ofs) {
+    std::string cond = m_condition->generateCode(ofs);
+    std::string label_true = "lbl_true_%" + std::to_string(next_addr());
+    std::string label_false, label_end;
+
+    // Check if there is an ELSE block
+    if (m_elseStatements.empty()) {
+        label_end = "lbl_end_%" + std::to_string(next_addr());
+        op_cond_branch(ofs, cond, label_true, label_end);
+    } else {
+        label_false = "lbl_false_%" + std::to_string(next_addr());
+        label_end = "lbl_end_%" + std::to_string(next_addr());
+        op_cond_branch(ofs, cond, label_true, label_false);
+    }
+
+    // Label true branch
+    ofs << label_true << ":" << std::endl;
+    for (auto& statement : m_ifStatements) {
+        statement->generateCode(ofs);
+    }
+
+    op_branch(ofs, label_end);
+
+    // Label false branch
+    if (!m_elseStatements.empty()) {
+        ofs << label_false << ":" << std::endl;
+        for (auto& statement : m_elseStatements) {
+            statement->generateCode(ofs);
+        }
+        op_branch(ofs, label_end);
+    }
+
+    ofs << label_end << ":" << std::endl;
     return "";
 }
 

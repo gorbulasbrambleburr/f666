@@ -7,11 +7,25 @@ define i32 @B(i32, i32) #0 {
   %3 = alloca i32, align 4				;  var B
   %4 = alloca i32, align 4				;  var C
   store i32 %1, i32* %4, align 4
-  %5 = load i32, i32* %2, align 4		;  var A
-  %6 = load i32, i32* %4, align 4		;  var C
-  %7 = mul i32 %6, 2
-  %8 = add i32 %5, %7
-  store i32 %8, i32* %3, align 4
+  %5 = alloca i32, align 4				;  var D
+  %6 = load i32, i32* %2, align 4		;  var A
+  %7 = load i32, i32* %4, align 4		;  var C
+  %8 = mul i32 %7, 2
+  %9 = add i32 %6, %8
+  store i32 %9, i32* %3, align 4
+  %10 = load i32, i32* %3, align 4		;  var B
+  %11 = load i32, i32* %2, align 4		;  var A
+  %12 = icmp eq i32 %10, %11
+  br i1 %12, label lbl_true_%13, label lbl_end_%14
+
+lbl_true_%13:
+  %15 = load i32, i32* %2, align 4		;  var A
+  %16 = load i32, i32* %4, align 4		;  var C
+  %17 = sdiv i32 %15, %16
+  store i32 %17, i32* %5, align 4
+br label lbl_end_%14
+
+lbl_end_%14:
   ret i32 %3
 }
 
@@ -19,6 +33,25 @@ define void @C(i32) #0 {
   %1 = alloca i32, align 4				;  var X
   store i32 %0, i32* %1, align 4
   %2 = alloca i32, align 4				;  var C
+  store i32 5, i32* %2, align 4
+  %3 = load i32, i32* %1, align 4		;  var X
+  %4 = load i32, i32* %2, align 4		;  var C
+  %5 = icmp sgt i32 %3, %4
+  br i1 %5, label lbl_true_%6, label lbl_false_%7
+
+lbl_true_%6:
+  %9 = load i32, i32* %1, align 4		;  var X
+  %10 = add i32 %9, 1
+  store i32 %10, i32* %2, align 4
+br label lbl_end_%8
+
+lbl_false_%7:
+  %11 = load i32, i32* %1, align 4		;  var X
+  %12 = sub i32 %11, 1
+  store i32 %12, i32* %2, align 4
+br label lbl_end_%8
+
+lbl_end_%8:
   ret void
 }
 

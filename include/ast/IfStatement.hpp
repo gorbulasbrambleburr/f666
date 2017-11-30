@@ -5,7 +5,8 @@
 
 class IfStatement : public AST {
 public:
-    IfStatement(node_ptr condition, node_ptrs&& ifStatements, node_ptrs&& elseIfStatements, node_ptrs&& elseStatements)
+    IfStatement(node_ptr condition, node_ptrs&& ifStatements,
+            node_ptrs&& elseIfStatements, node_ptrs&& elseStatements)
         : m_condition(std::move(condition)),
           m_ifStatements(std::forward<node_ptrs>(ifStatements)),
           m_elseIfStatements(std::forward<node_ptrs>(elseIfStatements)),
