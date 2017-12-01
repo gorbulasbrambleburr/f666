@@ -158,7 +158,7 @@ LLVM_AssemblyGenerator::LLVM_AssemblyGenerator() {
 }
 
 void LLVM_AssemblyGenerator::generateCode(node_ptr &root) {
-    std::ofstream ofs("./ir/code.txt", std::ofstream::out);
+    std::ofstream ofs("./ir/code.ll", std::ofstream::out);
     root->generateCode(ofs);
     ofs.close();
 }
@@ -266,6 +266,9 @@ std::string ExecutableConstruct::generateCode(std::ofstream &ofs) {
 // Contains a Type and a list of IdentifierDeclaration
 // Only works for scalar variables
 std::string DeclarationStatement::generateCode(std::ofstream &ofs) {
+
+    // For some shady reason, it has to skip a number
+    next_addr();
 
     // For each declared variable
     for (auto& var : m_ids) {
@@ -399,7 +402,7 @@ std::string FunctionCall::generateCode(std::ofstream &ofs) {
         << call_ret << " = call " << typeOf(ret_type)
         << " @" << m_id->id() << "(";
 
-    for (int i = 0; i < m_args.size(); i++) {
+    for (unsigned int i = 0; i < m_args.size(); i++) {
         auto entry = Mapper::get().lookup_var(m_args[i]->id());
         std::string addr = "%" + std::to_string(entry->addr());
         ofs << typeOf(entry->type()) << " " << addr;
@@ -450,21 +453,21 @@ std::string AssignmentStatement::generateCode(std::ofstream &ofs) {
 // Not working for ELSE IF
 std::string IfStatement::generateCode(std::ofstream &ofs) {
     std::string cond = m_condition->generateCode(ofs);
-    std::string label_true = "lbl_true_%" + std::to_string(next_addr());
+    std::string label_true = "%" + std::to_string(next_addr());
     std::string label_false, label_end;
 
     // Check if there is an ELSE block
     if (m_elseStatements.empty()) {
-        label_end = "lbl_end_%" + std::to_string(next_addr());
+        label_end = "%" + std::to_string(next_addr());
         op_cond_branch(ofs, cond, label_true, label_end);
     } else {
-        label_false = "lbl_false_%" + std::to_string(next_addr());
-        label_end = "lbl_end_%" + std::to_string(next_addr());
+        label_false = "%" + std::to_string(next_addr());
+        label_end = "%" + std::to_string(next_addr());
         op_cond_branch(ofs, cond, label_true, label_false);
     }
 
     // Label true branch
-    ofs << label_true << ":" << std::endl;
+    ofs << "; <label>:" << label_true.substr(1,std::string::npos) << ":" << std::endl;
     for (auto& statement : m_ifStatements) {
         statement->generateCode(ofs);
     }
@@ -473,14 +476,14 @@ std::string IfStatement::generateCode(std::ofstream &ofs) {
 
     // Label false branch
     if (!m_elseStatements.empty()) {
-        ofs << label_false << ":" << std::endl;
+        ofs << "; <label>:" << label_false.substr(1,std::string::npos) << ":" << std::endl;
         for (auto& statement : m_elseStatements) {
             statement->generateCode(ofs);
         }
         op_branch(ofs, label_end);
     }
 
-    ofs << label_end << ":" << std::endl;
+    ofs << "; <label>:" << label_end.substr(1,std::string::npos) << ":" << std::endl;
     return "";
 }
 
@@ -503,16 +506,16 @@ std::string DoStatement::generateCode(std::ofstream &ofs) {
     op_store(ofs, entry->type(), what, where);
 
     // Label branches
-    std::string label_decl = "lbl_decl_%" + std::to_string(next_addr());
-    std::string label_true = "lbl_true_%" + std::to_string(next_addr());
-    std::string label_incr = "lbl_incr_%" + std::to_string(next_addr());
-    std::string label_end = "lbl_end_%" + std::to_string(next_addr());
+    std::string label_decl = "%" + std::to_string(next_addr());
+    std::string label_true = "%" + std::to_string(next_addr());
+    std::string label_incr = "%" + std::to_string(next_addr());
+    std::string label_end = "%" + std::to_string(next_addr());
 
     // Create loop declaration branch and branch to it
     op_branch(ofs, label_decl);
 
     // Start of loop declaration branch
-    ofs << label_decl << ":" << std::endl;
+    ofs << "; <label>:" << label_decl.substr(1,std::string::npos) << ":" << std::endl;
 
     // Load loop var
     std::string loop_var = m_id->generateCode(ofs);
@@ -532,7 +535,7 @@ std::string DoStatement::generateCode(std::ofstream &ofs) {
     op_cond_branch(ofs, cond, label_true, label_end);
 
     // Start of true branch
-    ofs << label_true << ":" << std::endl;
+    ofs << "; <label>:" << label_true.substr(1,std::string::npos) << ":" << std::endl;
 
     // Loop body
     for (auto& statement : m_statements) {
@@ -543,7 +546,7 @@ std::string DoStatement::generateCode(std::ofstream &ofs) {
     op_branch(ofs, label_incr);
 
     // Start of loop increment branch
-    ofs << label_incr << ":" << std::endl;
+    ofs << "; <label>:" << label_incr.substr(1,std::string::npos) << ":" << std::endl;
 
     // Load loop var and increment it
     loop_var = m_id->generateCode(ofs);
@@ -559,7 +562,7 @@ std::string DoStatement::generateCode(std::ofstream &ofs) {
     op_branch(ofs, label_decl);
 
     // Start of loop end branch
-    ofs << label_end << ":" << std::endl;    
+    ofs << "; <label>:" << label_end.substr(1,std::string::npos) << ":" << std::endl;    
 
     return "";
 }
@@ -580,7 +583,7 @@ std::string CallStatement::generateCode(std::ofstream &ofs) {
     ofs << std::setw(13)
         << "call void @" << m_id->id() << "(";
 
-    for (int i = 0; i < m_params.size(); i++) {
+    for (unsigned int i = 0; i < m_params.size(); i++) {
         auto entry = Mapper::get().lookup_var(m_params[i]->id());
         std::string addr = "%" + std::to_string(entry->addr());
         ofs << typeOf(entry->type()) << " " << addr;
