@@ -17,8 +17,6 @@ class Entry {
     Dimension dimension() const {return m_dimension; }
     
     void set_addr(unsigned int addr) {
-        std::cout << "Setting addr of " << m_id << ": %"
-                  << std::to_string(addr) << std::endl;
         m_addr = addr;
     }
 

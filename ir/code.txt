@@ -1,36 +1,6 @@
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-samsung-linux"
 
-define void @DO_LOOP(i32) #0 {
-  %1 = alloca i32, align 4				;  var X
-  store i32 %0, i32* %1, align 4
-  %2 = alloca i32, align 4				;  var I
-  %3 = alloca i32, align 4				;  var J
-  store i32 1, i32* %2, align 4
-br label lbl_decl_%4
-
-lbl_decl_%4:
-  %8 = load i32, i32* %2, align 4		;  var I
-  %9 = icmp sle i32 %8, 10
-  br i1 %9, label lbl_true_%5, label lbl_end_%7
-
-lbl_true_%5:
-  %10 = load i32, i32* %2, align 4		;  var I
-  %11 = load i32, i32* %1, align 4		;  var X
-  %12 = mul i32 %10, %11
-  store i32 %12, i32* %3, align 4
-br label lbl_incr_%6
-
-lbl_incr_%6:
-  %13 = load i32, i32* %2, align 4		;  var I
-  %14 = add i32 %13, 2
-  store i32 %14, i32* %2, align 4
-br label lbl_decl_%4
-
-lbl_end_%7:
-  ret void
-}
-
 define i32 @B(i32, i32) #0 {
   %2 = alloca i32, align 4				;  var A
   store i32 %0, i32* %2, align 4
@@ -53,10 +23,38 @@ lbl_true_%13:
   %16 = load i32, i32* %4, align 4		;  var C
   %17 = sdiv i32 %15, %16
   store i32 %17, i32* %5, align 4
-br label lbl_end_%14
+  br label lbl_end_%14
 
 lbl_end_%14:
   ret i32 %3
+}
+
+define void @DO_LOOP(i32) #0 {
+  %1 = alloca i32, align 4				;  var X
+  store i32 %0, i32* %1, align 4
+  %2 = alloca i32, align 4				;  var I
+  %3 = alloca i32, align 4				;  var J
+  store i32 1, i32* %2, align 4
+  br label lbl_decl_%4
+
+lbl_decl_%4:
+  %8 = load i32, i32* %2, align 4		;  var I
+  %9 = icmp sle i32 %8, 10
+  br i1 %9, label lbl_true_%5, label lbl_end_%7
+
+lbl_true_%5:
+  %10 = call i32 @B(i32 %2, i32 %1)
+  store i32 %10, i32* %3, align 4
+  br label lbl_incr_%6
+
+lbl_incr_%6:
+  %11 = load i32, i32* %2, align 4		;  var I
+  %12 = add i32 %11, 2
+  store i32 %12, i32* %2, align 4
+  br label lbl_decl_%4
+
+lbl_end_%7:
+  ret void
 }
 
 define void @C(i32) #0 {
@@ -73,13 +71,13 @@ lbl_true_%6:
   %9 = load i32, i32* %1, align 4		;  var X
   %10 = add i32 %9, 1
   store i32 %10, i32* %2, align 4
-br label lbl_end_%8
+  br label lbl_end_%8
 
 lbl_false_%7:
   %11 = load i32, i32* %1, align 4		;  var X
   %12 = sub i32 %11, 1
   store i32 %12, i32* %2, align 4
-br label lbl_end_%8
+  br label lbl_end_%8
 
 lbl_end_%8:
   ret void
@@ -88,11 +86,13 @@ lbl_end_%8:
 define @A() #1 {
   %0 = alloca double, align 8				;  var X
   %1 = alloca double, align 8				;  var Y
+  %2 = alloca i32, align 4				;  var I
+  call void @C(i32 %2)
   store double 10.000000, double* %0, align 8
-  %2 = load double, double* %0, align 8		;  var X
   %3 = load double, double* %0, align 8		;  var X
-  %4 = mul i32 %2, %3
-  %5 = fsub double %4, 3.000000
-  store double %5, double* %1, align 8
+  %4 = load double, double* %0, align 8		;  var X
+  %5 = mul i32 %3, %4
+  %6 = fsub double %5, 3.000000
+  store double %6, double* %1, align 8
 }
 

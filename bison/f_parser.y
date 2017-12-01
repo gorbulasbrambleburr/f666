@@ -272,7 +272,6 @@ Function
             $$ = driver.createNode<ErrorNode>(error_msg);
             driver.semantic_error(error_msg);
         }
-        std::cout << "Resetting the scope" << std::endl;
         Mapper::get().reset_scope();
     }
     | Type FUNCTION FunctionIdentifier LP RP Body RETURN END {

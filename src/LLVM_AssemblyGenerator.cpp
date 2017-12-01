@@ -147,7 +147,8 @@ void op_cond_branch(std::ofstream &ofs, const std::string &cond,
 }
 
 void op_branch(std::ofstream &ofs, const std::string &label) {
-    ofs << "br label " << label << std::endl << std::endl;
+    ofs << std::setw(11) << "br label "
+        << label << std::endl << std::endl;
 }
 
 // Class methods --------------------------------------------------------------
@@ -288,8 +289,6 @@ std::string DeclarationStatement::generateCode(std::ofstream &ofs) {
         }
 
         auto entry2 = Mapper::get().lookup_var(var->id());
-        std::cout << "Addr of " << var->id() << ": "
-                  << std::to_string(entry2->addr()) << std::endl;
     }
     return "";
 }
@@ -392,7 +391,25 @@ std::string Comparison::generateCode(std::ofstream &ofs) {
 }
 
 std::string FunctionCall::generateCode(std::ofstream &ofs) {
-    return "";
+
+    auto ret_type = Mapper::get().return_type();
+
+    std::string call_ret = "%" + std::to_string(next_addr());
+    ofs << std::setw(call_ret.size() + 2)
+        << call_ret << " = call " << typeOf(ret_type)
+        << " @" << m_id->id() << "(";
+
+    for (int i = 0; i < m_args.size(); i++) {
+        auto entry = Mapper::get().lookup_var(m_args[i]->id());
+        std::string addr = "%" + std::to_string(entry->addr());
+        ofs << typeOf(entry->type()) << " " << addr;
+        if (i < m_args.size() - 1) {
+            ofs << ", ";
+        }
+    }
+    ofs << ")" << std::endl;
+
+    return call_ret;
 }
 
 std::string Literal::generateCode(std::ofstream &ofs) {
@@ -560,6 +577,18 @@ std::string ReadStatement::generateCode(std::ofstream &ofs) {
 }
 
 std::string CallStatement::generateCode(std::ofstream &ofs) {
+    ofs << std::setw(13)
+        << "call void @" << m_id->id() << "(";
+
+    for (int i = 0; i < m_params.size(); i++) {
+        auto entry = Mapper::get().lookup_var(m_params[i]->id());
+        std::string addr = "%" + std::to_string(entry->addr());
+        ofs << typeOf(entry->type()) << " " << addr;
+        if (i < m_params.size() - 1) {
+            ofs << ", ";
+        }
+    }
+    ofs << ")" << std::endl;
     return "";
 }
 
