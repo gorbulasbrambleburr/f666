@@ -470,7 +470,54 @@ std::string ElseIfStatement::generateCode(std::ofstream &ofs) {
 }
 
 std::string DoStatement::generateCode(std::ofstream &ofs) {
-    return "";
+
+    std::string address = std::to_string(next_addr());
+
+    ofs << "define void @do" << address << "() #0 {" << std::endl;
+    std::string j = m_boundExpr->generateCode(ofs);
+    std::string k = m_incExpr->generateCode(ofs);
+    std::string i = m_varExpr->generateCode(ofs);
+
+    std::string branch_start = std::to_string(next_addr());
+
+    std::string it = std::to_string(next_addr());
+    std::string itt = std::to_string(next_addr());
+    std::string ittt = std::to_string(next_addr());
+
+    std::string kt = std::to_string(next_addr());
+    std::string compare = std::to_string(next_addr());
+
+    std::string branch_true = std::to_string(next_addr());
+    std::string branch_false = std::to_string(next_addr());
+
+
+    ofs << "store i32 0, i32* %" << i << ", align 4" << std::endl;
+    ofs << "br label %" << label << std::endl;
+
+    ofs << "; <label>:" << branch_start << ":     ; preds = %" << branch_incrent << ", %0" << std::endl; // nao sei se o %0 esta certo
+    ofs << "%" << it << " = load i32, i32* %" << i << ", align 4" << std::endl;
+    ofs << "%" << kt << " = load i32, i32* %" << k << ", align 4" << std::endl;
+    ofs << "%" << compare << "icmp slt i32 %" << it << ", %" << kt  << std::endl;                                      
+    ofs << "br i1 %" << compare << ", label %" << branch_true", label %" << branch_false << std::endl;
+
+    ofs << "; <label>:" << branch_true << ":     ; preds = %" << branch_declare << std::endl;
+    for (auto& statement : m_ifStatements) {
+        statement->generateCode(ofs);
+    }
+    
+    ofs << "br label %" << branch_increment << std::endl;
+
+    ofs << "; <label>:" << branch_incrent << ":     ; preds = %" << std::endl;
+    ofs << "%" << itt <<  "= load i32, i32* %" << i << ", align 4" << std::endl;
+    ofs << "%" << ittt << "= add nsw i32 %" << itt << ", 1" << std::endl; // nao sei como pegar o valor da expression de incremento
+    ofs << "store i32 %" << ittt << ", i32* %" << i << ", align 4" << std::endl;
+    ofs << "br label %" << branch_start << std::endl;
+
+    ofs << "; <label>:" << branch_false << ":   ; preds = %" << branch_start << std::endl;
+    ofs << "ret void" << std::endl;
+    ofs << "}" << std::endl;
+
+    return "do" + address;
 }
 
 std::string WhileStatement::generateCode(std::ofstream &ofs) {
