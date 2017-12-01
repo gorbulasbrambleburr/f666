@@ -1,6 +1,36 @@
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-samsung-linux"
 
+define void @DO_LOOP(i32) #0 {
+  %1 = alloca i32, align 4				;  var X
+  store i32 %0, i32* %1, align 4
+  %2 = alloca i32, align 4				;  var I
+  %3 = alloca i32, align 4				;  var J
+  store i32 1, i32* %2, align 4
+br label lbl_decl_%4
+
+lbl_decl_%4:
+  %8 = load i32, i32* %2, align 4		;  var I
+  %9 = icmp sle i32 %8, 10
+  br i1 %9, label lbl_true_%5, label lbl_end_%7
+
+lbl_true_%5:
+  %10 = load i32, i32* %2, align 4		;  var I
+  %11 = load i32, i32* %1, align 4		;  var X
+  %12 = mul i32 %10, %11
+  store i32 %12, i32* %3, align 4
+br label lbl_incr_%6
+
+lbl_incr_%6:
+  %13 = load i32, i32* %2, align 4		;  var I
+  %14 = add i32 %13, 2
+  store i32 %14, i32* %2, align 4
+br label lbl_decl_%4
+
+lbl_end_%7:
+  ret void
+}
+
 define i32 @B(i32, i32) #0 {
   %2 = alloca i32, align 4				;  var A
   store i32 %0, i32* %2, align 4

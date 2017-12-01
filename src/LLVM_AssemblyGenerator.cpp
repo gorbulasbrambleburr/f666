@@ -78,6 +78,7 @@ std::string icmp_type(Fortran::op::comp op) {
         case (Fortran::op::comp::LE): return "icmp sle"; break;
         case (Fortran::op::comp::GT): return "icmp sgt"; break;
         case (Fortran::op::comp::GE): return "icmp sge"; break;
+        default: return ""; break;
     }
 }
 
@@ -90,6 +91,7 @@ std::string fcmp_type(Fortran::op::comp op) {
         case (Fortran::op::comp::LE): return "fcmp ole"; break;
         case (Fortran::op::comp::GT): return "fcmp ogt"; break;
         case (Fortran::op::comp::GE): return "fcmp oge"; break;
+        default: return ""; break;
     }
 }
 
@@ -471,53 +473,78 @@ std::string ElseIfStatement::generateCode(std::ofstream &ofs) {
 
 std::string DoStatement::generateCode(std::ofstream &ofs) {
 
-    std::string address = std::to_string(next_addr());
+    // The loop var
+    auto entry = Mapper::get().lookup_var(m_id->id());
 
-    ofs << "define void @do" << address << "() #0 {" << std::endl;
-    std::string j = m_boundExpr->generateCode(ofs);
-    std::string k = m_incExpr->generateCode(ofs);
-    std::string i = m_varExpr->generateCode(ofs);
+    // Loop var initial value comes from an expression
+    std::string what = m_varExpr->generateCode(ofs);
 
-    std::string branch_start = std::to_string(next_addr());
+    // Loop var allocated memory address
+    std::string where = "%" + std::to_string(entry->addr());
 
-    std::string it = std::to_string(next_addr());
-    std::string itt = std::to_string(next_addr());
-    std::string ittt = std::to_string(next_addr());
+    // Store initial value for loop var
+    op_store(ofs, entry->type(), what, where);
 
-    std::string kt = std::to_string(next_addr());
-    std::string compare = std::to_string(next_addr());
+    // Label branches
+    std::string label_decl = "lbl_decl_%" + std::to_string(next_addr());
+    std::string label_true = "lbl_true_%" + std::to_string(next_addr());
+    std::string label_incr = "lbl_incr_%" + std::to_string(next_addr());
+    std::string label_end = "lbl_end_%" + std::to_string(next_addr());
 
-    std::string branch_true = std::to_string(next_addr());
-    std::string branch_false = std::to_string(next_addr());
+    // Create loop declaration branch and branch to it
+    op_branch(ofs, label_decl);
 
+    // Start of loop declaration branch
+    ofs << label_decl << ":" << std::endl;
 
-    ofs << "store i32 0, i32* %" << i << ", align 4" << std::endl;
-    ofs << "br label %" << label << std::endl;
+    // Load loop var
+    std::string loop_var = m_id->generateCode(ofs);
 
-    ofs << "; <label>:" << branch_start << ":     ; preds = %" << branch_incrent << ", %0" << std::endl; // nao sei se o %0 esta certo
-    ofs << "%" << it << " = load i32, i32* %" << i << ", align 4" << std::endl;
-    ofs << "%" << kt << " = load i32, i32* %" << k << ", align 4" << std::endl;
-    ofs << "%" << compare << "icmp slt i32 %" << it << ", %" << kt  << std::endl;                                      
-    ofs << "br i1 %" << compare << ", label %" << branch_true", label %" << branch_false << std::endl;
+    // Get bound expression
+    std::string loop_bound = m_boundExpr->generateCode(ofs);
 
-    ofs << "; <label>:" << branch_true << ":     ; preds = %" << branch_declare << std::endl;
-    for (auto& statement : m_ifStatements) {
+    // Make LE comparison between integers
+    std::string cond = "%" + std::to_string(next_addr());
+    ofs << std::setw(cond.size() + 2) << cond << " = ";
+    ofs << icmp_type(Fortran::op::comp::LE) << " ";
+    ofs << typeOf(Fortran::type::INTEGER) << " "
+        << loop_var << ", "
+        << loop_bound << std::endl;
+    
+    // Comparison of loop declaration branch
+    op_cond_branch(ofs, cond, label_true, label_end);
+
+    // Start of true branch
+    ofs << label_true << ":" << std::endl;
+
+    // Loop body
+    for (auto& statement : m_statements) {
         statement->generateCode(ofs);
     }
-    
-    ofs << "br label %" << branch_increment << std::endl;
 
-    ofs << "; <label>:" << branch_incrent << ":     ; preds = %" << std::endl;
-    ofs << "%" << itt <<  "= load i32, i32* %" << i << ", align 4" << std::endl;
-    ofs << "%" << ittt << "= add nsw i32 %" << itt << ", 1" << std::endl; // nao sei como pegar o valor da expression de incremento
-    ofs << "store i32 %" << ittt << ", i32* %" << i << ", align 4" << std::endl;
-    ofs << "br label %" << branch_start << std::endl;
+    // Branch to loop increment branch
+    op_branch(ofs, label_incr);
 
-    ofs << "; <label>:" << branch_false << ":   ; preds = %" << branch_start << std::endl;
-    ofs << "ret void" << std::endl;
-    ofs << "}" << std::endl;
+    // Start of loop increment branch
+    ofs << label_incr << ":" << std::endl;
 
-    return "do" + address;
+    // Load loop var and increment it
+    loop_var = m_id->generateCode(ofs);
+    std::string loop_incr = m_incExpr->generateCode(ofs);
+    std::string tmp = "%" + std::to_string(next_addr());
+    ofs << std::setw(tmp.size() + 2)
+        << tmp << " = add i32 " << loop_var
+        << ", " << loop_incr
+        << std::endl;
+    op_store(ofs, entry->type(), tmp, where); 
+
+    // Branch to loop declaration branch
+    op_branch(ofs, label_decl);
+
+    // Start of loop end branch
+    ofs << label_end << ":" << std::endl;    
+
+    return "";
 }
 
 std::string WhileStatement::generateCode(std::ofstream &ofs) {
