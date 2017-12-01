@@ -22,9 +22,23 @@ RETURN
 END
 ```
 
+### Código em `C++` usado no site `ellcc.org`
+
+```C++
+int b(int a, int c)
+{
+  int b, d;
+  b = a + c * 2;
+  if (b == a) {
+    d = a/c;
+  }
+  return b;
+}
+```
 
 
-### Nosso código gerado em _assembly_ do LLVM
+
+### Código gerado em _assembly_ do LLVM
 
 ```
 define i32 @B(i32, i32) #0 {
@@ -53,20 +67,6 @@ define i32 @B(i32, i32) #0 {
 
 ; <label>:15:
   ret i32 %4
-}
-```
-
-### Código em `C++`
-
-```C++
-int b(int a, int c)
-{
-  int b, d;
-  b = a + c * 2;
-  if (b == a) {
-    d = a/c;
-  }
-  return b;
 }
 ```
 
