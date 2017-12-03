@@ -415,7 +415,7 @@ Percebe-se que a nomeação dos *branches* é diferente no código gerado pelos 
 
 O compilador Fortran 666, por sua vez, nomeia todos os *branches* necessários antes de percorrer os respectivos nós da árvore para evitar a cópia de `string`s entre inúmeros nós da árvore. Infelizmente, essa diferença de geração de código intermediário não permite a utilização do compilador estático do LLVM, `llc`, para a geração de arquivos objetos a partir da RI gerada pelo compilador Fortran 666.
 
-
+Pode-se perceber aqui novamente que o compilador ELLCC faz o `load` da variável `maior` armazenada em `%5` antes de retornar seu valor, enquanto que o compilador Fortran 666 utiliza a própria variável temporária onde `MAIOR` foi inicialmente alocada.
 
 <!--- ####################################################################  -->
 ### Estrutura de Repetição `DO`
