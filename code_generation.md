@@ -12,6 +12,27 @@ No compilador desenvolvido, a árvore de sintaxe abstrata (AST) gerada pelo *bis
 O primeiro desses formatos foi parcialmente [implementado](https://github.com/makhles/f666/blob/master/src/codegen.cpp), porém não foi possível configurar a biblioteca do LLVM corretamente. Escolheu-se, então, utilizar o formato `asm`.
 
 
+
+## Geração de Código Executável
+
+Dado um arquivo de representação intermediária de um código fonte, `code.ll`, é possível obter-se um arquivo objeto utilizando-se o compilador estático do LLVM:
+
+```
+    llc -filetype=obj code.ll
+```
+
+O arquivo objeto gerado, `code.o`, é um arquivo em `assembly` na arquitetura definida no arquivo de entrada. Este arquivo pode ser transformado em um arquivo executável com o auxílio do ligador do sistema. No caso do linux, utiliza-se o `g++`:
+
+```
+    g++ -o code.o
+```
+
+O compilador estático do LLVM, no entanto, não aceita qualquer arquivo de RI. Existem algumas regras para a nomeação de variáveis temporárias e *labels* que não estão explícitas no [manual de referência](https://releases.llvm.org/3.8.0/docs/LangRef.html). Embora algumas dessas regras tenham sido detectadas e aplicadas no arquivo de RI gerado pelo compilador Fortran 666, uma das regras implicaria na mudança de boa parte do código, pois se relaciona com a ordem de percorrimento da árvore AST e, portanto, não foi aplicada ao código.
+
+Decidiu-se por utilizar a ferramenta de geração de código em RI do [ELLCC](http://ellcc.org/demo/index.cgi) e fazer a comparação dos códigos gerados. Dado um código em `C/C++`, a ferramenta utilizada gera o código `asm` do LLVM.
+
+
+
 ## Geração do Código Intermediário
 
 Cada nó da árvore AST possui um método responsável pela geração de uma parte do código em `asm`:
