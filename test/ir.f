@@ -1,7 +1,6 @@
 INTEGER FUNCTION A()
-INTEGER A, I
-REAL J
-I = 10
-J = 2.0
+INTEGER A, I, J
+I = 5
+J = (3 + I) * 2 + 1
 RETURN
 END

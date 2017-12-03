@@ -163,21 +163,58 @@ Pode-se perceber que, exceto pela representação em formato científico de vari
 
 Código em Fortran 666:
 ```Fortran
+    INTEGER FUNCTION A()
+    INTEGER A, I, J
+    I = 5
+    J = (3 + I) * 2 + 1
+    RETURN
+    END
 ```
 
 Código equivalente em C++:
-
 ```C++
+    int main() {
+        int i, j;
+        i = 5;
+        j = (3 + i) * 2 + 1;
+        return 0;
+    }
 ```
 
 Código `asm` gerado pelo compilador Fortran 666:
 ```LLVM
+    define i32 @A() #0 {
+      %1 = alloca i32, align 4              ;  var A
+      %2 = alloca i32, align 4              ;  var I
+      %3 = alloca i32, align 4              ;  var J
+      store i32 5, i32* %2, align 4
+      %4 = load i32, i32* %2, align 4       ;  var I
+      %5 = add i32 3, %4
+      %6 = mul i32 %5, 2
+      %7 = add i32 %6, 1
+      store i32 %7, i32* %3, align 4
+      ret i32 %1
+    }
 ```
 
 Código `asm` gerado pelo compilador ELLCC:
 ```LLVM
+    define i32 @main() #0 {
+      %1 = alloca i32, align 4
+      %2 = alloca i32, align 4
+      %3 = alloca i32, align 4
+      store i32 0, i32* %1, align 4
+      store i32 5, i32* %2, align 4
+      %4 = load i32, i32* %2, align 4
+      %5 = add nsw i32 3, %4
+      %6 = mul nsw i32 %5, 2
+      %7 = add nsw i32 %6, 1
+      store i32 %7, i32* %3, align 4
+      ret i32 0
+    }
 ```
 
+Aqui novamente, com exceção do `store` de `0` na variável de retorno `%1`, os códigos gerados são equivalentes.
 
 
 
