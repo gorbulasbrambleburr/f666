@@ -12,7 +12,7 @@ No compilador desenvolvido, a árvore de sintaxe abstrata (AST) gerada pelo *bis
 O primeiro desses formatos foi parcialmente [implementado](https://github.com/makhles/f666/blob/master/src/codegen.cpp), porém não foi possível configurar a biblioteca do LLVM corretamente. Escolheu-se, então, utilizar o formato `asm`.
 
 
-## Geração das instruções em *assembly*
+## Geração do Código Intermediário
 
 Cada nó da árvore AST possui um método responsável pela geração de uma parte do código em `asm`:
 
