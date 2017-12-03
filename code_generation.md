@@ -15,7 +15,7 @@ O primeiro desses formatos foi parcialmente [implementado](https://github.com/ma
 
 ## Geração de Código Executável
 
-Dado um arquivo de representação intermediária de um código fonte, `code.ll`, é possível obter-se um arquivo objeto utilizando-se o compilador estático do LLVM:
+Dado um arquivo de representação intermediária de um código fonte, `code.ll`, é possível obter-se um arquivo objeto utilizando-se o compilador estático do LLVM, [`llc`](https://llvm.org/docs/CommandGuide/llc.html):
 
 ```
     llc -filetype=obj code.ll
@@ -43,12 +43,57 @@ Cada nó da árvore AST possui um método responsável pela geração de uma par
 
 Alguns nós simplesmente imprimem o código gerado diretamente num arquivo chamado `code.ll` (através do objeto do tipo *stream* `ofs`); outros, além da impressão, retornam alguma variável temporária para seus nós antecessores. Citam-se como exemplos desse último caso os nós `Expression` e `Comparison`. Os métodos foram implementados no arquivo [`LLVM_AssemblyGenerator.cpp`](https://github.com/makhles/f666/blob/slave/src/LLVM_AssemblyGenerator.cpp).
 
-A seguir são exemplificados trechos de código gerados segundo o `asm` do LLVM.
+A seguir são exemplificados trechos de código em `asm` do LLVM gerados pelo compilador Fortran 666 e pela ferramenta ELLCC.
 
 
 
 
 ### Declarações de Variáveis
+
+Código em Fortran 666 abaixo
+
+```Fortran
+    INTEGER FUNCTION A()
+    INTEGER A, I, J
+    RETURN
+    END
+```
+
+Código equivalente em C++:
+
+```C++
+    int main() {
+        int i, j;
+        return 0;
+    }
+```
+
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+    define i32 @A() #0 {
+      %1 = alloca i32, align 4              ;  var A
+      %2 = alloca i32, align 4              ;  var I
+      %3 = alloca i32, align 4              ;  var J
+      ret i32 %1
+    }
+```
+
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
+    define i32 @main() #0 {
+      %1 = alloca i32, align 4
+      %2 = alloca i32, align 4
+      %3 = alloca i32, align 4
+      store i32 0, i32* %1, align 4
+      ret i32 0
+    }
+```
+
+Percebe-se que em ambos os códigos gerados, são alocadas variáveis temporárias `%2` e `%3` para as variáveis `i` e `j`, respectivamente. No caso da linguagem Fortran 666, deve existir uma variável com o nome da própria função (`A`) que deve ser declarada em seu corpo e que será utilizada como retorno (`%1`). No caso do C++, o retorno é independente do nome da função, porém aloca-se uma variável temporária (`%1`) de qualquer maneira e armazena-se o valor `0`.
+
+
+
+
 ### Atribuições
 ### Expressões Algébricas
 ### Chamada de Funções
@@ -58,7 +103,7 @@ A seguir são exemplificados trechos de código gerados segundo o `asm` do LLVM.
 
 ### Desvios
 
-#### Código em `Fortran 666`
+#### Código em Fortran 666
 
 ```Fortran
 INTEGER FUNCTION B(A,C)
