@@ -250,6 +250,10 @@ std::string Body::generateCode(std::ofstream &ofs) {
 
 // Contains a list of DeclarationStatement and/or ParameterStatement
 std::string SpecificationConstruct::generateCode(std::ofstream &ofs) {
+    
+    // For some shady reason, it has to skip a number
+    next_addr();
+
     for (auto& spec : m_specifications) {
         spec->generateCode(ofs);
     }
@@ -266,9 +270,6 @@ std::string ExecutableConstruct::generateCode(std::ofstream &ofs) {
 // Contains a Type and a list of IdentifierDeclaration
 // Only works for scalar variables
 std::string DeclarationStatement::generateCode(std::ofstream &ofs) {
-
-    // For some shady reason, it has to skip a number
-    next_addr();
 
     // For each declared variable
     for (auto& var : m_ids) {

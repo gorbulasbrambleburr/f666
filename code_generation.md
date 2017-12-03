@@ -108,22 +108,53 @@ Percebe-se que em ambos os códigos gerados são alocadas as variáveis temporá
 
 Código em Fortran 666:
 ```Fortran
+    PROGRAM A
+    INTEGER I
+    REAL J
+    I = 10
+    J = 2.0
+    STOP
+    END
 ```
 
 Código equivalente em C++:
 
 ```C++
+    int main() {
+        int i;
+        double j;
+        i = 10;
+        j = 2.0;
+        return 0;
+    }
 ```
 
 Código `asm` gerado pelo compilador Fortran 666:
 ```LLVM
+    define i32 @A() #0 {
+      %1 = alloca i32, align 4              ;  var A
+      %2 = alloca i32, align 4              ;  var I
+      %3 = alloca double, align 8           ;  var J
+      store i32 10, i32* %2, align 4
+      store double 2.000000, double* %3, align 8
+      ret i32 %1
+    }
 ```
 
 Código `asm` gerado pelo compilador ELLCC:
 ```LLVM
+    define i32 @main() #0 {
+      %1 = alloca i32, align 4
+      %2 = alloca i32, align 4
+      %3 = alloca double, align 8
+      store i32 0, i32* %1, align 4
+      store i32 10, i32* %2, align 4
+      store double 2.000000e+00, double* %3, align 8
+      ret i32 0
+    }
 ```
 
-
+Pode-se perceber que, exceto pela representação em formato científico de variáveis de ponto flutuante e do `store` de `0` na variável de retorno `%1`, os códigos gerados são equivalentes.
 
 
 
