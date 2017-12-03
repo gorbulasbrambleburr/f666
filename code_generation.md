@@ -27,17 +27,17 @@ A seguir são exemplificados trechos de código gerados segundo o `asm` do LLVM.
 
 
 
-## Declarações de Variáveis
-## Atribuições
-## Expressões Algébricas
-## Chamada de Funções
+### Declarações de Variáveis
+### Atribuições
+### Expressões Algébricas
+### Chamada de Funções
 
 
 
 
-## Desvios
+### Desvios
 
-### Código em `Fortran 666`
+#### Código em `Fortran 666`
 
 ```Fortran
 INTEGER FUNCTION B(A,C)
@@ -50,7 +50,7 @@ RETURN
 END
 ```
 
-### Código em `C++` usado no site `ellcc.org`
+#### Código em `C++` usado no site `ellcc.org`
 
 ```C++
 int b(int a, int c)
@@ -66,7 +66,7 @@ int b(int a, int c)
 
 
 
-### Código gerado em _assembly_ do LLVM
+#### Código gerado em _assembly_ do LLVM
 
 ```
 define i32 @B(i32, i32) #0 {
@@ -98,7 +98,7 @@ define i32 @B(i32, i32) #0 {
 }
 ```
 
-### Código gerado no site `ellcc.org`
+#### Código gerado no site `ellcc.org`
 
 ```
 define i32 @_Z1bii(i32, i32) #0 {
@@ -132,5 +132,5 @@ define i32 @_Z1bii(i32, i32) #0 {
 ```
 
 
-## Estrutura de Seleção `IF-THEN-ELSE`
-## Estrutura de Repetição `DO`
+### Estrutura de Seleção `IF-THEN-ELSE`
+### Estrutura de Repetição `DO`
