@@ -407,7 +407,7 @@ Código `asm` gerado pelo compilador ELLCC:
     }
 ```
 
-Uma construção `IF-THEN-ELSE` é feita através de uma comparação, seguida de um desvio condicional para *branches* representados por *labels verdadeiro*, *falso* e *fim*, nesta ordem exata.
+Uma construção `IF-THEN-ELSE` é feita através de uma comparação, seguida de um desvio condicional para *branches* representados por *labels verdadeiro*, *falso* e *fim*, nesta ordem exata (*labels* `%9`, `%10` e `%11` para o compilador Fortran 666 e `%9`, `%11` e `%13` para o compilador ELLCC).
 
 A comparação de variáveis inteiras é feita utilizando-se o comando `icmp` e o resultado é armazenado em uma variável temporária de 1 bit (`%8`). O valor dessa variável é utilizada em um desvio (comando `br`) condicional. Ao fim dos *branches verdadeiro* e *falso*, faz-se um desvio não-condicional para o *branch fim*.
 
