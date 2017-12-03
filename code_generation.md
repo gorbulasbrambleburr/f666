@@ -518,7 +518,19 @@ Uma construção `DO` pode ser decomposta nas operações:
 Percebe-se aqui, novamente, a diferença de nomeação dos *labels* dos *branches* entre os códigos gerados pelos dois compiladores, pelo mesmo motivo explicado no item anterior.
 
 
+
+
+
 <!--- ####################################################################  -->
 ## Comentários Finais
 
 Infelizmente não foi possível fazer a geração do código intermediário utilizando a biblioteca *front-end* do LLVM, fato tal que reduziu consideralmente a geração do código utilizando a linguagem *assembly* do LLVM. Tendo esta última abordagem sido escolhida desde o início, as regras mencionadas anteriormente poderiam ter sido seguidas em sua totalidade e algum código executável gerado a partir do compilador estático do LLVM e do ligador do sistema operacional.
+
+
+
+
+<!--- ####################################################################  -->
+## Autores
+
+* Makhles Reuter Lange
+* Maurilio Atila Carvalho de Santana
