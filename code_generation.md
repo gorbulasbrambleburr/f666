@@ -13,6 +13,10 @@ O primeiro desses formatos foi parcialmente [implementado](https://github.com/ma
 
 
 
+
+
+
+<!--- ####################################################################  -->
 ## Geração de Código Executável
 
 Dado um arquivo de representação intermediária de um código fonte, `code.ll`, é possível obter-se um arquivo objeto utilizando-se o compilador estático do LLVM, [`llc`](https://llvm.org/docs/CommandGuide/llc.html):
@@ -33,6 +37,9 @@ Decidiu-se por utilizar a ferramenta de geração de código em RI do [ELLCC](ht
 
 
 
+
+
+<!--- ####################################################################  -->
 ## Geração do Código Intermediário
 
 Cada nó da árvore AST possui um método responsável pela geração de uma parte do código em `asm`:
@@ -48,9 +55,12 @@ A seguir são exemplificados trechos de código em `asm` do LLVM gerados pelo co
 
 
 
+
+
+<!--- ####################################################################  -->
 ### Declarações de Variáveis
 
-Código em Fortran 666 abaixo
+Código em Fortran 666:
 
 ```Fortran
     INTEGER FUNCTION A()
@@ -89,114 +99,145 @@ Código `asm` gerado pelo compilador ELLCC:
     }
 ```
 
-Percebe-se que em ambos os códigos gerados, são alocadas variáveis temporárias `%2` e `%3` para as variáveis `i` e `j`, respectivamente. No caso da linguagem Fortran 666, deve existir uma variável com o nome da própria função (`A`) que deve ser declarada em seu corpo e que será utilizada como retorno (`%1`). No caso do C++, o retorno é independente do nome da função, porém aloca-se uma variável temporária (`%1`) de qualquer maneira e armazena-se o valor `0`.
+Percebe-se que em ambos os códigos gerados são alocadas as variáveis temporárias `%2` e `%3` para as variáveis `i` e `j`, respectivamente. No caso da linguagem Fortran 666, deve existir uma variável com o nome da própria função (`A`) que deve ser declarada em seu corpo e que será utilizada como retorno (`%1`). No caso do C++, o retorno é independente do nome da função, porém aloca-se uma variável temporária (`%1`) de qualquer maneira e armazena-se o valor `0`.
 
 
 
-
+<!--- ####################################################################  -->
 ### Atribuições
-### Expressões Algébricas
-### Chamada de Funções
 
-
-
-
-### Desvios
-
-#### Código em Fortran 666
-
+Código em Fortran 666:
 ```Fortran
-INTEGER FUNCTION B(A,C)
-INTEGER A, B, C, D
-B = A + C * 2
-IF (B .EQ. A) THEN
-  D = A / C
-ENDIF
-RETURN
-END
 ```
 
-#### Código em `C++` usado no site `ellcc.org`
+Código equivalente em C++:
 
 ```C++
-int b(int a, int c)
-{
-  int b, d;
-  b = a + c * 2;
-  if (b == a) {
-    d = a/c;
-  }
-  return b;
-}
+```
+
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+```
+
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
 ```
 
 
 
-#### Código gerado em _assembly_ do LLVM
 
-```
-define i32 @B(i32, i32) #0 {
-  %3 = alloca i32, align 4              ;  var A
-  store i32 %0, i32* %3, align 4
-  %4 = alloca i32, align 4              ;  var B
-  %5 = alloca i32, align 4              ;  var C
-  store i32 %1, i32* %5, align 4
-  %6 = alloca i32, align 4              ;  var D
-  %7 = load i32, i32* %3, align 4       ;  var A
-  %8 = load i32, i32* %5, align 4       ;  var C
-  %9 = mul i32 %8, 2
-  %10 = add i32 %7, %9
-  store i32 %10, i32* %4, align 4
-  %11 = load i32, i32* %4, align 4      ;  var B
-  %12 = load i32, i32* %3, align 4      ;  var A
-  %13 = icmp eq i32 %11, %12
-  br i1 %13, label %14, label %15
 
-; <label>:14:
-  %16 = load i32, i32* %3, align 4      ;  var A
-  %17 = load i32, i32* %5, align 4      ;  var C
-  %18 = sdiv i32 %16, %17
-  store i32 %18, i32* %6, align 4
-  br label %15
+<!--- ####################################################################  -->
+### Expressões Algébricas
 
-; <label>:15:
-  ret i32 %4
-}
+Código em Fortran 666:
+```Fortran
 ```
 
-#### Código gerado no site `ellcc.org`
+Código equivalente em C++:
 
+```C++
 ```
-define i32 @_Z1bii(i32, i32) #0 {
-  %3 = alloca i32, align 4
-  %4 = alloca i32, align 4
-  %5 = alloca i32, align 4
-  %6 = alloca i32, align 4
-  store i32 %0, i32* %3, align 4
-  store i32 %1, i32* %4, align 4
-  %7 = load i32, i32* %3, align 4
-  %8 = load i32, i32* %4, align 4
-  %9 = mul nsw i32 %8, 2
-  %10 = add nsw i32 %7, %9
-  store i32 %10, i32* %5, align 4
-  %11 = load i32, i32* %5, align 4
-  %12 = load i32, i32* %3, align 4
-  %13 = icmp eq i32 %11, %12
-  br i1 %13, label %14, label %18
 
-; <label>:14:                                     ; preds = %2
-  %15 = load i32, i32* %3, align 4
-  %16 = load i32, i32* %4, align 4
-  %17 = sdiv i32 %15, %16
-  store i32 %17, i32* %6, align 4
-  br label %18
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+```
 
-; <label>:18:                                     ; preds = %14, %2
-  %19 = load i32, i32* %5, align 4
-  ret i32 %19
-}
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
 ```
 
 
+
+
+<!--- ####################################################################  -->
+### Chamada de Funções
+
+Código em Fortran 666:
+```Fortran
+```
+
+Código equivalente em C++:
+
+```C++
+```
+
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+```
+
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
+```
+
+
+
+
+
+<!--- ####################################################################  -->
+### Desvios
+
+Código em Fortran 666:
+```Fortran
+```
+
+Código equivalente em C++:
+
+```C++
+```
+
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+```
+
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
+```
+
+
+
+
+
+<!--- ####################################################################  -->
 ### Estrutura de Seleção `IF-THEN-ELSE`
+
+Código em Fortran 666:
+```Fortran
+```
+
+Código equivalente em C++:
+
+```C++
+```
+
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+```
+
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
+```
+
+
+
+
+
+<!--- ####################################################################  -->
 ### Estrutura de Repetição `DO`
+
+Código em Fortran 666:
+```Fortran
+```
+
+Código equivalente em C++:
+
+```C++
+```
+
+Código `asm` gerado pelo compilador Fortran 666:
+```LLVM
+```
+
+Código `asm` gerado pelo compilador ELLCC:
+```LLVM
+```
