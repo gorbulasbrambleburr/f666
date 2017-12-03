@@ -223,22 +223,98 @@ Aqui novamente, com exceção do `store` de `0` na variável de retorno `%1`, os
 
 Código em Fortran 666:
 ```Fortran
+INTEGER FUNCTION SUM(X,Y)
+INTEGER SUM, X, Y
+SUM = X + Y
+RETURN
+END
+
+PROGRAM MAIN
+INTEGER I, J, K
+I = 5
+J = 2
+K = SUM(I, J)
+STOP
+END
 ```
 
 Código equivalente em C++:
-
 ```C++
+    int sum(int x, int y) {
+        int sum;
+        sum = x + y;
+        return sum;
+    }
+
+    int main() {
+        int i, j, k;
+        i = 5;
+        j = 2;
+        k = sum(i,j);
+        return 0;
+    }
 ```
 
 Código `asm` gerado pelo compilador Fortran 666:
 ```LLVM
+    define i32 @SUM(i32, i32) #0 {
+      %3 = alloca i32, align 4              ;  var SUM
+      %4 = alloca i32, align 4              ;  var X
+      store i32 %0, i32* %4, align 4
+      %5 = alloca i32, align 4              ;  var Y
+      store i32 %1, i32* %5, align 4
+      %6 = load i32, i32* %4, align 4       ;  var X
+      %7 = load i32, i32* %5, align 4       ;  var Y
+      %8 = add i32 %6, %7
+      store i32 %8, i32* %3, align 4
+      ret i32 %3
+    }
+
+    define @MAIN() #1 {
+      %1 = alloca i32, align 4              ;  var I
+      %2 = alloca i32, align 4              ;  var J
+      %3 = alloca i32, align 4              ;  var K
+      store i32 5, i32* %1, align 4
+      store i32 2, i32* %2, align 4
+      %4 = call i32 @SUM(i32 %1, i32 %3)
+      store i32 %4, i32* %3, align 4
+    }
 ```
 
 Código `asm` gerado pelo compilador ELLCC:
 ```LLVM
+    define i32 @_Z3sumii(i32, i32) #0 {
+      %3 = alloca i32, align 4
+      %4 = alloca i32, align 4
+      %5 = alloca i32, align 4
+      store i32 %0, i32* %3, align 4
+      store i32 %1, i32* %4, align 4
+      %6 = load i32, i32* %3, align 4
+      %7 = load i32, i32* %4, align 4
+      %8 = add nsw i32 %6, %7
+      store i32 %8, i32* %5, align 4
+      %9 = load i32, i32* %5, align 4
+      ret i32 %9
+    }
+
+    ; Function Attrs: noinline norecurse nounwind optnone
+    define i32 @main() #1 {
+      %1 = alloca i32, align 4
+      %2 = alloca i32, align 4
+      %3 = alloca i32, align 4
+      %4 = alloca i32, align 4
+      store i32 0, i32* %1, align 4
+      store i32 5, i32* %2, align 4
+      store i32 2, i32* %3, align 4
+      %5 = load i32, i32* %2, align 4
+      %6 = load i32, i32* %3, align 4
+      %7 = call i32 @_Z3sumii(i32 %5, i32 %6)
+      store i32 %7, i32* %4, align 4
+      ret i32 0
+    }
 ```
 
-
+Percebe-se que o código `asm` gerado pelo compilador Fortran 666 faz o `store` dos argumentos de funções tão logo quanto são alocadas variáveis temporárias para estes, enquanto que o compilador ELLCC primeiro faz a alocação e depois os `store`s. Ainda, pode-se perceber uma certa otimização no primeiro código gerado, visto que não são feitos `load`s desnecessários de variáveis temporárias antes da chamada de funções.
 
 
 
@@ -250,7 +326,6 @@ Código em Fortran 666:
 ```
 
 Código equivalente em C++:
-
 ```C++
 ```
 
@@ -274,7 +349,6 @@ Código em Fortran 666:
 ```
 
 Código equivalente em C++:
-
 ```C++
 ```
 
@@ -298,7 +372,6 @@ Código em Fortran 666:
 ```
 
 Código equivalente em C++:
-
 ```C++
 ```
 

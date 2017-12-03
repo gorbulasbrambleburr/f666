@@ -544,7 +544,7 @@ FunctionCall
     : Identifier LP ParameterList RP {
         std::string error_msg = "";
         bool any_error = false;
-        
+
         // Check if function is declared
         if (Mapper::get().lookup_fun($1->id())) {
 
@@ -556,7 +556,7 @@ FunctionCall
                 // Check parameter types
                 std::string params = "";
                 for (unsigned int i = 0; i < $3.size(); i++) {
-                    
+
                     // Check if parameter was declared in the current scope
                     auto param_entry = Mapper::get().lookup_var($3[i]->id());
                     if (param_entry) {
