@@ -318,26 +318,6 @@ Percebe-se que o código `asm` gerado pelo compilador Fortran 666 faz o `store` 
 
 
 
-<!--- ####################################################################  -->
-### Desvios
-
-Código em Fortran 666:
-```Fortran
-```
-
-Código equivalente em C++:
-```C++
-```
-
-Código `asm` gerado pelo compilador Fortran 666:
-```LLVM
-```
-
-Código `asm` gerado pelo compilador ELLCC:
-```LLVM
-```
-
-
 
 
 
@@ -346,21 +326,94 @@ Código `asm` gerado pelo compilador ELLCC:
 
 Código em Fortran 666:
 ```Fortran
+    INTEGER FUNCTION MAIOR(X,Y)
+    INTEGER MAIOR, X, Y
+    IF (X >= Y) THEN
+        MAIOR = X
+    ELSE
+        MAIOR = Y
+    ENDIF
+    RETURN
+    END
 ```
 
 Código equivalente em C++:
 ```C++
+    int maior(int x, int y) {
+        int maior;
+        if (x >= y) {
+            maior = x;
+        } else {
+            maior = y;
+        }
+        return maior;
+    }
 ```
 
 Código `asm` gerado pelo compilador Fortran 666:
 ```LLVM
+    define i32 @MAIOR(i32, i32) #0 {
+      %3 = alloca i32, align 4              ;  var MAIOR
+      %4 = alloca i32, align 4              ;  var X
+      store i32 %0, i32* %4, align 4
+      %5 = alloca i32, align 4              ;  var Y
+      store i32 %1, i32* %5, align 4
+      %6 = load i32, i32* %4, align 4       ;  var X
+      %7 = load i32, i32* %5, align 4       ;  var Y
+      %8 = icmp sge i32 %6, %7
+      br i1 %8, label %9, label %10
+
+    ; <label>:9:
+      %12 = load i32, i32* %4, align 4      ;  var X
+      store i32 %12, i32* %3, align 4
+      br label %11
+
+    ; <label>:10:
+      %13 = load i32, i32* %5, align 4      ;  var Y
+      store i32 %13, i32* %3, align 4
+      br label %11
+
+    ; <label>:11:
+      ret i32 %3
+    }
 ```
 
 Código `asm` gerado pelo compilador ELLCC:
 ```LLVM
+    define i32 @_Z5maiorii(i32, i32) #0 {
+      %3 = alloca i32, align 4
+      %4 = alloca i32, align 4
+      %5 = alloca i32, align 4
+      store i32 %0, i32* %3, align 4
+      store i32 %1, i32* %4, align 4
+      %6 = load i32, i32* %3, align 4
+      %7 = load i32, i32* %4, align 4
+      %8 = icmp sge i32 %6, %7
+      br i1 %8, label %9, label %11
+
+    ; <label>:9:                                      ; preds = %2
+      %10 = load i32, i32* %3, align 4
+      store i32 %10, i32* %5, align 4
+      br label %13
+
+    ; <label>:11:                                     ; preds = %2
+      %12 = load i32, i32* %4, align 4
+      store i32 %12, i32* %5, align 4
+      br label %13
+
+    ; <label>:13:                                     ; preds = %11, %9
+      %14 = load i32, i32* %5, align 4
+      ret i32 %14
+    }
 ```
 
+Uma construção `IF-THEN-ELSE` é feita através de uma comparação, seguida de um desvio condicional para *branches* representados por *labels verdadeiro*, *falso* e *fim*, nesta ordem exata.
 
+A comparação de variáveis inteiras é feita utilizando-se o comando `icmp` e o resultado é armazenado em uma variável temporária de 1 bit (`%8`). O valor dessa variável é utilizada em um desvio (comando `br`) condicional. Ao fim dos *branches verdadeiro* e *falso*, faz-se um desvio não-condicional para o *branch fim*.
+
+Percebe-se que a nomeação dos *branches* é diferente no código gerado pelos dois compiladores. O compilador ELLCC armazena todo o código gerado em uma `string` e a passa para os nós antecessores, para posteriormente gerar os *labels falso* e *fim*. 
+
+O compilador Fortran 666, por sua vez, nomeia todos os *branches* necessários antes de percorrer os respectivos nós da árvore para evitar a cópia de `string`s entre inúmeros nós da árvore. Infelizmente, essa diferença de geração de código intermediário não permite a utilização do compilador estático do LLVM, `llc`, para a geração de arquivos objetos a partir da RI gerada pelo compilador Fortran 666.
 
 
 

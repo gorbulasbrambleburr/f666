@@ -1392,7 +1392,7 @@ namespace  Fortran  {
     {
         std::string error_msg = "";
         bool any_error = false;
-        
+
         // Check if function is declared
         if (Mapper::get().lookup_fun(yystack_[3].value.as< AST::node_ptr > ()->id())) {
 
@@ -1404,7 +1404,7 @@ namespace  Fortran  {
                 // Check parameter types
                 std::string params = "";
                 for (unsigned int i = 0; i < yystack_[1].value.as< AST::node_ptrs > ().size(); i++) {
-                    
+
                     // Check if parameter was declared in the current scope
                     auto param_entry = Mapper::get().lookup_var(yystack_[1].value.as< AST::node_ptrs > ()[i]->id());
                     if (param_entry) {
