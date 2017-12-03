@@ -422,16 +422,97 @@ Pode-se perceber aqui novamente que o compilador ELLCC faz o `load` da variável
 
 Código em Fortran 666:
 ```Fortran
+    INTEGER FUNCTION X()
+    INTEGER X, I
+    DO I = 0, 10, 2
+        X = I * 2
+    ENDDO
+    RETURN
+    END
 ```
 
 Código equivalente em C++:
 ```C++
+    int x() {
+        int x, i;
+        for (int i=0; i <= 10; i=i+2) {
+            x = i * 2;
+        } 
+        return x;
+    }
 ```
 
 Código `asm` gerado pelo compilador Fortran 666:
 ```LLVM
+    define i32 @X() #0 {
+      %1 = alloca i32, align 4              ;  var X
+      %2 = alloca i32, align 4              ;  var I
+      store i32 0, i32* %2, align 4
+      br label %3
+
+    ; <label>:3:
+      %7 = load i32, i32* %2, align 4       ;  var I
+      %8 = icmp sle i32 %7, 10
+      br i1 %8, label %4, label %6
+
+    ; <label>:4:
+      %9 = load i32, i32* %2, align 4       ;  var I
+      %10 = mul i32 %9, 2
+      store i32 %10, i32* %1, align 4
+      br label %5
+
+    ; <label>:5:
+      %11 = load i32, i32* %2, align 4      ;  var I
+      %12 = add i32 %11, 2
+      store i32 %12, i32* %2, align 4
+      br label %3
+
+    ; <label>:6:
+      ret i32 %1
+    }
 ```
 
 Código `asm` gerado pelo compilador ELLCC:
 ```LLVM
+    define i32 @_Z1xv() #0 {
+      %1 = alloca i32, align 4
+      %2 = alloca i32, align 4
+      %3 = alloca i32, align 4
+      store i32 0, i32* %3, align 4
+      br label %4
+
+    ; <label>:4:                                      ; preds = %10, %0
+      %5 = load i32, i32* %3, align 4
+      %6 = icmp sle i32 %5, 10
+      br i1 %6, label %7, label %13
+
+    ; <label>:7:                                      ; preds = %4
+      %8 = load i32, i32* %3, align 4
+      %9 = mul nsw i32 %8, 2
+      store i32 %9, i32* %1, align 4
+      br label %10
+
+    ; <label>:10:                                     ; preds = %7
+      %11 = load i32, i32* %3, align 4
+      %12 = add nsw i32 %11, 2
+      store i32 %12, i32* %3, align 4
+      br label %4
+
+    ; <label>:13:                                     ; preds = %4
+      %14 = load i32, i32* %1, align 4
+      ret i32 %14
+    }
 ```
+
+Uma construção `DO` pode ser decomposta nas operações:
+
+* Atribuir um valor inicial para a variável do laço:
+```
+    store i32 0, i32* %2, align 4
+```
+* Criar um *branch* de comparação entre o valor atual da variável do laço e o seu valor final, `%3`, seguido de um desvio condicional para o *branch* de execução ou para o *branch* final;
+* Criar um *branch* de execução dos comandos do corpo do `DO`, `%4`, seguido de um desvio não-condicional para o *branch* de incrementação;
+* Criar um *branch* de incrementação da variável do laço de acordo com o valor do incremento, `%5`, seguido de um desvio não-condicional para o *branch* de comparação;
+* Criar um *branch* final que será executado quando a condição do laço não for mais verdadeira.
+
+Percebe-se aqui, novamente, a diferença de nomeação dos *labels* dos *branches* entre os códigos gerados pelos dois compiladores, pelo mesmo motivo explicado no item anterior.
