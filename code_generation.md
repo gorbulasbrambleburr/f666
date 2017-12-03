@@ -20,12 +20,22 @@ Cada nó da árvore AST possui um método responsável pela geração de uma par
     std::string generateCode(std::ofstream &ofs);
 ``` 
 
-Alguns nós simplesmente imprimem o código gerado diretamente num arquivo chamado `code.ll` (através do objeto do tipo *stream* `ofs`); outros, além da impressão, retornam alguma variável temporária. Citam-se como exemplos desse último caso os nós `Expression` e `Comparison`. Os métodos foram implementados no arquivo [`LLVM_AssemblyGenerator.cpp`](https://github.com/makhles/f666/blob/slave/src/LLVM_AssemblyGenerator.cpp).
+Alguns nós simplesmente imprimem o código gerado diretamente num arquivo chamado `code.ll` (através do objeto do tipo *stream* `ofs`); outros, além da impressão, retornam alguma variável temporária para seus nós antecessores. Citam-se como exemplos desse último caso os nós `Expression` e `Comparison`. Os métodos foram implementados no arquivo [`LLVM_AssemblyGenerator.cpp`](https://github.com/makhles/f666/blob/slave/src/LLVM_AssemblyGenerator.cpp).
 
 A seguir são exemplificados trechos de código gerados segundo o `asm` do LLVM.
 
 
-## Geração de _Branches_
+
+
+## Declarações de Variáveis
+## Atribuições
+## Expressões Algébricas
+## Chamada de Funções
+
+
+
+
+## Desvios
 
 ### Código em `Fortran 666`
 
@@ -120,3 +130,7 @@ define i32 @_Z1bii(i32, i32) #0 {
   ret i32 %19
 }
 ```
+
+
+## Estrutura de Seleção `IF-THEN-ELSE`
+## Estrutura de Repetição `DO`
