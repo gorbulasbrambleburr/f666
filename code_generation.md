@@ -1,13 +1,31 @@
 # Geração de Código da Linguagem F666
 
-Makhles Reuter Lange
 
-Maurilio Atila Carvalho de Santana
+A geração de código é o processo pelo qual um compilador converte a *Representação Intermediária* (RI) de um código fonte em um formato executável por uma máquina. Neste projeto, utilizamos o LLVM (Low Level Virtual Machine) para a geração de código.
+
+No compilador desenvolvido, a árvore de sintaxe abstrata (AST) gerada pelo *bison* é utilizada como entrada para o gerador de código. A árvore é convertida em uma seqüência de instruções segundo uma RI do LLVM. O LLVM suporta três formas isomórficas de RIs:
+
+* Formato de objetos de C++
+* Formato bitcode (para serialização)
+* Formato *assembly* (`asm`)
+
+O primeiro desses formatos foi parcialmente [implementado](https://github.com/makhles/f666/blob/master/src/codegen.cpp), porém não foi possível configurar a biblioteca do LLVM corretamente. Escolheu-se, então, utilizar o formato `asm`.
+
+
+## Geração das instruções em *assembly*
+
+Cada nó da árvore AST possui um método responsável pela geração de uma parte do código em `asm`:
+
+```C++
+    std::string generateCode(std::ofstream &ofs);
+``` 
+
+Alguns nós simplesmente imprimem o código gerado diretamente num arquivo chamado `code.ll` (através do objeto do tipo *stream* `ofs`); outros, além da impressão, retornam alguma variável temporária. Citam-se como exemplos desse último caso os nós `Expression` e `Comparison`. Os métodos foram implementados no arquivo [`LLVM_AssemblyGenerator.cpp`](https://github.com/makhles/f666/blob/slave/src/LLVM_AssemblyGenerator.cpp).
+
+A seguir são exemplificados trechos de código gerados segundo o `asm` do LLVM.
 
 
 ## Geração de _Branches_
-
-
 
 ### Código em `Fortran 666`
 
